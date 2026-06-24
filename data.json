@@ -1,11 +1,11 @@
 {
   "schema": {
-    "title": "Test spørgeskema",
+    "title": "Test spÃ¸rgeskema",
     "description": "Her testes svarens udfald.",
     "questions": [
       {
         "id": "q1",
-        "text": "Kan du lide layoutet i spørgeskemaet?",
+        "text": "Kan du lide layoutet i spÃ¸rgeskemaet?",
         "sub": "",
         "type": "single",
         "options": [
@@ -24,7 +24,7 @@
       },
       {
         "id": "_0fucb8",
-        "text": "Hvad synes du skal ÃÂ¦ndres?",
+        "text": "Hvad synes du skal ÃÂÃÂ¦ndres?",
         "sub": "",
         "type": "multi",
         "options": [
@@ -80,18 +80,18 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Tak for svar. MÃÂ¥ vi kontakte dig?",
+        "text": "Tak for svar. MÃÂÃÂ¥ vi kontakte dig?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Ja, det mÃÂ¥ i gerne",
+            "label": "Ja, det mÃÂÃÂ¥ i gerne",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Nej tak, jeg gÃÂ¸r det selv.",
+            "label": "Nej tak, jeg gÃÂÃÂ¸r det selv.",
             "nextQ": null
           }
         ]
@@ -101,7 +101,7 @@
       {
         "id": "o1",
         "title": "Visuelt orienteret",
-        "desc": "Du har ÃÂ¸je for det visuelle.",
+        "desc": "Du har ÃÂÃÂ¸je for det visuelle.",
         "tags": [],
         "keywords": [
           "_nv4nxx",
