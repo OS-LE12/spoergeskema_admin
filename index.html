@@ -304,6 +304,11 @@ select{cursor:pointer}
       <label>Returnér svar til e-mail (valgfrit)</label>
       <input type="text" id="share-email" placeholder="din@email.dk — lad stå tom for kun lokal gemning">
     </div>
+    <div class="field">
+      <label>Dispatch Token (til automatisk svar-modtagelse)</label>
+      <input type="password" id="share-dispatch-token" placeholder="github_pat_xxxx — kun workflow-adgang, sikkert i brugerfil">
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">Opret et separat token med kun <strong>Actions: Read &amp; Write</strong> — ingen kodeadgang. Dette token må gerne være i brugerfilen.</div>
+    </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn btna" onclick="downloadUserFile()">⬇ Download bruger-HTML</button>
       <button class="btn" onclick="showPage('quiz',document.querySelector('[onclick*=quiz]'))">▶ Forhåndsvis som bruger</button>
@@ -588,7 +593,8 @@ function buildUserHTML(sc,email){
   const sd=JSON.stringify(sc).replace(/</g,'\\u003c').replace(/>/g,'\\u003e');
   const em=email?JSON.stringify(email):'""';
   const ghR=ghConfig?JSON.stringify(ghConfig.repo):'null';
-  const ghT=ghConfig?JSON.stringify(ghConfig.token):'null';
+  const ghDT=document.getElementById('share-dispatch-token').value.trim();
+  const ghDTJ=ghDT?JSON.stringify(ghDT):'null';
   const ghF=ghConfig?JSON.stringify(ghConfig.filename||'data.json'):'null';
   return`<!DOCTYPE html>
 <html lang="da"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -674,7 +680,7 @@ textarea.sa{width:100%;min-height:80px;font-family:var(--font);font-size:13px;pa
 <script>
 var SC=${sd};
 var EMAIL=${em};
-var GH_REPO=${ghR};var GH_TOKEN=${ghT};var GH_FILE=${ghF};
+var GH_REPO=${ghR};var GH_DISPATCH_TOKEN=${ghDTJ};var GH_FILE=${ghF};
 var qs={qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null};
 function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
 function uid(){return '_'+Math.random().toString(36).slice(2,8)}
@@ -772,19 +778,15 @@ function buildSendBox(){
     +'</div></div>';
 }
 async function sendToGitHub(){
-  if(!GH_REPO||!GH_TOKEN||GH_REPO==='null'||GH_TOKEN==='null')return false;
+  if(!GH_REPO||!GH_DISPATCH_TOKEN||GH_REPO==='null'||GH_DISPATCH_TOKEN==='null')return false;
   try{
     var resp={id:uid(),timestamp:Date.now(),contact:qs.contact,answers:qs.answers,topOutcome:calcR()[0]&&calcR()[0].title||null,completed:true};
-    var ex=await fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}});
-    var data={schema:null,responses:[]};var sha=null;
-    if(ex.ok){var j=await ex.json();sha=j.sha;try{data=JSON.parse(atob(j.content.replace(/\n/g,'')))}catch(e){}}
-    if(!data.responses)data.responses=[];
-    data.responses.push(resp);
-    var encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
-    var body={message:'Nyt svar '+new Date().toISOString(),content:encoded};
-    if(sha)body.sha=sha;
-    var r=await fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE,{method:'PUT',headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},body:JSON.stringify(body)});
-    return r.ok;
+    var r=await fetch('https://api.github.com/repos/'+GH_REPO+'/dispatches',{
+      method:'POST',
+      headers:{'Authorization':'token '+GH_DISPATCH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({event_type:'nyt-svar',client_payload:resp})
+    });
+    return r.status===204;
   }catch(e){return false}
 }
 function dlAnswers(){downloadResultImage()}
