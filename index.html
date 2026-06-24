@@ -304,25 +304,25 @@ select{cursor:pointer}
       <label>Returnér svar til e-mail (valgfrit)</label>
       <input type="text" id="share-email" placeholder="din@email.dk — lad stå tom for kun lokal gemning">
     </div>
-    <div class="field">
-      <label>Dispatch Token (til automatisk svar-modtagelse)</label>
-      <input type="password" id="share-dispatch-token" placeholder="github_pat_xxxx — kun workflow-adgang, sikkert i brugerfil">
-      <div style="font-size:12px;color:var(--text3);margin-top:4px">Opret et separat token med kun <strong>Actions: Read &amp; Write</strong> — ingen kodeadgang. Dette token må gerne være i brugerfilen.</div>
-    </div>
+
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn btna" onclick="downloadUserFile()">⬇ Download bruger-HTML</button>
       <button class="btn" onclick="showPage('quiz',document.querySelector('[onclick*=quiz]'))">▶ Forhåndsvis som bruger</button>
     </div>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:8px">Sådan deler du filen</div>
+    <div class="ct" style="margin-bottom:8px">Sådan virker det</div>
     <p style="font-size:14px;color:var(--text2);line-height:1.7">
-      1. Klik <strong>Download bruger-HTML</strong> ovenfor<br>
-      2. Send filen til dine brugere via e-mail, WeTransfer, Dropbox el.lign.<br>
-      3. Brugeren åbner filen i en browser og besvarer spørgeskemaet<br>
-      4. Brugeren klikker <strong>Send svar</strong> nederst — enten via e-mail eller download<br>
-      5. Du importerer de modtagne JSON-svar under <strong>Eksport / import</strong>
+      1. Klik <strong>Download bruger-HTML</strong> og upload som <code>index.html</code> til dit bruger-repository<br>
+      2. Del QR-koden eller linket med dine brugere<br>
+      3. Brugeren åbner spørgeskemaet og besvarer det<br>
+      4. Første bruger bliver bedt om at indtaste Dispatch Token én gang i deres browser<br>
+      5. Svar sendes automatisk til GitHub Actions og gemmes i <code>data.json</code><br>
+      6. Åbn admin og klik <strong>↓ Hent fra GitHub</strong> for at se svarene
     </p>
+    <div style="margin-top:12px;padding:10px 14px;border-radius:var(--radius);background:var(--warn-bg);border:0.5px solid rgba(107,74,0,.2);font-size:13px;color:var(--warn-text)">
+      ⚠ Brugerne skal indtaste Dispatch Token én gang. Del tokenet med dem på forhånd via e-mail.
+    </div>
   </div>
 </div>
 
@@ -593,8 +593,6 @@ function buildUserHTML(sc,email){
   const sd=JSON.stringify(sc).replace(/</g,'\\u003c').replace(/>/g,'\\u003e');
   const em=email?JSON.stringify(email):'""';
   const ghR=ghConfig?JSON.stringify(ghConfig.repo):'null';
-  const ghDT=document.getElementById('share-dispatch-token').value.trim();
-  const ghDTJ=ghDT?JSON.stringify(ghDT):'null';
   const ghF=ghConfig?JSON.stringify(ghConfig.filename||'data.json'):'null';
   return`<!DOCTYPE html>
 <html lang="da"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -680,7 +678,7 @@ textarea.sa{width:100%;min-height:80px;font-family:var(--font);font-size:13px;pa
 <script>
 var SC=${sd};
 var EMAIL=${em};
-var GH_REPO=${ghR};var GH_DISPATCH_TOKEN=${ghDTJ};var GH_FILE=${ghF};
+var GH_REPO=${ghR};var GH_FILE=${ghF};
 var qs={qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null};
 function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
 function uid(){return '_'+Math.random().toString(36).slice(2,8)}
@@ -761,12 +759,31 @@ function selMulti(qid,oid){var cur=Array.isArray(qs.answers[qid])?qs.answers[qid
 function goNext(qid,type){if(type==='text'){var ta=document.getElementById('ti');if(ta)qs.answers[qid]=ta.value.trim()}var q=SC.questions[qs.qIdx];var ans=qs.answers[qid];var firstAns=Array.isArray(ans)?ans[0]:ans;qs.history.push(qs.qIdx);var next=getNext(q,firstAns);if(next===-1){qs.done=true}else{qs.qIdx=next}render()}
 function goBack(){if(!qs.history.length)return;qs.qIdx=qs.history.pop();qs.done=false;render()}
 function renderResult(c){var results=calcR().filter(function(r){return r.pct>0});var html='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div><div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Baseret p\u00e5 dine svar</div>';if(!results.length){html+='<p style="color:var(--t2)">Ingen matchende udfald.</p>'}else{results.slice(0,4).forEach(function(r,i){html+='<div class="rcard '+(i===0?'top':'')+'">'+( i===0?'<div class="badge ba" style="margin-bottom:8px">\u2605 Bedste match</div>':'')+'<div style="font-size:17px;font-weight:500;color:'+(i===0?'var(--tod)':'var(--t)')+';margin-bottom:4px">'+esc(r.title)+'</div><div style="font-size:14px;color:'+(i===0?'var(--tod2)':'var(--t2)')+';line-height:1.6;margin-bottom:10px">'+esc(r.desc)+'</div>'+(r.tags&&r.tags.length?'<div class="tags">'+r.tags.map(function(t){return'<span class="tag">'+esc(t)+'</span>'}).join('')+'</div>':'')+'<div class="sbg" style="margin-top:10px"><div class="sf" style="width:'+r.pct+'%"></div></div><div style="font-size:12px;color:'+(i===0?'var(--fg)':'var(--t2)')+';margin-top:4px">'+r.pct+'% match</div></div>'})}html+='<button class="btn" onclick="qs=fq();render()" style="margin-top:8px">\u21ba Start forfra</button>';html+=buildSendBox();c.innerHTML=html;
-  sendToGitHub().then(function(ok){
-    var st=document.getElementById('send-status');
-    if(st)st.textContent=ok?'Dine svar er gemt. Tak for din besvarelse.':'Tak for din besvarelse.';
-  });
   var db=document.getElementById('btn-dl');if(db)db.addEventListener('click',downloadResultImage);
-  var cb=document.getElementById('btn-close');if(cb)cb.addEventListener('click',function(){window.close();});
+  // Get token now (prompt shown immediately, before close is possible)
+  var token=localStorage.getItem('qs_dispatch_token');
+  if(!token){
+    token=prompt('Indtast Dispatch Token for at sende dine svar:\n(Du bliver kun spurgt \u00e9n gang \u2014 kontakt arrang\u00f8ren hvis du ikke har det)');
+    if(token)localStorage.setItem('qs_dispatch_token',token.trim());
+  }
+  var st=document.getElementById('send-status');
+  var cb=document.getElementById('btn-close');
+  if(token){
+    if(st)st.textContent='Sender svar...';
+    sendToGitHub(token).then(function(ok){
+      if(ok){
+        if(st)st.textContent='Dine svar er gemt. \u2713';
+      } else {
+        if(st)st.textContent='Kunne ikke sende automatisk. Download venligst resultatet.';
+        localStorage.removeItem('qs_dispatch_token');
+      }
+      if(cb)cb.disabled=false;
+    });
+  } else {
+    if(st)st.textContent='Svar ikke sendt \u2014 intet token angivet.';
+    if(cb)cb.disabled=false;
+  }
+  if(cb){cb.disabled=true;cb.addEventListener('click',function(){window.close();});}
 }
 function buildSendBox(){
   return'<div class="send-box" id="send-box-wrap">'
@@ -777,15 +794,21 @@ function buildSendBox(){
     +'<button id="btn-close" class="btn btnp">\u2715 Luk vindue</button>'
     +'</div></div>';
 }
-async function sendToGitHub(){
-  if(!GH_REPO||!GH_DISPATCH_TOKEN||GH_REPO==='null'||GH_DISPATCH_TOKEN==='null')return false;
+async function sendToGitHub(token){
+  if(!GH_REPO||GH_REPO==='null')return false;
+  if(!token)token=localStorage.getItem('qs_dispatch_token');
+  if(!token)return false;
   try{
     var resp={id:uid(),timestamp:Date.now(),contact:qs.contact,answers:qs.answers,topOutcome:calcR()[0]&&calcR()[0].title||null,completed:true};
     var r=await fetch('https://api.github.com/repos/'+GH_REPO+'/dispatches',{
       method:'POST',
-      headers:{'Authorization':'token '+GH_DISPATCH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify({event_type:'nyt-svar',client_payload:resp})
     });
+    if(r.status===401||r.status===403){
+      localStorage.removeItem('qs_dispatch_token');
+      return false;
+    }
     return r.status===204;
   }catch(e){return false}
 }
