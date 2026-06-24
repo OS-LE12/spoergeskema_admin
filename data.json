@@ -123,5 +123,23 @@
       }
     ]
   },
-  "responses": []
+  "responses": [
+    {
+      "answers": {
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_mtxnca",
+          "_jxcyxo"
+        ],
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "name": "Dan"
+      },
+      "id": "_7h3ozu",
+      "timestamp": 1782298286805,
+      "topOutcome": "Funktionalitet"
+    }
+  ]
 }
