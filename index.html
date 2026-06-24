@@ -416,22 +416,22 @@ async function doLogin(){
   const btn=document.getElementById('login-btn');
   btn.disabled=true;btn.textContent='Logger ind...';
   if(token&&repo){
-    const ok=await ghTest(token,repo);
-    if(!ok){err.textContent='Kunne ikke forbinde til GitHub. Tjek token og repository-navn.';err.style.display='block';btn.disabled=false;btn.textContent='Log ind →';return}
     ghConfig={token,repo,filename};
     localStorage.setItem(LS_GH,JSON.stringify(ghConfig));
   }
+  // Log in immediately - don't wait for GitHub test
   document.getElementById('login-overlay').classList.add('hidden');
   document.getElementById('gh-bar').style.display='flex';
-  if(ghConfig){
-    setGhStatus('ok','Tilsluttet '+ghConfig.repo);
-    await ghPull(true);
-  } else {
-    setGhStatus('local','Lokal tilstand');
-  }
   localStorage.setItem('qs_logged_in','1');
   btn.disabled=false;btn.textContent='Log ind →';
   initApp();
+  // Pull from GitHub in background after UI is shown
+  if(ghConfig){
+    setGhStatus('saving','Forbinder til GitHub...');
+    ghPull(true).catch(()=>setGhStatus('error','Kunne ikke forbinde — tjek token'));
+  } else {
+    setGhStatus('local','Lokal tilstand');
+  }
 }
 
 function doLogout(){
@@ -956,9 +956,14 @@ let tt;function toast(msg){const el=document.getElementById('toast');el.textCont
   if((hasPw&&isLoggedIn)||(hasConfig&&isLoggedIn)){
     document.getElementById('login-overlay').classList.add('hidden');
     document.getElementById('gh-bar').style.display='flex';
-    if(ghConfig){setGhStatus('ok','Tilsluttet '+ghConfig.repo);await ghPull(true);}
-    else{setGhStatus('local','Lokal tilstand');}
-    initApp();return;
+    initApp();
+    if(ghConfig){
+      setGhStatus('saving','Forbinder til GitHub...');
+      ghPull(true).then(()=>{}).catch(()=>setGhStatus('error','Kunne ikke forbinde'));
+    } else {
+      setGhStatus('local','Lokal tilstand');
+    }
+    return;
   }
   if(ghConfig){
     const tf=document.getElementById('login-token');
