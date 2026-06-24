@@ -437,7 +437,7 @@ async function doLogin(){
 function doLogout(){
   if(!confirm('Log ud? Dine lokale data bevares.'))return;
   localStorage.removeItem(LS_GH);
-  localStorage.removeItem('qs_logged_in');
+  localStorage.setItem('qs_logged_in','1');
   ghConfig=null;
   location.reload();
 }
@@ -473,17 +473,36 @@ async function ghSave(){
   try{
     const data=JSON.stringify({schema,responses},null,2);
     const encoded=btoa(unescape(encodeURIComponent(data)));
+    // Always fetch fresh SHA to avoid 409 conflicts
     let sha=null;
     const ex=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
       {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
-    if(ex.ok){const j=await ex.json();sha=j.sha}
-    const body={message:'Opdateret '+new Date().toISOString(),content:encoded};
+    if(ex.ok){
+      const j=await ex.json();sha=j.sha;
+      // Merge: keep remote responses + local schema
+      try{
+        const remote=JSON.parse(atob(j.content.replace(/
+/g,'')));
+        if(remote.responses&&remote.responses.length>responses.length){
+          responses=remote.responses;
+          localStorage.setItem('qs_responses_v2',JSON.stringify(responses));
+        }
+      }catch(e){}
+    }
+    const merged=JSON.stringify({schema,responses},null,2);
+    const mergedEncoded=btoa(unescape(encodeURIComponent(merged)));
+    const body={message:'Opdateret '+new Date().toISOString(),content:mergedEncoded};
     if(sha)body.sha=sha;
     const r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,{
       method:'PUT',
       headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
+    if(r.status===409){
+      setGhStatus('error','Konflikt — klik ↓ Hent fra GitHub og prøv igen');
+      toast('409 konflikt — hent først, gem derefter');
+      return;
+    }
     if(!r.ok)throw new Error('HTTP '+r.status);
     setGhStatus('ok','Gemt til GitHub — '+new Date().toLocaleTimeString('da-DK'));
     toast('Gemt til GitHub ✓');
@@ -914,7 +933,7 @@ h2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53;line-height:1
   var cfg={token:tok,repo:'${repo}',filename:'${fname}'};
   localStorage.setItem('qs_gh_config',JSON.stringify(cfg));
   localStorage.setItem('qs_admin_pw','${pw}');
-  localStorage.removeItem('qs_logged_in');
+  localStorage.setItem('qs_logged_in','1');
   window.location.href='${adminUrl}';
 })();
 <\/script></body></html>`;
@@ -932,7 +951,9 @@ let tt;function toast(msg){const el=document.getElementById('toast');el.textCont
   try{ const s=localStorage.getItem('qs_gh_config'); if(s)ghConfig=JSON.parse(s); }catch(e){}
   const hasPw=!!localStorage.getItem(ADMIN_PW_KEY);
   const isLoggedIn=localStorage.getItem('qs_logged_in')==='1';
-  if(hasPw&&isLoggedIn){
+  // Also auto-login if config was set by admin-adgang.html stub
+  const hasConfig=!!localStorage.getItem('qs_gh_config');
+  if((hasPw&&isLoggedIn)||(hasConfig&&isLoggedIn)){
     document.getElementById('login-overlay').classList.add('hidden');
     document.getElementById('gh-bar').style.display='flex';
     if(ghConfig){setGhStatus('ok','Tilsluttet '+ghConfig.repo);await ghPull(true);}
