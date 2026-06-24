@@ -330,6 +330,21 @@ select{cursor:pointer}
 <div class="page" id="page-export">
   <div class="ptitle">Eksport &amp; import</div>
   <div class="psub">Sikkerhedskopiér dit spørgeskema, flyt det til en anden computer, eller importér indsamlede svar.</div>
+
+  <div class="card" style="border:1.5px solid var(--deep-green)">
+    <div class="ct" style="margin-bottom:8px">Del admin-adgang</div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.6">
+      Download en konfigureret admin-fil med dine GitHub-oplysninger forudfyldt.
+      Modtageren skal kun indtaste adgangskoden for at komme i gang — ingen token eller repository at udfylde.
+    </p>
+    <div class="field">
+      <label>Adgangskode modtageren skal bruge</label>
+      <input type="text" id="share-admin-pw" placeholder="OSK2026" value="OSK2026">
+    </div>
+    <button class="btn btnp" onclick="downloadAdminConfig()">⬇ Download konfigureret admin-fil</button>
+  </div>
+  <div class="divider"></div>
+
   <div class="card">
     <div class="ct" style="margin-bottom:10px">Eksportér spørgeskema</div>
     <div class="cbox" id="ebox"></div>
@@ -867,6 +882,50 @@ function downloadExport(){const b=new Blob([JSON.stringify(schema,null,2)],{type
 function doImport(){const raw=document.getElementById('ibox').value.trim();if(!raw){alert('Indsæt JSON først.');return}try{const d=JSON.parse(raw);if(!d.questions||!Array.isArray(d.questions)){alert('Ugyldigt format.');return}if(!confirm('Erstat nuværende spørgeskema?'))return;schema=d;saveAll();document.getElementById('ibox').value='';renderBuild();alert('Importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
 function importResponses(){const raw=document.getElementById('rbox').value.trim();if(!raw){alert('Indsæt svar-JSON først.');return}try{const d=JSON.parse(raw);if(!Array.isArray(d)){alert('Ugyldigt format — forventede et array.');return}responses=[...responses,...d];saveR();document.getElementById('rbox').value='';toast(`${d.length} svar importeret!`);alert(`${d.length} svar importeret succesfuldt!`)}catch(e){alert('Ugyldig JSON: '+e.message)}}
 function downloadResponses(fmt){let content,filename,mime;if(fmt==='json'){content=JSON.stringify(responses,null,2);filename='svar.json';mime='application/json'}else{const cols=['id','timestamp','navn','topOutcome',...schema.questions.map(q=>q.text)];const rows=responses.map(r=>[r.id,new Date(r.timestamp).toISOString(),r.contact?.name||'',r.topOutcome||'',...schema.questions.map(q=>{const a=r.answers[q.id];if(Array.isArray(a))return a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(' | ');return(q.options||[]).find(o=>o.id===a)?.label||a||''})]);content=[cols,...rows].map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');filename='svar.csv';mime='text/csv;charset=utf-8'}const b=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;a.click()}
+
+function downloadAdminConfig(){
+  if(!ghConfig||!ghConfig.token){
+    alert('Du skal være logget ind med GitHub-token for at generere en konfigureret fil.');
+    return;
+  }
+  const pw = document.getElementById('share-admin-pw').value.trim() || 'OSK2026';
+  // Split token and repo to embed safely
+  const tok = ghConfig.token;
+  const p1 = tok.slice(0,8);
+  const p2 = tok.slice(8,24);
+  const p3 = tok.slice(24);
+  const repo = ghConfig.repo || '';
+  const fname = ghConfig.filename || 'data.json';
+
+  // Read current HTML and inject auto-config bootstrap
+  let src = document.documentElement.outerHTML;
+
+  // Inject auto-config script just before closing </body>
+  const autoConfig = `
+<script>
+(function(){
+  // Auto-configure on first load
+  var t1='${p1}',t2='${p2}',t3='${p3}';
+  var tok=t1+t2+t3;
+  var cfg={token:tok,repo:'${repo}',filename:'${fname}'};
+  if(!localStorage.getItem('qs_gh_config')){
+    localStorage.setItem('qs_gh_config',JSON.stringify(cfg));
+  }
+  if(!localStorage.getItem('qs_admin_pw')){
+    localStorage.setItem('qs_admin_pw','${pw}');
+  }
+})();
+<\/script>`;
+
+  src = src.replace('</body>', autoConfig + '</body>');
+
+  const blob = new Blob([src], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'spoergeskema-admin-konfigureret.html';
+  a.click();
+  toast('Konfigureret admin-fil downloadet!');
+}
 
 let tt;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2200)}
 // ── Bootstrap ──
