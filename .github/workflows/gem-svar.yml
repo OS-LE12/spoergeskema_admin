@@ -1,1 +1,63 @@
+name: Gem brugersvar
 
+on:
+  repository_dispatch:
+    types: [nyt-svar]
+
+permissions:
+  contents: write
+
+jobs:
+  gem-svar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hent repository
+        uses: actions/checkout@v4
+
+      - name: Gem svar i data.json
+        env:
+          SVAR_DATA: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os, datetime
+
+          # Læs nyt svar fra workflow input
+          raw = os.environ.get('SVAR_DATA', '{}')
+          nyt_svar = json.loads(raw)
+
+          # Tilføj tidsstempel hvis mangler
+          if 'timestamp' not in nyt_svar:
+              nyt_svar['timestamp'] = datetime.datetime.utcnow().isoformat()
+
+          # Indlæs eksisterende data.json
+          try:
+              with open('data.json', 'r', encoding='utf-8') as f:
+                  data = json.load(f)
+          except (FileNotFoundError, json.JSONDecodeError):
+              data = {'schema': None, 'responses': []}
+
+          if 'responses' not in data:
+              data['responses'] = []
+
+          # Tjek for duplikater (samme id)
+          eksisterende_ids = {r.get('id') for r in data['responses']}
+          if nyt_svar.get('id') not in eksisterende_ids:
+              data['responses'].append(nyt_svar)
+              print(f"Tilføjet svar fra: {nyt_svar.get('contact', {}).get('name', 'Ukendt')}")
+          else:
+              print(f"Duplikat ignoreret: {nyt_svar.get('id')}")
+
+          # Gem opdateret data.json
+          with open('data.json', 'w', encoding='utf-8') as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+
+          print(f"Total svar: {len(data['responses'])}")
+          PYEOF
+
+      - name: Commit svar
+        run: |
+          git config user.name  "Spørgeskema Bot"
+          git config user.email "bot@github-actions"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Nyt svar modtaget $(date '+%Y-%m-%d %H:%M')"
+          git push
