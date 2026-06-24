@@ -100,21 +100,25 @@
     "outcomes": [
       {
         "id": "o1",
-        "title": "Karrierefokuseret",
-        "desc": "Du er drevet af professionelle mål.",
+        "title": "Visuelt orienteret",
+        "desc": "Du har øje for det visuelle.",
         "tags": [],
         "keywords": [
-          "a1"
+          "_nv4nxx",
+          "_txby6r",
+          "_mzzkcm"
         ]
       },
       {
         "id": "o2",
-        "title": "Personlig vækst",
-        "desc": "Du søger indre udvikling og sundhed.",
+        "title": "Funktionalitet",
+        "desc": "Du forholder til funktionaliteten i systemer.",
         "tags": [],
         "keywords": [
-          "a2",
-          "a3"
+          "a3",
+          "_het213",
+          "_mtxnca",
+          "_ipxcoy"
         ]
       }
     ]
