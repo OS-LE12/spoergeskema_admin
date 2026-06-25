@@ -481,8 +481,7 @@ async function ghSave(){
       const j=await ex.json();sha=j.sha;
       // Merge: keep remote responses + local schema
       try{
-        const remote=JSON.parse(atob(j.content.replace(/
-/g,'')));
+        const remote=JSON.parse(atob(j.content.replace(/\n/g,'')));
         if(remote.responses&&remote.responses.length>responses.length){
           responses=remote.responses;
           localStorage.setItem('qs_responses_v2',JSON.stringify(responses));
