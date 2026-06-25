@@ -123,12 +123,12 @@
           {
             "id": "_a7pk58",
             "label": "Ja",
-            "nextQ": null
+            "nextQ": "__end__"
           },
           {
             "id": "_1z5d44",
             "label": "Nej",
-            "nextQ": null
+            "nextQ": "__end__"
           }
         ]
       }
