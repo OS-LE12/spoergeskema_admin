@@ -1,240 +1,243 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="da">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spørgeskema-system</title>
+<title>Spørgeskema — Admin</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --deep-green:#333C35;--light-gray:#EFECE4;--faded-green:#ABB892;
-  --dark:#333127;--accent:#F0FE89;--accent-text:#252900;
-  --bg:#EFECE4;--bg2:#E4E1D9;--card-bg:#F7F5EF;
-  --text:#333127;--text2:#5a5d53;--text3:#8a8d80;
-  --text-on-dark:#EFECE4;--text-on-dark2:#ABB892;
-  --border:rgba(51,49,39,0.14);--border2:rgba(51,49,39,0.26);
-  --border-dark:rgba(239,236,228,0.15);
-  --success-bg:#d8edcc;--success-text:#1e4a0a;
-  --info-bg:#d4e8f5;--info-text:#0d3d63;
-  --warn-bg:#fdf3d0;--warn-text:#6b4a00;
-  --danger-text:#8b1f1f;
-  --r:3px;--rlg:4px;
+  --dg:#333C35;--lg:#EFECE4;--fg:#ABB892;--dk:#333127;--ac:#F0FE89;--at:#252900;
+  --bg:#EFECE4;--bg2:#E4E1D9;--cb:#F7F5EF;
+  --t:#333127;--t2:#5a5d53;--t3:#8a8d80;
+  --tod:#EFECE4;--tod2:#ABB892;
+  --bd:rgba(51,49,39,.14);--bd2:rgba(51,49,39,.26);--bdd:rgba(239,236,228,.15);
+  --r:3px;--rl:5px;
   --font:system-ui,-apple-system,'Segoe UI',sans-serif;
-  --mono:'Courier New',monospace;
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100vh}
+
+/* ── Login ── */
+#login-overlay{position:fixed;inset:0;background:var(--dg);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1rem}
+#login-overlay.hidden{display:none}
+.login-box{width:100%;max-width:360px;background:var(--cb);border-radius:var(--rl);padding:2rem}
+.login-logo{text-align:center;margin-bottom:1.5rem}
+.login-logo h1{font-size:18px;font-weight:500;color:var(--t)}
+.login-logo p{font-size:13px;color:var(--t3);margin-top:3px}
+.login-err{font-size:13px;color:#8b1f1f;background:rgba(139,31,31,.07);border-radius:var(--r);padding:8px 10px;margin-bottom:10px;display:none}
+.lf{margin-bottom:14px}
+.lf label{font-size:13px;color:var(--t2);display:block;margin-bottom:4px}
+.lf input{width:100%;font-size:14px;padding:9px 11px;border:.5px solid var(--bd2);border-radius:var(--r);background:#fff;color:var(--t);font-family:var(--font);outline:none}
+.lf input:focus{border-color:var(--dg);box-shadow:0 0 0 2px rgba(51,60,53,.1)}
+.lf .hint{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.5}
+.sep{height:.5px;background:var(--bd);margin:1.25rem 0}
+.lbtn{width:100%;padding:11px;background:var(--dg);color:var(--tod);border:none;border-radius:var(--r);font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font)}
+.lbtn:hover{background:#253028}
+.lskip{width:100%;text-align:center;margin-top:10px;font-size:12px;color:var(--t3);background:none;border:none;cursor:pointer;font-family:var(--font)}
+.lskip:hover{color:var(--t2)}
+
+/* ── Layout ── */
 .shell{display:flex;min-height:100vh}
-.sidebar{width:230px;background:var(--deep-green);padding:1.5rem 0;flex-shrink:0;display:flex;flex-direction:column}
-.slogo{padding:0 1.25rem 1.25rem;border-bottom:.5px solid var(--border-dark);margin-bottom:.75rem}
-.slogo h1{font-size:15px;font-weight:500;color:var(--text-on-dark);letter-spacing:.01em}
-.slogo p{font-size:12px;color:var(--text-on-dark2);margin-top:3px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;font-size:14px;color:var(--text-on-dark2);cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background .12s,color .12s}
-.nav-item:hover{background:rgba(239,236,228,.08);color:var(--text-on-dark)}
-.nav-item.active{background:var(--accent);color:var(--accent-text);font-weight:500}
-.nav-item.active .ni{color:var(--accent-text)}
-.ni{font-size:15px;width:18px;text-align:center;flex-shrink:0;color:var(--text-on-dark2)}
-.ndiv{height:.5px;background:var(--border-dark);margin:.5rem 0}
-.nsec{font-size:10px;color:var(--faded-green);padding:6px 1.25rem 4px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
-.sbot{margin-top:auto;padding:1rem 1.25rem 0;border-top:.5px solid var(--border-dark)}
-.mbadge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-on-dark2)}
-.mdot{width:7px;height:7px;border-radius:50%;background:var(--faded-green);flex-shrink:0}
-.main{flex:1;overflow-y:auto;background:var(--bg)}
-.page{max-width:720px;margin:0 auto;padding:2.5rem 2rem 5rem;display:none}
+.sidebar{width:220px;background:var(--dg);display:flex;flex-direction:column;flex-shrink:0}
+.slogo{padding:1.25rem 1.25rem 1rem;border-bottom:.5px solid var(--bdd)}
+.slogo h1{font-size:15px;font-weight:500;color:var(--tod)}
+.slogo p{font-size:11px;color:var(--tod2);margin-top:2px}
+.nsec{font-size:10px;color:rgba(171,184,146,.7);padding:10px 1.25rem 4px;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+.nitem{display:flex;align-items:center;gap:10px;padding:9px 1.25rem;font-size:14px;color:var(--tod2);cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:background .12s,color .12s}
+.nitem:hover{background:rgba(239,236,228,.08);color:var(--tod)}
+.nitem.active{background:var(--ac);color:var(--at);font-weight:500}
+.nitem.active .ni{color:var(--at)}
+.ni{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.ndiv{height:.5px;background:var(--bdd);margin:.5rem 0}
+.sbot{margin-top:auto;padding:1rem 1.25rem;border-top:.5px solid var(--bdd)}
+.sdot{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tod2)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--fg);flex-shrink:0;transition:background .3s}
+.dot.saving{background:var(--ac)}
+.dot.error{background:#e07070}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* ── GitHub bar ── */
+#gh-bar{background:var(--dg);padding:6px 1.25rem;display:none;align-items:center;gap:8px;border-bottom:.5px solid var(--bdd);flex-wrap:wrap}
+.gh-info{flex:1;font-size:12px;color:var(--tod2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gh-actions{display:flex;gap:6px;flex-shrink:0}
+.ghbtn{padding:3px 10px;border:.5px solid var(--bdd);border-radius:var(--r);background:transparent;color:var(--tod2);font-size:11px;cursor:pointer;font-family:var(--font)}
+.ghbtn:hover{background:rgba(239,236,228,.1);color:var(--tod)}
+.ghbtn.p{background:var(--ac);color:var(--at);border-color:var(--ac)}
+.ghbtn.p:hover{background:#ddf000}
+
+/* ── Pages ── */
+.page{display:none;flex:1;overflow-y:auto}
 .page.active{display:block}
+.inner{max-width:700px;margin:0 auto;padding:2rem 1.5rem 4rem}
+
+/* ── Typography ── */
 .ptitle{font-size:22px;font-weight:500;margin-bottom:4px}
-.psub{font-size:14px;color:var(--text2);margin-bottom:2rem;line-height:1.65}
-.card{background:var(--card-bg);border:.5px solid var(--border);border-radius:var(--rlg);padding:1.25rem;margin-bottom:14px}
-.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.psub{font-size:14px;color:var(--t2);margin-bottom:1.75rem;line-height:1.6}
+.slbl{font-size:11px;font-weight:500;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin:1rem 0 8px}
+.divid{height:.5px;background:var(--bd);margin:1rem 0}
+
+/* ── Cards ── */
+.card{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px}
+.card.hl{border:1.5px solid var(--dg)}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .ct{font-size:15px;font-weight:500}
-label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
-input[type=text],textarea,select{width:100%;font-size:14px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);background:#fff;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
-input[type=text]:focus,textarea:focus,select:focus{border-color:var(--deep-green);box-shadow:0 0 0 2px rgba(51,60,53,.12)}
+
+/* ── Form ── */
+label{font-size:13px;color:var(--t2);display:block;margin-bottom:4px}
+input[type=text],input[type=email],input[type=password],textarea,select{
+  width:100%;font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);
+  border-radius:var(--r);background:#fff;color:var(--t);font-family:var(--font);outline:none;
+  transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--dg);box-shadow:0 0 0 2px rgba(51,60,53,.1)}
 textarea{resize:vertical;min-height:60px;line-height:1.5}
 select{cursor:pointer}
-.row{display:flex;gap:10px;margin-bottom:12px}
-.row>*{flex:1;min-width:0}
 .field{margin-bottom:12px}
-.btn{padding:8px 18px;border:.5px solid var(--border2);border-radius:var(--r);background:transparent;color:var(--text);font-size:14px;cursor:pointer;font-family:var(--font);transition:background .12s,opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.fhint{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.5}
+
+/* ── Buttons ── */
+.btn{padding:8px 16px;border:.5px solid var(--bd2);border-radius:var(--r);background:transparent;color:var(--t);font-size:14px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:background .12s}
 .btn:hover{background:var(--bg2)}
-.btn:active{transform:scale(.98)}
-.btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
-.btnp{background:var(--deep-green);color:var(--text-on-dark);border-color:var(--deep-green);font-weight:500}
-.btnp:hover{background:#253028;border-color:#253028}
-.btna{background:var(--accent);color:var(--accent-text);border-color:#c8d500;font-weight:500}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btnp{background:var(--dg);color:var(--tod);border-color:var(--dg);font-weight:500}
+.btnp:hover{background:#253028}
+.btna{background:var(--ac);color:var(--at);border-color:#c8d500;font-weight:500}
 .btna:hover{background:#ddf000}
-.btnd{color:var(--danger-text);border-color:rgba(139,31,31,.25)}
+.btnd{color:#8b1f1f;border-color:rgba(139,31,31,.25)}
 .btnd:hover{background:rgba(139,31,31,.06)}
 .btnsm{padding:5px 10px;font-size:13px}
 .btnbl{width:100%;justify-content:center}
-.btnda{border-style:dashed;color:var(--text2)}
-.btnda:hover{color:var(--text);background:var(--bg2)}
-.notice{padding:10px 14px;border-radius:var(--r);font-size:14px;margin-bottom:1rem;border:.5px solid;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.ni-info{background:var(--info-bg);border-color:rgba(13,61,99,.2);color:var(--info-text)}
-.ni-ok{background:var(--success-bg);border-color:rgba(30,74,10,.2);color:var(--success-text)}
-.ni-warn{background:var(--warn-bg);border-color:rgba(107,74,0,.2);color:var(--warn-text)}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r);font-size:12px;font-weight:500;border:none;cursor:default}
-.bg-g{background:var(--deep-green);color:var(--faded-green)}
-.bg-f{background:#d8e2cf;color:#2d4028}
-.bg-gr{background:var(--bg2);color:var(--text2)}
-.bg-a{background:var(--accent);color:var(--accent-text)}
-.bc{cursor:pointer;transition:opacity .12s}
-.bc:hover{opacity:.75}
-.slbl{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin:1rem 0 8px}
-.divid{height:.5px;background:var(--border);margin:1rem 0}
-.qcard{background:var(--card-bg);border:.5px solid var(--border);border-radius:var(--rlg);margin-bottom:8px;overflow:hidden}
+.btnda{border-style:dashed;color:var(--t2)}
+.btnda:hover{color:var(--t);background:var(--bg2)}
+
+/* ── Notices ── */
+.notice{padding:10px 14px;border-radius:var(--r);font-size:14px;margin-bottom:1rem;border:.5px solid;display:flex;gap:8px;line-height:1.5}
+.notice-info{background:#d4e8f5;border-color:rgba(13,61,99,.2);color:#0d3d63}
+.notice-ok{background:#d8edcc;border-color:rgba(30,74,10,.2);color:#1e4a0a}
+.notice-warn{background:#fdf3d0;border-color:rgba(107,74,0,.2);color:#6b4a00}
+
+/* ── Question cards ── */
+.qcard{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);margin-bottom:8px;overflow:hidden}
 .qch{display:flex;align-items:center;gap:10px;padding:12px 1.25rem;cursor:pointer;user-select:none}
 .qch:hover{background:var(--bg2)}
-.qcb{padding:14px 1.25rem 1.25rem;border-top:.5px solid var(--border)}
-.qnb{width:22px;height:22px;background:var(--deep-green);color:var(--faded-green);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:2px}
-.qtp{flex:1;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.qtt{font-size:11px;color:var(--text3);background:var(--bg2);padding:2px 8px;border-radius:99px;flex-shrink:0}
-.orow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.qcb{padding:14px 1.25rem 1.25rem;border-top:.5px solid var(--bd)}
+.qnb{width:22px;height:22px;background:var(--dg);color:var(--fg);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;border-radius:2px;flex-shrink:0}
+.qtp{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qtt{font-size:11px;color:var(--t3);background:var(--bg2);padding:2px 8px;border-radius:99px;flex-shrink:0}
+.chev{font-size:12px;color:var(--t3);transition:transform .2s;flex-shrink:0}
+.collapsed .qcb{display:none}
+.collapsed .chev{transform:rotate(-90deg)}
+.orow{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .orow input{flex:1}
-.onxt{width:190px;flex-shrink:0;font-size:13px;padding:6px 8px}
+.onxt{flex-shrink:0;font-size:13px;padding:6px 8px;width:185px}
+
+/* ── Badges / keywords ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r);font-size:12px;font-weight:500;border:none;cursor:default}
+.bg-g{background:var(--dg);color:var(--fg)}
+.bg-f{background:#d8e2cf;color:#2d4028}
+.bg-gr{background:var(--bg2);color:var(--t2)}
+.bg-a{background:var(--ac);color:var(--at)}
+.bc{cursor:pointer;transition:opacity .12s}
+.bc:hover{opacity:.75}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12px;padding:3px 9px;border-radius:var(--r);background:var(--bg2);color:var(--t2);border:.5px solid var(--bd)}
+
+/* ── Stats ── */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
-.sc{background:var(--deep-green);border-radius:var(--r);padding:1rem;text-align:center}
-.sn{font-size:26px;font-weight:500;color:var(--text-on-dark)}
-.sl{font-size:12px;color:var(--text-on-dark2);margin-top:2px}
-.qwrap{max-width:560px;margin:0 auto}
-.pbg{height:3px;background:var(--border);margin-bottom:1.75rem}
-.pf{height:3px;background:var(--deep-green);transition:width .4s ease}
-.qsl{font-size:12px;color:var(--text3);margin-bottom:6px}
-.qt{font-size:20px;font-weight:500;margin-bottom:6px;line-height:1.4;color:var(--text)}
-.qsub{font-size:14px;color:var(--text2);margin-bottom:1.25rem;line-height:1.5}
-.obtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:.5px solid var(--border);border-radius:var(--rlg);background:var(--card-bg);cursor:pointer;font-size:15px;color:var(--text);text-align:left;width:100%;margin-bottom:8px;transition:border-color .15s,background .15s;font-family:var(--font)}
-.obtn:hover{border-color:var(--faded-green);background:#EBE9E1}
-.obtn.sel{border:1.5px solid var(--deep-green);background:#d6ddd0;color:var(--dark)}
-.rc{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s}
-.obtn.sel .rc{border-color:var(--deep-green)}
-.rd{width:10px;height:10px;border-radius:50%;background:var(--deep-green);display:none}
-.obtn.sel .rd{display:block}
-.qnav{display:flex;gap:10px;margin-top:10px}
-.rcard{border:.5px solid var(--border);border-radius:var(--rlg);padding:1.25rem;margin-bottom:12px;background:var(--card-bg)}
-.rcard.top{border:1.5px solid var(--deep-green);background:var(--deep-green)}
-.rtitle{font-size:17px;font-weight:500;color:var(--text);margin-bottom:4px}
-.rcard.top .rtitle{color:var(--text-on-dark)}
-.rdesc{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:10px}
-.rcard.top .rdesc{color:var(--faded-green)}
-.sbg{height:4px;background:var(--border)}
-.sf{height:4px;background:var(--faded-green);transition:width .6s ease}
-.rcard.top .sf{background:var(--accent)}
-.spct{font-size:12px;color:var(--text2);margin-top:4px}
-.rcard.top .spct{color:var(--faded-green)}
-.ri{border:.5px solid var(--border);border-radius:var(--rlg);padding:1rem 1.25rem;margin-bottom:10px;background:var(--card-bg)}
-.rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.rq{font-size:12px;color:var(--text2);margin-bottom:1px}
-.ra{font-size:14px;font-weight:500;color:var(--text)}
-.rag{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.sc{background:var(--dg);border-radius:var(--r);padding:1rem;text-align:center}
+.sn{font-size:26px;font-weight:500;color:var(--tod)}
+.sl{font-size:12px;color:var(--tod2);margin-top:2px}
 .brow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:14px}
-.blbl{flex:1;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.btrk{width:140px;height:5px;background:var(--border);flex-shrink:0}
-.bfil{height:5px;background:var(--faded-green)}
-.bcnt{width:20px;text-align:right;color:var(--text2);font-size:13px;flex-shrink:0}
-.cbox{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--r);padding:12px;font-family:var(--mono);font-size:13px;color:var(--text2);word-break:break-all;max-height:120px;overflow-y:auto;margin-bottom:10px}
-.iarea{width:100%;min-height:100px;font-family:var(--mono);font-size:13px}
+.blbl{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btrk{width:120px;height:5px;background:var(--bd);flex-shrink:0}
+.bfil{height:5px;background:var(--fg)}
+.bcnt{width:24px;text-align:right;color:var(--t2);font-size:13px;flex-shrink:0}
+.ri{border:.5px solid var(--bd);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:10px;background:var(--cb)}
+.rh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.rag{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.rq{font-size:12px;color:var(--t2);margin-bottom:1px}
+.ra{font-size:14px;font-weight:500}
+
+/* ── Img upload ── */
+.imgup{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:.5px dashed var(--bd2);border-radius:var(--r);font-size:13px;color:var(--t2);cursor:pointer}
+.imgup:hover{background:var(--bg2);color:var(--t)}
+.imgprev{position:relative;display:inline-block}
+.imgprev img{max-width:100%;max-height:160px;border-radius:var(--rl);border:.5px solid var(--bd);display:block}
+.imgprev .rmimg{position:absolute;top:5px;right:5px;padding:3px 8px;background:rgba(51,49,39,.7);color:#fff;border:none;border-radius:var(--r);font-size:12px;cursor:pointer}
+
+/* ── Code box ── */
+.cbox{background:var(--bg2);border:.5px solid var(--bd);border-radius:var(--r);padding:12px;font-family:monospace;font-size:13px;color:var(--t2);word-break:break-all;max-height:120px;overflow-y:auto;margin-bottom:10px}
+.iarea{width:100%;min-height:100px;font-family:monospace;font-size:13px}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--ac);color:var(--at);padding:10px 16px;border-radius:var(--r);font-size:14px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10000}
+#toast.show{opacity:1}
+
+/* ── Mobile ── */
 @media(max-width:640px){
   .sidebar{width:52px}
-  .slogo,.nsec,.nav-item span,.sbot{display:none}
-  .nav-item{justify-content:center;padding:12px}
-  .page{padding:1.25rem 1rem 3rem}
+  .slogo,.nsec,.nitem span,.sbot p,.sdot span{display:none}
+  .nitem{justify-content:center;padding:12px}
+  .inner{padding:1.25rem 1rem 3rem}
   .sgrid{grid-template-columns:repeat(2,1fr)}
+  .orow{flex-wrap:wrap}
+  .onxt{width:100%}
+  .row{flex-direction:column}
+  .gh-info{display:none}
 }
-#toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:var(--accent-text);padding:10px 18px;border-radius:var(--r);font-size:14px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:1000}
-#toast.show{opacity:1}
-.collapsed .qcb{display:none}
-.chev{transition:transform .2s;font-size:13px;color:var(--text3)}
-.collapsed .chev{transform:rotate(-90deg)}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.tag{font-size:12px;padding:3px 9px;border-radius:var(--r);background:var(--bg2);color:var(--text2);border:.5px solid var(--border)}
-.img-upload-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:.5px dashed var(--border2);border-radius:var(--r);font-size:13px;color:var(--text2);cursor:pointer;transition:background .12s}
-.img-upload-btn:hover{background:var(--bg2);color:var(--text)}
-.img-preview{position:relative;display:inline-block}
-.img-preview img{max-width:100%;max-height:180px;border-radius:var(--rlg);border:.5px solid var(--border);display:block}
-.img-remove{position:absolute;top:6px;right:6px;padding:4px 8px;background:rgba(51,49,39,.7);color:#fff;border:none;border-radius:var(--r);font-size:12px;cursor:pointer}
-.img-remove:hover{background:rgba(51,49,39,.9)}
-.q-img{width:100%;max-height:220px;object-fit:cover;border-radius:var(--rlg);margin-bottom:1.25rem;border:.5px solid var(--border)}
-/* Share page */
-.share-preview{background:var(--deep-green);color:var(--text-on-dark);border-radius:var(--rlg);padding:1.5rem;margin-bottom:1rem}
-.share-preview h3{font-size:16px;font-weight:500;margin-bottom:6px;color:var(--accent)}
-.share-preview p{font-size:14px;color:var(--text-on-dark2);line-height:1.6}
-
-/* ── Login overlay ── */
-#login-overlay{position:fixed;inset:0;background:var(--deep-green);display:flex;align-items:center;justify-content:center;z-index:9999}
-#login-overlay.hidden{display:none}
-.login-box{width:100%;max-width:380px;padding:2rem;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:0 8px 32px rgba(0,0,0,.25)}
-.login-logo{text-align:center;margin-bottom:1.75rem}
-.login-logo h1{font-size:20px;font-weight:500;color:var(--text)}
-.login-logo p{font-size:13px;color:var(--text2);margin-top:4px}
-.login-field{margin-bottom:14px}
-.login-field label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
-.login-field input{width:100%;font-size:14px;padding:9px 11px;border:.5px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
-.login-field input:focus{border-color:var(--deep-green);box-shadow:0 0 0 2px rgba(51,60,53,.12)}
-.login-hint{font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5}
-.login-err{font-size:13px;color:var(--danger-text);margin-bottom:10px;display:none;padding:8px 10px;background:rgba(139,31,31,.07);border-radius:var(--radius)}
-.login-sep{height:.5px;background:var(--border);margin:1.25rem 0}
-/* ── GitHub status bar ── */
-#gh-bar{display:flex;align-items:center;gap:10px;padding:7px 1.25rem;background:var(--deep-green);font-size:12px;color:var(--text-on-dark2);border-bottom:.5px solid var(--border-on-dark);flex-shrink:0}
-#gh-bar .gh-dot{width:7px;height:7px;border-radius:50%;background:var(--faded-green);flex-shrink:0;transition:background .3s}
-#gh-bar .gh-dot.saving{background:var(--accent)}
-#gh-bar .gh-dot.error{background:#e07070}
-#gh-bar .gh-info{flex:1}
-#gh-bar .gh-actions{display:flex;gap:6px}
-.gh-btn{padding:3px 10px;border:.5px solid var(--border-on-dark);border-radius:var(--radius);background:transparent;color:var(--text-on-dark2);font-size:11px;cursor:pointer;font-family:var(--font)}
-.gh-btn:hover{background:rgba(239,236,228,.1);color:var(--text-on-dark)}
-.gh-btn.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
-.gh-btn.primary:hover{background:#ddf000}
-
+@media(max-width:400px){
+  .login-box{padding:1.5rem 1rem}
+}
 </style>
 </head>
 <body>
 
-<!-- Login overlay -->
+<!-- Login -->
 <div id="login-overlay">
   <div class="login-box">
     <div class="login-logo">
+      <div class="badge bg-a" style="margin-bottom:10px">Admin</div>
       <h1>Spørgeskema-system</h1>
       <p>Log ind for at fortsætte</p>
     </div>
-    <div class="login-field">
+    <div class="lf">
       <label>Adgangskode</label>
       <input type="password" id="login-pw" placeholder="Din adgangskode" autocomplete="current-password">
     </div>
-    <div class="login-sep"></div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">
-      <strong style="color:var(--text)">GitHub-synkronisering</strong><br>
-      Udfyld nedenfor for at gemme og hente data direkte fra GitHub.
-    </div>
-    <div class="login-field">
-      <label>GitHub Personal Access Token</label>
-      <input type="password" id="login-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-      <div class="login-hint">Opret under GitHub → Settings → Developer settings → Personal access tokens → Fine-grained. Giv adgang til dit admin-repository med <em>Contents: Read &amp; Write</em>.</div>
-    </div>
-    <div class="login-field">
-      <label>Repository (bruger/repo-navn)</label>
-      <input type="text" id="login-repo" placeholder="ditbrugernavn/spørgeskema-admin">
-    </div>
-    <div class="login-field">
-      <label>Filnavn i repository</label>
-      <input type="text" id="login-filename" placeholder="spørgeskema-system.html" value="data.json">
-      <div class="login-hint">Anbefalet: <em>data.json</em> — gemmer kun spørgeskema-data, ikke hele HTML-filen.</div>
-    </div>
     <div class="login-err" id="login-err"></div>
-    <button class="btn btnp btnbl" id="login-btn" style="margin-top:6px">Log ind →</button>
-    <div style="margin-top:12px;text-align:center">
-      <button style="font-size:12px;color:var(--text3);background:none;border:none;cursor:pointer" onclick="loginOffline()">Fortsæt uden GitHub (kun lokal)</button>
-    </div>
+    <button class="lbtn" id="login-btn">Log ind →</button>
+    <div class="sep"></div>
+    <details style="font-size:13px;color:var(--t2)">
+      <summary style="cursor:pointer;color:var(--t3);font-size:12px">GitHub-synkronisering (valgfrit)</summary>
+      <div style="margin-top:12px">
+        <div class="lf">
+          <label>Personal Access Token</label>
+          <input type="password" id="login-token" placeholder="github_pat_xxxx" autocomplete="off">
+          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">GitHub → Settings → Developer settings → Fine-grained tokens. Giv Contents: Read &amp; Write på dit admin-repo.</div>
+        </div>
+        <div class="lf">
+          <label>Repository</label>
+          <input type="text" id="login-repo" placeholder="bruger/repo-navn">
+        </div>
+        <div class="lf">
+          <label>Filnavn</label>
+          <input type="text" id="login-filename" placeholder="data.json" value="data.json">
+        </div>
+      </div>
+    </details>
   </div>
 </div>
 
-<!-- GitHub status bar (shown when logged in) -->
-<div id="gh-bar" style="display:none">
-  <div class="gh-dot" id="gh-dot"></div>
+<!-- GitHub bar -->
+<div id="gh-bar">
+  <div class="dot" id="gh-dot"></div>
   <div class="gh-info" id="gh-info">Ikke tilsluttet</div>
   <div class="gh-actions">
-    <button class="gh-btn primary" onclick="ghSave()">↑ Gem til GitHub</button>
-    <button class="gh-btn" onclick="ghPull()">↓ Hent fra GitHub</button>
-    <button class="gh-btn" onclick="doLogout()">Log ud</button>
+    <button class="ghbtn p" onclick="ghSave()">↑ Gem</button>
+    <button class="ghbtn" onclick="ghPull(false)">↓ Hent</button>
+    <button class="ghbtn" onclick="doLogout()">Log ud</button>
   </div>
 </div>
 
@@ -242,26 +245,29 @@ select{cursor:pointer}
 <nav class="sidebar">
   <div class="slogo"><h1>Spørgeskema</h1><p>Beslutningssystem</p></div>
   <div class="nsec">Admin</div>
-  <button class="nav-item active" onclick="showPage('build',this)"><span class="ni">⚙</span><span>Byg spørgeskema</span></button>
-  <button class="nav-item" onclick="showPage('outcomes',this)"><span class="ni">🎯</span><span>Udfald &amp; logik</span></button>
-  <button class="nav-item" onclick="showPage('data',this)"><span class="ni">📊</span><span>Indsamlede svar</span></button>
-  <button class="nav-item" onclick="showPage('share',this)"><span class="ni">🔗</span><span>Del med brugere</span></button>
-  <button class="nav-item" onclick="showPage('export',this)"><span class="ni">↗</span><span>Eksport / import</span></button>
+  <button class="nitem active" onclick="showPage('build',this)"><span class="ni">⚙</span><span>Byg spørgeskema</span></button>
+  <button class="nitem" onclick="showPage('outcomes',this)"><span class="ni">🎯</span><span>Udfald &amp; logik</span></button>
+  <button class="nitem" onclick="showPage('data',this)"><span class="ni">📊</span><span>Indsamlede svar</span></button>
+  <button class="nitem" onclick="showPage('share',this)"><span class="ni">🔗</span><span>Del med brugere</span></button>
+  <button class="nitem" onclick="showPage('export',this)"><span class="ni">↗</span><span>Eksport / import</span></button>
   <div class="ndiv"></div>
   <div class="nsec">Bruger</div>
-  <button class="nav-item" onclick="showPage('quiz',this)"><span class="ni">▶</span><span>Afspil spørgeskema</span></button>
-  <div class="sbot"><div class="mbadge"><div class="mdot"></div><span id="qcnt">0 spørgsmål</span></div></div>
+  <button class="nitem" onclick="showPage('quiz',this)"><span class="ni">▶</span><span>Afspil spørgeskema</span></button>
+  <div class="sbot">
+    <div class="sdot"><div class="dot" id="sb-dot"></div><span id="qcnt">0 spørgsmål</span></div>
+  </div>
 </nav>
 <main class="main">
 
 <!-- BUILD -->
 <div class="page active" id="page-build">
+<div class="inner">
   <div class="ptitle">Byg spørgeskema</div>
-  <div class="psub">Definer spørgsmål, svarmuligheder og forgreningslogik.</div>
+  <div class="psub">Tilføj spørgsmål, svarmuligheder og forgreningslogik.</div>
   <div class="card">
     <div class="slbl">Generelt</div>
-    <div class="field"><label>Titel</label><input type="text" id="s-title" placeholder="Spørgeskema-titel..." oninput="schema.title=this.value;updateBadge()"></div>
-    <div class="field"><label>Beskrivelse (vises for brugeren)</label><textarea id="s-desc" placeholder="Beskriv formålet..." oninput="schema.description=this.value"></textarea></div>
+    <div class="field"><label>Titel</label><input type="text" id="s-title" oninput="schema.title=this.value;updateBadge()"></div>
+    <div class="field"><label>Beskrivelse</label><textarea id="s-desc" oninput="schema.description=this.value"></textarea></div>
   </div>
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
     <span id="qslbl">Spørgsmål (0)</span>
@@ -270,267 +276,219 @@ select{cursor:pointer}
   <div id="qlist"></div>
   <button class="btn btnda btnbl" onclick="addQ()" style="margin-bottom:1.5rem">+ Tilføj spørgsmål</button>
   <button class="btn btnp btnbl" onclick="saveAll()">💾 Gem alt</button>
-</div>
+</div></div>
 
 <!-- OUTCOMES -->
 <div class="page" id="page-outcomes">
+<div class="inner">
   <div class="ptitle">Udfald &amp; logik</div>
-  <div class="psub">Definer hvilke udfald systemet kan anbefale. Klik på svar-badges for at knytte dem til et udfald.</div>
-  <div class="notice ni-info"><span>ℹ</span><span>Matchprocent = (matchende svar / antal nøgleord) × 100. Højeste score vises som "Bedste match".</span></div>
+  <div class="psub">Klik på svar-badges for at knytte dem til et udfald. Systemet beregner matchprocent automatisk.</div>
+  <div class="notice notice-info"><span>ℹ</span><span>Matchprocent = (matchende svar ÷ antal nøgleord) × 100. Højeste score vises som "Bedste match".</span></div>
   <div id="olist"></div>
   <button class="btn btnda btnbl" onclick="addOutcome()" style="margin-bottom:1.5rem">+ Tilføj udfald</button>
   <button class="btn btnp btnbl" onclick="saveAll()">💾 Gem alt</button>
-</div>
+</div></div>
 
 <!-- DATA -->
 <div class="page" id="page-data">
+<div class="inner">
   <div class="ptitle">Indsamlede svar</div>
-  <div class="psub">Oversigt over alle brugersvar. Data gemmes lokalt i browseren.</div>
+  <div class="psub">Oversigt over alle brugersvar.</div>
   <div id="dcontent"></div>
-</div>
+</div></div>
 
 <!-- SHARE -->
 <div class="page" id="page-share">
+<div class="inner">
   <div class="ptitle">Del med brugere</div>
-  <div class="psub">Generer en selvstændig HTML-fil som kun indeholder spørgeskemaet — uden admin-funktioner. Del filen direkte med dine brugere.</div>
-  <div class="share-preview" id="share-preview">
-    <h3 id="sp-title">—</h3>
-    <p id="sp-desc">—</p>
+  <div class="psub">Generer brugerfilen og del den via QR-kode eller link.</div>
+  <div class="card hl">
+    <div class="ct" style="margin-bottom:8px">Download brugerfil</div>
+    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Filen indeholder spørgeskemaet. Upload den som <code>index.html</code> til dit bruger-repository på GitHub Pages.</p>
+    <button class="btn btna" onclick="downloadUserFile()">⬇ Download brugerfil</button>
   </div>
-  <div class="card">
-    <div class="ct" style="margin-bottom:8px">Download bruger-fil</div>
-    <p style="font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.6">Filen indeholder spørgeskemaet indlejret som data. Brugere åbner den i en browser og besvarer spørgsmålene. Deres svar gemmes i filen — eller du kan modtage dem via e-mail (se nedenfor).</p>
-    <div class="field">
-      <label>Returnér svar til e-mail (valgfrit)</label>
-      <input type="text" id="share-email" placeholder="din@email.dk — lad stå tom for kun lokal gemning">
-    </div>
-
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btna" onclick="downloadUserFile()">⬇ Download bruger-HTML</button>
-      <button class="btn" onclick="showPage('quiz',document.querySelector('[onclick*=quiz]'))">▶ Forhåndsvis som bruger</button>
-    </div>
+  <div class="card hl" style="margin-top:12px">
+    <div class="ct" style="margin-bottom:8px">Del admin-adgang</div>
+    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Generer en adgangsfil til en kollega. De åbner filen i browseren og viderestilles automatisk til admin med alle indstillinger klar.</p>
+    <div class="field"><label>Kollegaens adgangskode</label><input type="text" id="share-pw" value="OSK2026"></div>
+    <button class="btn btnp" onclick="downloadAdminAccess()">⬇ Download admin-adgang.html</button>
   </div>
-  <div class="card">
-    <div class="ct" style="margin-bottom:8px">Sådan virker det</div>
-    <p style="font-size:14px;color:var(--text2);line-height:1.7">
-      1. Klik <strong>Download bruger-HTML</strong> og upload som <code>index.html</code> til dit bruger-repository<br>
-      2. Del QR-koden eller linket med dine brugere<br>
-      3. Brugeren åbner spørgeskemaet og besvarer det<br>
-      4. Første bruger bliver bedt om at indtaste Dispatch Token én gang i deres browser<br>
-      5. Svar sendes automatisk til GitHub Actions og gemmes i <code>data.json</code><br>
-      6. Åbn admin og klik <strong>↓ Hent fra GitHub</strong> for at se svarene
-    </p>
-    <div style="margin-top:12px;padding:10px 14px;border-radius:var(--radius);background:var(--warn-bg);border:0.5px solid rgba(107,74,0,.2);font-size:13px;color:var(--warn-text)">
-      ⚠ Brugerne skal indtaste Dispatch Token én gang. Del tokenet med dem på forhånd via e-mail.
-    </div>
+  <div class="card" style="margin-top:12px">
+    <div class="ct" style="margin-bottom:8px">Sådan deler du filen</div>
+    <p style="font-size:14px;color:var(--t2);line-height:1.7">1. Download brugerfilen og upload den til GitHub<br>2. Del QR-kode eller URL med brugerne<br>3. Svar sendes automatisk til GitHub — åbn admin og klik <strong>↓ Hent</strong> for at se dem</p>
   </div>
-</div>
+</div></div>
 
 <!-- EXPORT -->
 <div class="page" id="page-export">
+<div class="inner">
   <div class="ptitle">Eksport &amp; import</div>
-  <div class="psub">Sikkerhedskopiér dit spørgeskema, flyt det til en anden computer, eller importér indsamlede svar.</div>
-
-  <div class="card" style="border:1.5px solid var(--deep-green)">
-    <div class="ct" style="margin-bottom:8px">Del admin-adgang</div>
-    <p style="font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.6">
-      Download en konfigureret admin-fil med dine GitHub-oplysninger forudfyldt.
-      Modtageren skal kun indtaste adgangskoden for at komme i gang — ingen token eller repository at udfylde.
-    </p>
-    <div class="field">
-      <label>Adgangskode modtageren skal bruge</label>
-      <input type="text" id="share-admin-pw" placeholder="OSK2026" value="OSK2026">
-    </div>
-    <button class="btn btnp" onclick="downloadAdminConfig()">⬇ Download konfigureret admin-fil</button>
-  </div>
-  <div class="divider"></div>
-
+  <div class="psub">Sikkerhedskopiér eller flyt dit spørgeskema.</div>
   <div class="card">
     <div class="ct" style="margin-bottom:10px">Eksportér spørgeskema</div>
     <div class="cbox" id="ebox"></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btnp" onclick="copyExport()">📋 Kopiér JSON</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btnp" onclick="copyExport()">📋 Kopiér</button>
       <button class="btn" onclick="downloadExport()">⬇ Download .json</button>
     </div>
   </div>
   <div class="card">
     <div class="ct" style="margin-bottom:10px">Importér spørgeskema</div>
-    <div class="field"><label>Indsæt JSON her</label><textarea class="iarea" id="ibox" placeholder='{"title":"...","questions":[...]}'></textarea></div>
+    <div class="field"><textarea class="iarea" id="ibox" placeholder='{"title":"...","questions":[]}'></textarea></div>
     <button class="btn btnp" onclick="doImport()">⬆ Importér</button>
   </div>
   <div class="card">
     <div class="ct" style="margin-bottom:10px">Importér brugersvar (JSON)</div>
-    <p style="font-size:14px;color:var(--text2);margin-bottom:12px;line-height:1.5">Indsæt svar-JSON modtaget fra en bruger.</p>
-    <div class="field"><textarea class="iarea" id="rbox" placeholder='[{"id":"...","timestamp":...,"answers":{...}}]'></textarea></div>
+    <div class="field"><textarea class="iarea" id="rbox" placeholder='[{"id":"...","answers":{...}}]'></textarea></div>
     <button class="btn btnp" onclick="importResponses()">⬆ Importér svar</button>
   </div>
   <div class="card">
     <div class="ct" style="margin-bottom:10px">Eksportér svardata</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn" onclick="downloadResponses('json')">⬇ Download JSON</button>
-      <button class="btn" onclick="downloadResponses('csv')">⬇ Download CSV</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" onclick="downloadResponses('json')">⬇ JSON</button>
+      <button class="btn" onclick="downloadResponses('csv')">⬇ CSV</button>
     </div>
   </div>
-</div>
+</div></div>
 
-<!-- QUIZ -->
+<!-- QUIZ PREVIEW -->
 <div class="page" id="page-quiz">
-  <div class="qwrap" id="qcontainer"></div>
-</div>
+<div class="inner" style="max-width:560px">
+  <div class="notice notice-warn" style="margin-bottom:1.5rem"><span>⚠</span><span>Forhåndsvisning — svar gemmes ikke.</span></div>
+  <div id="qcontainer"></div>
+</div></div>
 
 </main>
 </div>
 <div id="toast">Gemt ✓</div>
+
 <script>
-const LSS='qs_schema_v2',LSR='qs_responses_v2',LS_GH='qs_gh_config',ADMIN_PW_KEY='qs_admin_pw';
+// ── Constants ──
+const LSS='qs_v3_schema',LSR='qs_v3_responses',LSG='qs_v3_ghconfig',LSP='qs_v3_pw',LSL='qs_v3_loggedin';
+
+// ── State ──
+let schema=null,responses=[],ghConfig=null,qstate={qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null},openCards={};
+
+// ── Helpers ──
+function uid(){return '_'+Math.random().toString(36).slice(2,8)}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
+function ds(){return{title:'Mit spørgeskema',description:'Beskriv formålet her.',questions:[],outcomes:[]}}
+
+// ── Local storage ──
+function loadSchema(){try{return JSON.parse(localStorage.getItem(LSS))||ds()}catch(e){return ds()}}
+function loadResponses(){try{return JSON.parse(localStorage.getItem(LSR))||[]}catch(e){return[]}}
+function saveLocal(){localStorage.setItem(LSS,JSON.stringify(schema));localStorage.setItem(LSR,JSON.stringify(responses))}
 
 // ── Auth ──
-function getStoredPw(){return localStorage.getItem(ADMIN_PW_KEY)||''}
-function setStoredPw(pw){localStorage.setItem(ADMIN_PW_KEY,pw)}
-function checkPw(pw){const stored=getStoredPw();if(!stored){setStoredPw(pw);return true}return pw===stored}
+function getPw(){return localStorage.getItem(LSP)||''}
+function checkPw(pw){const s=getPw();if(!s){localStorage.setItem(LSP,pw);return true}return pw===s}
 
-// ── GitHub config ──
-let ghConfig=null;
-
-function loginOffline(){
-  const pw=document.getElementById('login-pw').value;
-  const err=document.getElementById('login-err');
-  if(!pw){err.textContent='Angiv en adgangskode.';err.style.display='block';return}
-  if(!checkPw(pw)){err.textContent='Forkert adgangskode.';err.style.display='block';return}
-  document.getElementById('login-overlay').classList.add('hidden');
-  document.getElementById('gh-bar').style.display='flex';
-  setGhStatus('local','Lokal tilstand — ingen GitHub-synkronisering');
-  initApp();
-}
-
-async function doLogin(){
+function doLogin(){
   const pw=document.getElementById('login-pw').value.trim();
   const token=document.getElementById('login-token').value.trim();
   const repo=document.getElementById('login-repo').value.trim();
   const filename=document.getElementById('login-filename').value.trim()||'data.json';
   const err=document.getElementById('login-err');
   err.style.display='none';
-  if(!pw){err.textContent='Angiv en adgangskode.';err.style.display='block';return}
-  if(!checkPw(pw)){err.textContent='Forkert adgangskode.';err.style.display='block';return}
-  if(token&&!repo){err.textContent='Angiv repository-navn (bruger/repo).';err.style.display='block';return}
-  const btn=document.getElementById('login-btn');
-  btn.disabled=true;btn.textContent='Logger ind...';
+  if(!pw){showErr('Angiv en adgangskode.');return}
+  if(!checkPw(pw)){showErr('Forkert adgangskode.');return}
   if(token&&repo){
     ghConfig={token,repo,filename};
-    localStorage.setItem(LS_GH,JSON.stringify(ghConfig));
+    localStorage.setItem(LSG,JSON.stringify(ghConfig));
   }
-  // Log in immediately - don't wait for GitHub test
-  document.getElementById('login-overlay').classList.add('hidden');
-  document.getElementById('gh-bar').style.display='flex';
-  localStorage.setItem('qs_logged_in','1');
-  btn.disabled=false;btn.textContent='Log ind →';
-  initApp();
-  // Pull from GitHub in background after UI is shown
-  if(ghConfig){
-    setGhStatus('saving','Forbinder til GitHub...');
-    ghPull(true).catch(()=>setGhStatus('error','Kunne ikke forbinde — tjek token'));
-  } else {
-    setGhStatus('local','Lokal tilstand');
-  }
+  localStorage.setItem(LSL,'1');
+  openAdmin();
 }
 
+function showErr(msg){const e=document.getElementById('login-err');e.textContent=msg;e.style.display='block'}
+
 function doLogout(){
-  if(!confirm('Log ud? Dine lokale data bevares.'))return;
-  localStorage.removeItem(LS_GH);
-  localStorage.setItem('qs_logged_in','1');
-  ghConfig=null;
+  if(!confirm('Log ud?'))return;
+  localStorage.removeItem(LSL);
   location.reload();
 }
 
-// ── GitHub API ──
-async function ghTest(token,repo){
-  try{
-    const r=await fetch('https://api.github.com/repos/'+repo,{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}});
-    return r.ok||r.status===404;
-  }catch(e){return false}
+function openAdmin(){
+  document.getElementById('login-overlay').classList.add('hidden');
+  document.getElementById('gh-bar').style.display='flex';
+  schema=loadSchema();
+  responses=loadResponses();
+  renderBuild();
+  updateBadge();
+  if(ghConfig){
+    setGhStatus('saving','Forbinder...');
+    ghPull(true);
+  } else {
+    setGhStatus('local','Lokal tilstand — ingen GitHub');
+  }
 }
 
+// ── GitHub API ──
 async function ghPull(silent){
   if(!ghConfig)return;
   setGhStatus('saving','Henter fra GitHub...');
   try{
     const r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
       {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
-    if(r.status===404){setGhStatus('ok','Tilsluttet '+ghConfig.repo+' (ingen data endnu)');return}
+    if(r.status===404){setGhStatus('ok','Tilsluttet — ingen data endnu');return}
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
     const data=JSON.parse(atob(j.content.replace(/\n/g,'')));
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
     if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
     setGhStatus('ok','Hentet — '+new Date().toLocaleTimeString('da-DK'));
-    if(!silent){renderBuild();renderOutcomes&&renderOutcomes();toast('Hentet fra GitHub!')}
+    if(!silent){renderBuild();toast('Hentet fra GitHub!')}
   }catch(e){setGhStatus('error','Fejl: '+e.message);if(!silent)toast('Fejl: '+e.message)}
 }
 
 async function ghSave(){
-  if(!ghConfig){toast('Ikke tilsluttet GitHub');return}
+  if(!ghConfig){saveLocal();toast('Gemt lokalt');return}
   setGhStatus('saving','Gemmer...');
+  saveLocal();
   try{
-    const data=JSON.stringify({schema,responses},null,2);
-    const encoded=btoa(unescape(encodeURIComponent(data)));
-    // Always fetch fresh SHA to avoid 409 conflicts
-    let sha=null;
+    let sha=null,remoteResponses=responses;
     const ex=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
       {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
     if(ex.ok){
       const j=await ex.json();sha=j.sha;
-      // Merge: keep remote responses + local schema
       try{
         const remote=JSON.parse(atob(j.content.replace(/\n/g,'')));
-        if(remote.responses&&remote.responses.length>responses.length){
-          responses=remote.responses;
-          localStorage.setItem('qs_responses_v2',JSON.stringify(responses));
-        }
+        if(remote.responses&&remote.responses.length>responses.length)remoteResponses=remote.responses;
       }catch(e){}
     }
-    const merged=JSON.stringify({schema,responses},null,2);
-    const mergedEncoded=btoa(unescape(encodeURIComponent(merged)));
-    const body={message:'Opdateret '+new Date().toISOString(),content:mergedEncoded};
+    const data=JSON.stringify({schema,responses:remoteResponses},null,2);
+    const body={message:'Opdateret '+new Date().toISOString(),content:btoa(unescape(encodeURIComponent(data)))};
     if(sha)body.sha=sha;
     const r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,{
       method:'PUT',
       headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
-    if(r.status===409){
-      setGhStatus('error','Konflikt — klik ↓ Hent fra GitHub og prøv igen');
-      toast('409 konflikt — hent først, gem derefter');
-      return;
-    }
+    if(r.status===409){setGhStatus('error','Konflikt — klik ↓ Hent og prøv igen');toast('Konflikt — hent først');return}
     if(!r.ok)throw new Error('HTTP '+r.status);
-    setGhStatus('ok','Gemt til GitHub — '+new Date().toLocaleTimeString('da-DK'));
+    setGhStatus('ok','Gemt — '+new Date().toLocaleTimeString('da-DK'));
     toast('Gemt til GitHub ✓');
   }catch(e){setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message)}
 }
 
 function setGhStatus(state,msg){
   const dot=document.getElementById('gh-dot');
+  const sbot=document.getElementById('sb-dot');
   const info=document.getElementById('gh-info');
   if(!dot)return;
-  dot.className='gh-dot'+(state==='saving'?' saving':state==='error'?' error':'');
+  const cls='dot'+(state==='saving'?' saving':state==='error'?' error':'');
+  dot.className=cls;if(sbot)sbot.className=cls;
   info.textContent=msg;
 }
 
-// ── Storage ──
-let schema=null,responses=null,qstate=fq(),openCards={};
-function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
-function loadSchema(){try{return JSON.parse(localStorage.getItem(LSS))||ds()}catch(e){return ds()}}
-function loadResponses(){try{return JSON.parse(localStorage.getItem(LSR))||[]}catch(e){return[]}}
-function saveAll(){localStorage.setItem(LSS,JSON.stringify(schema));updateBadge();if(ghConfig)ghSave();else toast('Gemt lokalt')}
-function saveR(){localStorage.setItem(LSR,JSON.stringify(responses));if(ghConfig)ghSave()}
-function initApp(){schema=loadSchema();responses=loadResponses();renderBuild();updateBadge()}
-function ds(){return{title:'Mit spørgeskema',description:'Beskriv formålet med dit spørgeskema her.',questions:[{id:'q1',text:'Hvad er dit primære mål?',sub:'',type:'single',options:[{id:'a1',label:'Karriere og arbejde',nextQ:null},{id:'a2',label:'Personlig udvikling',nextQ:null},{id:'a3',label:'Sundhed og velvære',nextQ:null}]}],outcomes:[{id:'o1',title:'Karrierefokuseret',desc:'Du er drevet af professionelle mål.',tags:[],keywords:['a1']},{id:'o2',title:'Personlig vækst',desc:'Du søger indre udvikling og sundhed.',tags:[],keywords:['a2','a3']}]}}
-function uid(){return '_'+Math.random().toString(36).slice(2,8)}
-function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+// ── Build ──
+function saveAll(){saveLocal();if(ghConfig)ghSave();else toast('Gemt lokalt ✓');updateBadge()}
+function updateBadge(){document.getElementById('qcnt').textContent=schema.questions.length+' spørgsmål'}
 
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(btn)btn.classList.add('active');
   if(id==='data')renderData();
@@ -538,38 +496,67 @@ function showPage(id,btn){
   if(id==='quiz'){qstate=fq();qstate.contactDone=true;renderQuiz()}
   if(id==='export')renderExport();
   if(id==='build')renderBuild();
-  if(id==='share')renderShare();
 }
 
 function renderBuild(){
   document.getElementById('s-title').value=schema.title||'';
   document.getElementById('s-desc').value=schema.description||'';
-  document.getElementById('qslbl').textContent=`Spørgsmål (${schema.questions.length})`;
+  document.getElementById('qslbl').textContent='Spørgsmål ('+schema.questions.length+')';
   updateBadge();
   document.getElementById('qlist').innerHTML=schema.questions.map((q,i)=>renderQCard(q,i)).join('');
 }
+
 function renderQCard(q,qi){
   const open=openCards[q.id]!==false;
   const tl={single:'Enkeltvalg',multi:'Flervalg',text:'Fritekst'}[q.type]||q.type;
   const opts=(q.options||[]).map(o=>{
-    const nx=schema.questions.filter(qq=>qq.id!==q.id).map(qq=>`<option value="${qq.id}" ${o.nextQ===qq.id?'selected':''}>${esc(qq.text).slice(0,26)||'...'}</option>`).join('');
-    return `<div class="orow"><input type="text" value="${esc(o.label)}" placeholder="Svarmulighed..." oninput="setOL('${q.id}','${o.id}',this.value)"><select class="onxt" onchange="setON('${q.id}','${o.id}',this.value)"><option value="">Næste i rækkefølge</option>${nx}<option value="__end__" ${o.nextQ==='__end__'?'selected':''}>Afslut quiz</option></select><button class="btn btnsm btnd" onclick="delOpt('${q.id}','${o.id}')">✕</button></div>`;
+    const nx=schema.questions.filter(qq=>qq.id!==q.id).map(qq=>`<option value="${qq.id}" ${o.nextQ===qq.id?'selected':''}>${esc(qq.text).slice(0,25)||'...'}</option>`).join('');
+    return `<div class="orow">
+      <input type="text" value="${esc(o.label)}" placeholder="Svarmulighed..." oninput="setOL('${q.id}','${o.id}',this.value)">
+      <select class="onxt" onchange="setON('${q.id}','${o.id}',this.value)">
+        <option value="">Næste i rækkefølge</option>${nx}
+        <option value="__end__" ${o.nextQ==='__end__'?'selected':''}>Afslut</option>
+      </select>
+      <button class="btn btnsm btnd" onclick="delOpt('${q.id}','${o.id}')">✕</button>
+    </div>`;
   }).join('');
-  return `<div class="qcard ${open?'':'collapsed'}" id="qc-${q.id}"><div class="qch" onclick="toggleCard('${q.id}')"><div class="qnb">${qi+1}</div><div class="qtp">${esc(q.text)||'(tomt)'}</div><div class="qtt">${tl}</div><span class="chev">▼</span></div><div class="qcb"><div class="field"><label>Spørgsmålstekst</label><input type="text" value="${esc(q.text)}" oninput="setQT('${q.id}',this.value)"></div><div class="field"><label>Undertekst (valgfri)</label><input type="text" value="${esc(q.sub||'')}" oninput="setQS('${q.id}',this.value)"></div>
+  return `<div class="qcard ${open?'':'collapsed'}" id="qc-${q.id}">
+    <div class="qch" onclick="toggleCard('${q.id}')">
+      <div class="qnb">${qi+1}</div>
+      <div class="qtp">${esc(q.text)||'(tomt)'}</div>
+      <div class="qtt">${tl}</div>
+      <span class="chev">▼</span>
+    </div>
+    <div class="qcb">
+      <div class="field"><label>Spørgsmålstekst</label><input type="text" value="${esc(q.text)}" oninput="setQT('${q.id}',this.value)"></div>
+      <div class="field"><label>Undertekst (valgfri)</label><input type="text" value="${esc(q.sub||'')}" oninput="setQS('${q.id}',this.value)"></div>
       <div class="field">
         <label>Billede (valgfrit)</label>
-        <div class="img-upload-wrap" id="imgwrap-${q.id}">
-          ${q.image
-            ? `<div class="img-preview"><img src="${q.image}" alt=""><button class="img-remove" onclick="removeQImg('${q.id}')">✕ Fjern</button></div>`
-            : `<label class="img-upload-btn" for="imgfile-${q.id}">📷 Vælg billede</label><input type="file" id="imgfile-${q.id}" accept="image/*" style="display:none" onchange="uploadQImg('${q.id}',this)">`
-          }
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-top:4px">Billedet gemmes indlejret i filen (base64). Hold det under 1 MB for bedste ydelse.</div>
-      </div><div class="field"><label>Svartype</label><select style="width:auto" onchange="setQType('${q.id}',this.value)"><option value="single" ${q.type==='single'?'selected':''}>Enkeltvalg</option><option value="multi" ${q.type==='multi'?'selected':''}>Flervalg</option><option value="text" ${q.type==='text'?'selected':''}>Fritekst</option></select></div>${q.type!=='text'?`<div class="slbl" style="margin-top:4px">Svarmuligheder &amp; forgrening</div>${opts}<button class="btn btnsm" onclick="addOpt('${q.id}')" style="margin-top:4px">+ Tilføj svar</button>`:''}<div class="divid"></div><div style="display:flex;gap:8px">${qi>0?`<button class="btn btnsm" onclick="moveQ('${q.id}',-1)">↑ Op</button>`:''} ${qi<schema.questions.length-1?`<button class="btn btnsm" onclick="moveQ('${q.id}',1)">↓ Ned</button>`:''}<button class="btn btnsm btnd" onclick="delQ('${q.id}')">🗑 Slet</button></div></div></div>`;
+        ${q.image
+          ?`<div class="imgprev"><img src="${q.image}" alt=""><button class="rmimg" onclick="rmImg('${q.id}')">✕ Fjern</button></div>`
+          :`<label class="imgup" for="img-${q.id}">📷 Vælg billede</label><input type="file" id="img-${q.id}" accept="image/*" style="display:none" onchange="uploadImg('${q.id}',this)">`}
+      </div>
+      <div class="field"><label>Svartype</label>
+        <select style="width:auto" onchange="setQType('${q.id}',this.value)">
+          <option value="single" ${q.type==='single'?'selected':''}>Enkeltvalg</option>
+          <option value="multi" ${q.type==='multi'?'selected':''}>Flervalg</option>
+          <option value="text" ${q.type==='text'?'selected':''}>Fritekst</option>
+        </select>
+      </div>
+      ${q.type!=='text'?`<div class="slbl">Svarmuligheder &amp; forgrening</div>${opts}<button class="btn btnsm" onclick="addOpt('${q.id}')" style="margin-top:4px">+ Tilføj svar</button>`:''}
+      <div class="divid"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${qi>0?`<button class="btn btnsm" onclick="moveQ('${q.id}',-1)">↑ Op</button>`:''}
+        ${qi<schema.questions.length-1?`<button class="btn btnsm" onclick="moveQ('${q.id}',1)">↓ Ned</button>`:''}
+        <button class="btn btnsm btnd" onclick="delQ('${q.id}')">🗑 Slet</button>
+      </div>
+    </div>
+  </div>`;
 }
+
 function toggleCard(id){openCards[id]=openCards[id]===false;renderBuild()}
 function collapseAll(){schema.questions.forEach(q=>openCards[q.id]=false);renderBuild()}
-function setQT(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.text=v;document.getElementById('qslbl').textContent=`Spørgsmål (${schema.questions.length})`}
+function setQT(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.text=v;document.getElementById('qslbl').textContent='Spørgsmål ('+schema.questions.length+')'}
 function setQS(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.sub=v}
 function setQType(id,v){const q=schema.questions.find(x=>x.id===id);if(!q)return;q.type=v;if(v==='text')q.options=[];else if(!q.options||!q.options.length)q.options=[{id:uid(),label:'',nextQ:null},{id:uid(),label:'',nextQ:null}];renderBuild()}
 function setOL(qid,oid,v){const q=schema.questions.find(x=>x.id===qid);if(q){const o=q.options.find(x=>x.id===oid);if(o)o.label=v}}
@@ -579,27 +566,21 @@ function delOpt(qid,oid){const q=schema.questions.find(x=>x.id===qid);if(q){q.op
 function addQ(){schema.questions.push({id:uid(),text:'',sub:'',type:'single',options:[{id:uid(),label:'',nextQ:null},{id:uid(),label:'',nextQ:null}]});renderBuild()}
 function delQ(id){if(!confirm('Slet spørgsmål?'))return;schema.questions=schema.questions.filter(x=>x.id!==id);renderBuild()}
 function moveQ(id,dir){const i=schema.questions.findIndex(x=>x.id===id);const j=i+dir;if(j<0||j>=schema.questions.length)return;[schema.questions[i],schema.questions[j]]=[schema.questions[j],schema.questions[i]];renderBuild()}
-function uploadQImg(qid,input){
-  const file=input.files[0];if(!file)return;
-  if(file.size>2*1024*1024){alert('Billedet er for stort. Max 2 MB.');return}
-  const reader=new FileReader();
-  reader.onload=function(e){
-    const q=schema.questions.find(x=>x.id===qid);
-    if(q){q.image=e.target.result;renderBuild()}
-  };
-  reader.readAsDataURL(file);
-}
-function removeQImg(qid){
-  const q=schema.questions.find(x=>x.id===qid);
-  if(q){q.image=null;renderBuild()}
-}
-function updateBadge(){document.getElementById('qcnt').textContent=`${schema.questions.length} spørgsmål`}
+function uploadImg(qid,inp){const f=inp.files[0];if(!f)return;if(f.size>2*1024*1024){alert('Max 2 MB');return}const r=new FileReader();r.onload=e=>{const q=schema.questions.find(x=>x.id===qid);if(q){q.image=e.target.result;renderBuild()}};r.readAsDataURL(f)}
+function rmImg(qid){const q=schema.questions.find(x=>x.id===qid);if(q){q.image=null;renderBuild()}}
 
+// ── Outcomes ──
 function renderOutcomes(){
   const allO=schema.questions.flatMap(q=>q.options||[]);
   document.getElementById('olist').innerHTML=schema.outcomes.map(o=>{
     const kw=allO.map(opt=>{const on=o.keywords.includes(opt.id);return`<button class="badge bc ${on?'bg-g':'bg-gr'}" onclick="toggleKw('${o.id}','${opt.id}')">${esc(opt.label)||opt.id}</button>`}).join('');
-    return`<div class="card"><div class="ch"><span class="ct">${esc(o.title)||'Nyt udfald'}</span><button class="btn btnsm btnd" onclick="delOutcome('${o.id}')">🗑</button></div><div class="field"><label>Titel</label><input type="text" value="${esc(o.title)}" oninput="setO('${o.id}','title',this.value)"></div><div class="field"><label>Beskrivelse</label><textarea oninput="setO('${o.id}','desc',this.value)">${esc(o.desc)}</textarea></div><div class="field"><label>Tags (kommasepareret)</label><input type="text" value="${esc((o.tags||[]).join(', '))}" oninput="setOTags('${o.id}',this.value)"></div><div class="slbl" style="margin-top:4px">Nøgleord</div><div class="tags">${kw||'<span style="font-size:13px;color:var(--text3)">Ingen svarmuligheder endnu.</span>'}</div></div>`;
+    return`<div class="card">
+      <div class="ch"><span class="ct">${esc(o.title)||'Nyt udfald'}</span><button class="btn btnsm btnd" onclick="delOutcome('${o.id}')">🗑</button></div>
+      <div class="field"><label>Titel</label><input type="text" value="${esc(o.title)}" oninput="setO('${o.id}','title',this.value)"></div>
+      <div class="field"><label>Beskrivelse</label><textarea oninput="setO('${o.id}','desc',this.value)">${esc(o.desc)}</textarea></div>
+      <div class="field"><label>Tags (kommasepareret)</label><input type="text" value="${esc((o.tags||[]).join(', '))}" oninput="setOTags('${o.id}',this.value)"></div>
+      <div class="slbl">Nøgleord</div><div class="tags">${kw||'<span style="font-size:13px;color:var(--t3)">Ingen svarmuligheder endnu.</span>'}</div>
+    </div>`;
   }).join('');
 }
 function setO(id,f,v){const o=schema.outcomes.find(x=>x.id===id);if(o)o[f]=v}
@@ -608,49 +589,171 @@ function toggleKw(oid,kid){const o=schema.outcomes.find(x=>x.id===oid);if(!o)ret
 function addOutcome(){schema.outcomes.push({id:uid(),title:'Nyt udfald',desc:'',tags:[],keywords:[]});renderOutcomes()}
 function delOutcome(id){if(!confirm('Slet udfald?'))return;schema.outcomes=schema.outcomes.filter(x=>x.id!==id);renderOutcomes()}
 
-function renderShare(){
-  document.getElementById('sp-title').textContent=schema.title||'(ingen titel)';
-  document.getElementById('sp-desc').textContent=schema.description||'(ingen beskrivelse)';
+// ── Data ──
+function renderData(){
+  const el=document.getElementById('dcontent');
+  const total=responses.length;
+  if(!total){el.innerHTML='<div class="notice notice-info"><span>ℹ</span><span>Ingen svar endnu.</span></div>';return}
+  const comp=responses.filter(r=>r.completed).length;
+  const oc={};schema.outcomes.forEach(o=>oc[o.title]=0);
+  responses.forEach(r=>{if(r.topOutcome&&oc[r.topOutcome]!==undefined)oc[r.topOutcome]++});
+  const mx=Math.max(...Object.values(oc),1);
+  let h=`<div class="sgrid">
+    <div class="sc"><div class="sn">${total}</div><div class="sl">Besvarelser</div></div>
+    <div class="sc"><div class="sn">${Math.round(comp/total*100)}%</div><div class="sl">Fuldført</div></div>
+    <div class="sc"><div class="sn">${schema.questions.length}</div><div class="sl">Spørgsmål</div></div>
+  </div><div class="slbl">Fordeling</div><div class="card">`;
+  Object.entries(oc).forEach(([t,n])=>{h+=`<div class="brow"><div class="blbl">${esc(t)}</div><div class="btrk"><div class="bfil" style="width:${Math.round(n/mx*100)}%"></div></div><div class="bcnt">${n}</div></div>`});
+  h+=`</div><div class="slbl">Alle besvarelser</div>`;
+  responses.slice().reverse().forEach((resp,i)=>{
+    const d=new Date(resp.timestamp);
+    const ds=d.toLocaleDateString('da-DK')+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
+    h+=`<div class="ri"><div class="rh"><span style="font-size:13px;font-weight:500">Besvarelse #${responses.length-i}${resp.contact?' — '+esc(resp.contact.name):''}</span><span style="font-size:12px;color:var(--t2)">${ds}</span></div>
+      ${resp.topOutcome?`<div class="badge bg-f" style="margin-bottom:8px">${esc(resp.topOutcome)}</div>`:''}
+      <div class="rag">${schema.questions.map(q=>{const a=resp.answers[q.id];if(!a)return'';const l=Array.isArray(a)?a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(', '):(q.options||[]).find(o=>o.id===a)?.label||a;return`<div><div class="rq">${esc(q.text)}</div><div class="ra">${esc(l)}</div></div>`}).join('')}</div>
+    </div>`;
+  });
+  h+=`<button class="btn btnd" onclick="clearR()" style="margin-top:8px">🗑 Slet alle svar</button>`;
+  el.innerHTML=h;
 }
+function clearR(){if(!confirm('Slet alle svar?'))return;responses=[];saveLocal();if(ghConfig)ghSave();renderData()}
 
+// ── Export ──
+function renderExport(){document.getElementById('ebox').textContent=JSON.stringify(schema,null,2)}
+function copyExport(){navigator.clipboard.writeText(JSON.stringify(schema,null,2)).then(()=>toast('Kopieret!')).catch(()=>toast('Brug Ctrl+C'))}
+function downloadExport(){dl(JSON.stringify(schema,null,2),(schema.title||'sq').replace(/\s+/g,'-')+'.json','application/json')}
+function doImport(){const raw=document.getElementById('ibox').value.trim();if(!raw){alert('Indsæt JSON først');return}try{const d=JSON.parse(raw);if(!d.questions)throw new Error('Mangler questions');if(!confirm('Erstat?'))return;schema=d;saveAll();document.getElementById('ibox').value='';renderBuild();alert('Importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
+function importResponses(){const raw=document.getElementById('rbox').value.trim();if(!raw)return;try{const d=JSON.parse(raw);if(!Array.isArray(d))throw new Error('Forventede array');responses=[...responses,...d];saveLocal();if(ghConfig)ghSave();document.getElementById('rbox').value='';toast(d.length+' svar importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
+function downloadResponses(fmt){
+  let content,fname,mime;
+  if(fmt==='json'){content=JSON.stringify(responses,null,2);fname='svar.json';mime='application/json'}
+  else{
+    const cols=['id','timestamp','navn','topOutcome',...schema.questions.map(q=>q.text)];
+    const rows=responses.map(r=>[r.id,new Date(r.timestamp).toISOString(),r.contact?.name||'',r.topOutcome||'',...schema.questions.map(q=>{const a=r.answers[q.id];if(Array.isArray(a))return a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(' | ');return(q.options||[]).find(o=>o.id===a)?.label||a||''})]);
+    content=[cols,...rows].map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+    fname='svar.csv';mime='text/csv;charset=utf-8';
+  }
+  dl(content,fname,mime);
+}
+function dl(content,fname,mime){const b=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fname;a.click()}
+
+// ── Share ──
 function downloadUserFile(){
-  const email=document.getElementById('share-email').value.trim();
-  const blob=new Blob([buildUserHTML(schema,email)],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=(schema.title||'spørgeskema').replace(/\s+/g,'-').toLowerCase()+'-bruger.html';
-  a.click();
-  toast('Bruger-fil downloadet!');
+  const sd=JSON.stringify(schema).replace(/</g,'\\u003c').replace(/>/g,'\\u003e');
+  const r=ghConfig?ghConfig.repo:'';
+  const t=ghConfig?ghConfig.token:'';
+  const f=ghConfig?ghConfig.filename:'data.json';
+  const t1=t.slice(0,8),t2=t.slice(8,24),t3=t.slice(24);
+  const userHtml=buildUserHTML(sd,r,t1,t2,t3,f);
+  dl(userHtml,(schema.title||'spørgeskema').replace(/\s+/g,'-')+'-bruger.html','text/html;charset=utf-8');
 }
 
-function buildUserHTML(sc,email){
-  const sd=JSON.stringify(sc).replace(/</g,'\\u003c').replace(/>/g,'\\u003e');
-  const em=email?JSON.stringify(email):'""';
-  const ghR=ghConfig?JSON.stringify(ghConfig.repo):'null';
-  const ghF=ghConfig?JSON.stringify(ghConfig.filename||'data.json'):'null';
-  // Split token into 3 parts to avoid secret scanning detection
-  const tok=ghConfig?ghConfig.token||'':'';
-  const t1=JSON.stringify(tok.slice(0,8));
-  const t2=JSON.stringify(tok.slice(8,24));
-  const t3=JSON.stringify(tok.slice(24));
+function downloadAdminAccess(){
+  if(!ghConfig||!ghConfig.token){alert('Log ind med GitHub-token først.');return}
+  const pw=document.getElementById('share-pw').value.trim()||'OSK2026';
+  const t=ghConfig.token;
+  const p1=t.slice(0,8),p2=t.slice(8,24),p3=t.slice(24);
+  const repo=ghConfig.repo||'';
+  const fname=ghConfig.filename||'data.json';
+  const adminUrl='https://'+repo.split('/')[0].toLowerCase()+'.github.io/'+repo.split('/')[1]+'/';
+  const stub=`<!DOCTYPE html>\n<html lang="da"><head><meta charset="UTF-8"><title>Konfigurerer...</title>\n<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;text-align:center;padding:1rem}\n.box{background:#F7F5EF;color:#333127;border-radius:8px;padding:2rem;max-width:320px}\nh2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53}</style>\n</head><body><div class="box"><h2>Konfigurerer admin...</h2><p>Du videresendes om et \u00f8jeblik.</p></div>\n<script>\n(function(){\n  var p1='${p1}',p2='${p2}',p3='${p3}';\n  var tok=p1+p2+p3;\n  localStorage.setItem('qs_v3_ghconfig',JSON.stringify({token:tok,repo:'${repo}',filename:'${fname}'}));\n  localStorage.setItem('qs_v3_pw','${pw}');\n  localStorage.setItem('qs_v3_loggedin','1');\n  window.location.href='${adminUrl}';\n})();\n<\/script></body></html>`;
+  dl(stub,'admin-adgang.html','text/html;charset=utf-8');
+  toast('admin-adgang.html downloadet!');
+}
+
+// ── Quiz preview (admin) ──
+function calcResultsAdmin(){
+  const vals=Object.values(qstate.answers).flatMap(v=>Array.isArray(v)?v:[v]);
+  return schema.outcomes.map(o=>{
+    const hits=o.keywords.filter(k=>vals.includes(k)).length;
+    const pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;
+    return{...o,pct};
+  }).sort((a,b)=>b.pct-a.pct);
+}
+
+function renderQuiz(){
+  const c=document.getElementById('qcontainer');
+  if(!schema.questions.length){c.innerHTML='<div class="notice notice-warn"><span>⚠</span><span>Ingen spørgsmål endnu.</span></div>';return}
+  if(qstate.done||qstate.qIdx===-1){renderQResult(c);return}
+  const qs=schema.questions;const qi=qstate.qIdx;
+  if(qi>=qs.length){renderQResult(c);return}
+  const q=qs[qi];const sel=qstate.answers[q.id]||null;
+  const selArr=Array.isArray(sel)?sel:(sel?[sel]:[]);
+  const pct=Math.round((qi/qs.length)*100);
+  let opts='';
+  if(q.type==='text'){opts=`<textarea id="ti" style="width:100%;min-height:80px;font-family:var(--font);font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:var(--r);outline:none;resize:vertical;margin-bottom:1rem">${esc(sel||'')}</textarea>`}
+  else if(q.type==='multi'){
+    opts='<div style="font-size:12px;color:var(--t3);margin-bottom:8px">Vælg en eller flere</div>';
+    opts+=(q.options||[]).map(o=>`<button class="obtn${selArr.includes(o.id)?' sel':''}" data-qid="${q.id}" data-oid="${o.id}" data-multi="1"><div class="rc" style="border-radius:3px"><div class="rd"></div></div>${esc(o.label)}</button>`).join('');
+  } else {
+    opts=(q.options||[]).map(o=>`<button class="obtn${sel===o.id?' sel':''}" data-qid="${q.id}" data-oid="${o.id}" data-single="1"><div class="rc"><div class="rd"></div></div>${esc(o.label)}</button>`).join('');
+  }
+  const hasAns=q.type==='multi'?selArr.length>0:(!!sel||q.type==='text');
+  c.innerHTML=`<div style="height:3px;background:var(--bd);margin-bottom:1.75rem"><div style="height:3px;background:var(--dg);width:${Math.max(2,pct)}%;transition:width .4s"></div></div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:6px">Spørgsmål ${qi+1} af ${qs.length}</div>
+    ${q.image?`<img src="${q.image}" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--rl);margin-bottom:1.25rem;border:.5px solid var(--bd)">`:''}
+    <div style="font-size:20px;font-weight:500;margin-bottom:6px;line-height:1.4">${esc(q.text)}</div>
+    ${q.sub?`<div style="font-size:14px;color:var(--t2);margin-bottom:1.25rem;line-height:1.5">${esc(q.sub)}</div>`:'<div style="margin-bottom:1.25rem"></div>'}
+    ${opts}
+    <div style="display:flex;gap:10px;margin-top:10px">
+      ${qi>0?'<button id="btn-bk" class="btn">← Tilbage</button>':''}
+      <button id="btn-nx" class="btn btnp" ${!hasAns?'disabled':''}>${qi===qs.length-1?'Se resultat →':'Næste →'}</button>
+    </div>`;
+  c.querySelectorAll('[data-single]').forEach(b=>b.addEventListener('click',()=>{qstate.answers[b.dataset.qid]=b.dataset.oid;renderQuiz()}));
+  c.querySelectorAll('[data-multi]').forEach(b=>b.addEventListener('click',()=>{const cur=Array.isArray(qstate.answers[b.dataset.qid])?qstate.answers[b.dataset.qid]:[];const i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qstate.answers[b.dataset.qid]=[...cur];renderQuiz()}));
+  const nx=document.getElementById('btn-nx');if(nx)nx.addEventListener('click',()=>quizNext(q.id,q.type));
+  const bk=document.getElementById('btn-bk');if(bk)bk.addEventListener('click',()=>{if(qstate.history.length){qstate.qIdx=qstate.history.pop();qstate.done=false;renderQuiz()}});
+}
+
+function quizNext(qid,type){
+  if(type==='text'){const ta=document.getElementById('ti');if(ta)qstate.answers[qid]=ta.value.trim()}
+  const q=schema.questions[qstate.qIdx];const ans=qstate.answers[qid];const first=Array.isArray(ans)?ans[0]:ans;
+  qstate.history.push(qstate.qIdx);
+  const opt=(q.options||[]).find(o=>o.id===first);
+  if(opt&&opt.nextQ==='__end__'){qstate.done=true}
+  else if(opt&&opt.nextQ){const i=schema.questions.findIndex(x=>x.id===opt.nextQ);qstate.qIdx=i>=0?i:-1;if(i<0)qstate.done=true}
+  else{const i=qstate.qIdx+1;if(i>=schema.questions.length)qstate.done=true;else qstate.qIdx=i}
+  renderQuiz();
+}
+
+function renderQResult(c){
+  const res=calcResultsAdmin().filter(r=>r.pct>0);
+  let h='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div><div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forhåndsvisning</div>';
+  res.slice(0,4).forEach((r,i)=>{h+=`<div style="border:${i===0?'1.5px solid var(--dg)':'0.5px solid var(--bd)'};border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;background:${i===0?'var(--dg)':'var(--cb)'}">
+    ${i===0?'<div class="badge bg-a" style="margin-bottom:8px">★ Bedste match</div>':''}
+    <div style="font-size:17px;font-weight:500;color:${i===0?'var(--tod)':'var(--t)'};margin-bottom:4px">${esc(r.title)}</div>
+    <div style="font-size:14px;color:${i===0?'var(--tod2)':'var(--t2)'};margin-bottom:10px;line-height:1.6">${esc(r.desc)}</div>
+    <div style="height:4px;background:${i===0?'rgba(239,236,228,.2)':'var(--bd)'}"><div style="height:4px;background:${i===0?'var(--ac)':'var(--fg)'};width:${r.pct}%"></div></div>
+    <div style="font-size:12px;color:${i===0?'var(--fg)':'var(--t2)'};margin-top:4px">${r.pct}% match</div>
+  </div>`});
+  h+='<button class="btn" onclick="qstate=Object.assign({},{qIdx:0,answers:{},history:[],done:false,contactDone:true});renderQuiz()" style="margin-top:8px">↺ Start forfra</button>';
+  c.innerHTML=h;
+}
+
+// ── Toast ──
+let tt;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2400)}
+
+// ── User HTML builder ──
+function buildUserHTML(sd,repo,t1,t2,t3,fname){
   return`<!DOCTYPE html>
-<html lang="da"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>${sc.title||'Sp\u00f8rgeskema'}</title>
+<html lang="da"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>${esc(schema.title)||'Sp\u00f8rgeskema'}</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--dg:#333C35;--lg:#EFECE4;--fg:#ABB892;--dk:#333127;--ac:#F0FE89;--at:#252900;--bg:#EFECE4;--bg2:#E4E1D9;--cb:#F7F5EF;--t:#333127;--t2:#5a5d53;--t3:#8a8d80;--tod:#EFECE4;--tod2:#ABB892;--bd:rgba(51,49,39,.14);--bd2:rgba(51,49,39,.26);--r:3px;--rl:4px;--font:system-ui,-apple-system,'Segoe UI',sans-serif}
+:root{--dg:#333C35;--lg:#EFECE4;--fg:#ABB892;--dk:#333127;--ac:#F0FE89;--at:#252900;--bg:#EFECE4;--bg2:#E4E1D9;--cb:#F7F5EF;--t:#333127;--t2:#5a5d53;--t3:#8a8d80;--tod:#EFECE4;--tod2:#ABB892;--bd:rgba(51,49,39,.14);--bd2:rgba(51,49,39,.26);--r:3px;--rl:5px;--font:system-ui,-apple-system,'Segoe UI',sans-serif}
 body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100vh;display:flex;flex-direction:column}
-.header{background:var(--dg);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:15px;font-weight:500;color:var(--tod)}
-.header p{font-size:12px;color:var(--tod2)}
-.wrap{max-width:560px;margin:0 auto;padding:2.5rem 1.5rem 4rem;width:100%}
-.intro{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-bottom:2rem}
-.intro h2{font-size:18px;font-weight:500;margin-bottom:6px}
-.intro p{font-size:14px;color:var(--t2);line-height:1.65}
+.hdr{background:var(--dg);padding:1rem 1.5rem}
+.hdr h1{font-size:16px;font-weight:500;color:var(--tod)}
+.hdr p{font-size:12px;color:var(--tod2);margin-top:2px}
+.wrap{max-width:560px;margin:0 auto;padding:2rem 1.5rem 4rem;width:100%;flex:1}
+.card{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px}
 .pbg{height:3px;background:var(--bd);margin-bottom:1.75rem}
-.pf{height:3px;background:var(--dg);transition:width .4s ease}
+.pf{height:3px;background:var(--dg);transition:width .4s}
 .qlbl{font-size:12px;color:var(--t3);margin-bottom:6px}
 .qt{font-size:20px;font-weight:500;margin-bottom:6px;line-height:1.4}
 .qs{font-size:14px;color:var(--t2);margin-bottom:1.25rem;line-height:1.5}
+.qimg{width:100%;max-height:240px;object-fit:cover;border-radius:var(--rl);margin-bottom:1.25rem;border:.5px solid var(--bd)}
 .obtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:.5px solid var(--bd);border-radius:var(--rl);background:var(--cb);cursor:pointer;font-size:15px;color:var(--t);text-align:left;width:100%;margin-bottom:8px;transition:border-color .15s,background .15s;font-family:var(--font)}
 .obtn:hover{border-color:var(--fg);background:#EBE9E1}
 .obtn.sel{border:1.5px solid var(--dg);background:#d6ddd0;color:var(--dk)}
@@ -658,167 +761,62 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .obtn.sel .rc{border-color:var(--dg)}
 .rd{width:10px;height:10px;border-radius:50%;background:var(--dg);display:none}
 .obtn.sel .rd{display:block}
-.nav{display:flex;gap:10px;margin-top:10px}
+.mhint{font-size:12px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.nav{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 .btn{padding:8px 18px;border:.5px solid var(--bd2);border-radius:var(--r);background:transparent;color:var(--t);font-size:14px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px}
 .btn:hover{background:var(--bg2)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
 .btnp{background:var(--dg);color:var(--tod);border-color:var(--dg);font-weight:500}
 .btnp:hover{background:#253028}
 .btna{background:var(--ac);color:var(--at);border-color:#c8d500;font-weight:500}
 .btna:hover{background:#ddf000}
-.btn:disabled{opacity:.35;cursor:not-allowed}
+label{font-size:13px;color:var(--t2);display:block;margin-bottom:4px}
+input[type=text],input[type=email],textarea{width:100%;font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:var(--r);background:#fff;color:var(--t);font-family:var(--font);outline:none}
+input:focus,textarea:focus{border-color:var(--dg)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
 .rcard{border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;background:var(--cb)}
 .rcard.top{border:1.5px solid var(--dg);background:var(--dg)}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r);font-size:12px;font-weight:500}
 .ba{background:var(--ac);color:var(--at)}
-.bf{background:#d8e2cf;color:#2d4028}
 .sbg{height:4px;background:var(--bd)}
-.sf{height:4px;background:var(--fg);transition:width .6s ease}
+.sf{height:4px;background:var(--fg);transition:width .6s}
 .rcard.top .sf{background:var(--ac)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .tag{font-size:12px;padding:3px 9px;border-radius:var(--r);background:var(--bg2);color:var(--t2)}
-.qimg{width:100%;max-height:240px;object-fit:cover;border-radius:var(--rl);margin-bottom:1.25rem;border:.5px solid var(--bd)}
-.multi-hint{font-size:12px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
 .send-box{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-top:1.5rem}
 .send-box h3{font-size:15px;font-weight:500;margin-bottom:6px}
 .send-box p{font-size:14px;color:var(--t2);margin-bottom:12px;line-height:1.5}
-textarea.sa{width:100%;min-height:80px;font-family:var(--font);font-size:13px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:var(--r);background:#fff;color:var(--t);resize:vertical;outline:none}
 @media(max-width:500px){.wrap{padding:1.5rem 1rem 3rem}}
-
-/* \u2500\u2500 Login overlay \u2500\u2500 */
-#login-overlay{position:fixed;inset:0;background:var(--deep-green);display:flex;align-items:center;justify-content:center;z-index:9999}
-#login-overlay.hidden{display:none}
-.login-box{width:100%;max-width:380px;padding:2rem;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:0 8px 32px rgba(0,0,0,.25)}
-.login-logo{text-align:center;margin-bottom:1.75rem}
-.login-logo h1{font-size:20px;font-weight:500;color:var(--text)}
-.login-logo p{font-size:13px;color:var(--text2);margin-top:4px}
-.login-field{margin-bottom:14px}
-.login-field label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px}
-.login-field input{width:100%;font-size:14px;padding:9px 11px;border:.5px solid var(--border2);border-radius:var(--radius);background:#fff;color:var(--text);font-family:var(--font);outline:none;transition:border-color .15s}
-.login-field input:focus{border-color:var(--deep-green);box-shadow:0 0 0 2px rgba(51,60,53,.12)}
-.login-hint{font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5}
-.login-err{font-size:13px;color:var(--danger-text);margin-bottom:10px;display:none;padding:8px 10px;background:rgba(139,31,31,.07);border-radius:var(--radius)}
-.login-sep{height:.5px;background:var(--border);margin:1.25rem 0}
-/* \u2500\u2500 GitHub status bar \u2500\u2500 */
-#gh-bar{display:flex;align-items:center;gap:10px;padding:7px 1.25rem;background:var(--deep-green);font-size:12px;color:var(--text-on-dark2);border-bottom:.5px solid var(--border-on-dark);flex-shrink:0}
-#gh-bar .gh-dot{width:7px;height:7px;border-radius:50%;background:var(--faded-green);flex-shrink:0;transition:background .3s}
-#gh-bar .gh-dot.saving{background:var(--accent)}
-#gh-bar .gh-dot.error{background:#e07070}
-#gh-bar .gh-info{flex:1}
-#gh-bar .gh-actions{display:flex;gap:6px}
-.gh-btn{padding:3px 10px;border:.5px solid var(--border-on-dark);border-radius:var(--radius);background:transparent;color:var(--text-on-dark2);font-size:11px;cursor:pointer;font-family:var(--font)}
-.gh-btn:hover{background:rgba(239,236,228,.1);color:var(--text-on-dark)}
-.gh-btn.primary{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
-.gh-btn.primary:hover{background:#ddf000}
-
 </style></head><body>
-<div class="header"><div><h1>${sc.title||'Sp\u00f8rgeskema'}</h1>${sc.description?`<p>${sc.description}</p>`:''}</div></div>
+<div class="hdr"><h1>${esc(schema.title)||'Sp\u00f8rgeskema'}</h1>${schema.description?`<p>${esc(schema.description)}</p>`:''}</div>
 <div class="wrap"><div id="app"></div></div>
 <script>
 var SC=${sd};
-var EMAIL=${em};
-var GH_REPO=${ghR};var GH_FILE=${ghF};var GH_T1=${t1},GH_T2=${t2},GH_T3=${t3};
+var GH_REPO='${repo}';
+var GH_T1='${t1}',GH_T2='${t2}',GH_T3='${t3}';
+var GH_FILE='${fname}';
 var qs={qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null};
 function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
 function uid(){return '_'+Math.random().toString(36).slice(2,8)}
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
-function getNext(q,aid){var o=(q.options||[]).find(function(x){return x.id===aid});if(o&&o.nextQ==='__end__')return -1;if(o&&o.nextQ){var i=SC.questions.findIndex(function(x){return x.id===o.nextQ});return i>=0?i:-1}var c=SC.questions.findIndex(function(x){return x.id===q.id});return c+1<SC.questions.length?c+1:-1}
-function calcR(){var vals=Object.values(qs.answers).reduce(function(acc,v){return acc.concat(Array.isArray(v)?v:[v])},[]);return SC.outcomes.map(function(o){var hits=o.keywords.filter(function(k){return vals.indexOf(k)>=0}).length;var pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;return Object.assign({},o,{pct:pct})}).sort(function(a,b){return b.pct-a.pct})}
-function render(){var c=document.getElementById('app');
-  if(!qs.contactDone){renderContact(c);return}
-  if(!SC.questions.length){c.innerHTML='<p>Ingen sp\u00f8rgsm\u00e5l.</p>';return}
-  if(qs.done||qs.qIdx===-1){renderResult(c);return}
-  var q=SC.questions[qs.qIdx];if(!q){renderResult(c);return}
-  var sel=qs.answers[q.id]||null;
-  var selArr=Array.isArray(sel)?sel:(sel?[sel]:[]);
-  var pct=Math.round((qs.qIdx+1)/SC.questions.length*100);
-  var hasAns=q.type==='multi'?selArr.length>0:(!!sel||q.type==='text');
-  var optHtml='';
-  if(q.type==='text'){
-    optHtml='<textarea class="sa" id="ti" placeholder="Skriv dit svar...">'+(sel?esc(Array.isArray(sel)?sel.join(', '):sel):'')+'</textarea>';
-  } else if(q.type==='multi'){
-    optHtml='<div class="multi-hint"><span style="font-size:15px">&#9745;</span> V\u00e6lg en eller flere muligheder</div>';
-    (q.options||[]).forEach(function(o,oi){
-      var on=selArr.indexOf(o.id)>=0;
-      optHtml+='<button class="obtn'+(on?' sel':'')+'" data-qid="'+esc(q.id)+'" data-oid="'+esc(o.id)+'" data-multi="1"><div class="rc" style="border-radius:3px"><div class="rd" style="border-radius:2px"></div></div>'+esc(o.label)+'</button>';
-    });
-  } else {
-    (q.options||[]).forEach(function(o){
-      var on=sel===o.id;
-      optHtml+='<button class="obtn'+(on?' sel':'')+'" data-qid="'+esc(q.id)+'" data-oid="'+esc(o.id)+'" data-single="1"><div class="rc"><div class="rd"></div></div>'+esc(o.label)+'</button>';
-    });
-  }
-  c.innerHTML='<div class="pbg"><div class="pf" id="pf" style="width:'+Math.max(2,pct)+'%"></div></div>'
-    +'<div class="qlbl">Sp\u00f8rgsm\u00e5l '+(qs.qIdx+1)+' af '+SC.questions.length+'</div>'
-    +(q.image?'<img src="'+q.image+'" class="qimg" alt="">':'')
-    +'<div class="qt">'+esc(q.text)+'</div>'
-    +(q.sub?'<div class="qs">'+esc(q.sub)+'</div>':'<div style="margin-bottom:1.25rem"></div>')
-    +optHtml
-    +'<div class="nav" id="qnav">'
-    +(qs.qIdx>0?'<button id="btn-back" class="btn">&#8592; Tilbage</button>':'')
-    +'<button id="btn-next" class="btn btnp">'+(qs.qIdx===SC.questions.length-1?'Se resultat &#8594;':'N&#230;ste &#8594;')+'</button>'
-    +'</div>';
-  if(document.getElementById('btn-next')){
-    document.getElementById('btn-next').disabled=!hasAns;
-    document.getElementById('btn-next').addEventListener('click',function(){goNext(q.id,q.type)});
-  }
-  if(document.getElementById('btn-back')){
-    document.getElementById('btn-back').addEventListener('click',goBack);
-  }
-  c.querySelectorAll('[data-single]').forEach(function(btn){
-    btn.addEventListener('click',function(){selA(this.dataset.qid,this.dataset.oid)});
-  });
-  c.querySelectorAll('[data-multi]').forEach(function(btn){
-    btn.addEventListener('click',function(){selMulti(this.dataset.qid,this.dataset.oid)});
-  });
+function getNext(q,aid){
+  var o=(q.options||[]).find(function(x){return x.id===aid});
+  if(o&&o.nextQ==='__end__')return -1;
+  if(o&&o.nextQ){var i=SC.questions.findIndex(function(x){return x.id===o.nextQ});return i>=0?i:-1}
+  var c=SC.questions.findIndex(function(x){return x.id===q.id});
+  return c+1<SC.questions.length?c+1:-1;
 }
-function renderContact(c){
-  c.innerHTML='<div class="intro" style="margin-bottom:0"><h2>Inden vi starter</h2><p style="margin-top:6px">Udfyld venligst dit navn.</p></div>'
-    +'<div style="background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-top:1px">'
-    +'<div style="margin-bottom:16px"><label style="font-size:13px;color:var(--t2);display:block;margin-bottom:4px">Navn <span style="color:#8b1f1f">*</span></label>'
-    +'<input type="text" id="c-name" value="'+(qs.contact&&qs.contact.name?esc(qs.contact.name):'')+'" placeholder="Dit fulde navn" style="width:100%;font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:var(--r);background:#fff;color:var(--t);font-family:var(--font);outline:none"></div>'
-    +'<div id="c-err" style="font-size:13px;color:#8b1f1f;margin-bottom:10px;display:none">Udfyld venligst dit navn.</div>'
-    +'<button id="btn-contact" class="btn btnp">Start sp\u00f8rgeskema \u2192</button>'
-    +'</div>';
-  var bc=document.getElementById('btn-contact');if(bc)bc.addEventListener('click',submitContact);
-  var cn=document.getElementById('c-name');if(cn)cn.addEventListener('keydown',function(e){if(e.key==='Enter')submitContact()});
-}
-function submitContact(){
-  var name=document.getElementById('c-name').value.trim();
-  var err=document.getElementById('c-err');
-  if(!name){err.style.display='block';return}
-  err.style.display='none';
-  qs.contact={name:name};
-  qs.contactDone=true;
-  render();
-}
-
-function selA(qid,oid){qs.answers[qid]=oid;render()}
-function selMulti(qid,oid){var cur=Array.isArray(qs.answers[qid])?qs.answers[qid]:[];var i=cur.indexOf(oid);if(i>=0)cur.splice(i,1);else cur.push(oid);qs.answers[qid]=cur.slice();render()}
-function goNext(qid,type){if(type==='text'){var ta=document.getElementById('ti');if(ta)qs.answers[qid]=ta.value.trim()}var q=SC.questions[qs.qIdx];var ans=qs.answers[qid];var firstAns=Array.isArray(ans)?ans[0]:ans;qs.history.push(qs.qIdx);var next=getNext(q,firstAns);if(next===-1){qs.done=true}else{qs.qIdx=next}render()}
-function goBack(){if(!qs.history.length)return;qs.qIdx=qs.history.pop();qs.done=false;render()}
-function renderResult(c){var results=calcR().filter(function(r){return r.pct>0});var html='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div><div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Baseret p\u00e5 dine svar</div>';if(!results.length){html+='<p style="color:var(--t2)">Ingen matchende udfald.</p>'}else{results.slice(0,4).forEach(function(r,i){html+='<div class="rcard '+(i===0?'top':'')+'">'+( i===0?'<div class="badge ba" style="margin-bottom:8px">\u2605 Bedste match</div>':'')+'<div style="font-size:17px;font-weight:500;color:'+(i===0?'var(--tod)':'var(--t)')+';margin-bottom:4px">'+esc(r.title)+'</div><div style="font-size:14px;color:'+(i===0?'var(--tod2)':'var(--t2)')+';line-height:1.6;margin-bottom:10px">'+esc(r.desc)+'</div>'+(r.tags&&r.tags.length?'<div class="tags">'+r.tags.map(function(t){return'<span class="tag">'+esc(t)+'</span>'}).join('')+'</div>':'')+'<div class="sbg" style="margin-top:10px"><div class="sf" style="width:'+r.pct+'%"></div></div><div style="font-size:12px;color:'+(i===0?'var(--fg)':'var(--t2)')+';margin-top:4px">'+r.pct+'% match</div></div>'})}html+='<button class="btn" onclick="qs=fq();render()" style="margin-top:8px">\u21ba Start forfra</button>';html+=buildSendBox();c.innerHTML=html;
-  var db=document.getElementById('btn-dl');if(db)db.addEventListener('click',downloadResultImage);
-  var cb=document.getElementById('btn-close');
-  var st=document.getElementById('send-status');
-  if(cb)cb.disabled=true;
-  sendToGitHub().then(function(ok){
-    if(st)st.textContent=ok?'Dine svar er gemt. Tak for din besvarelse.':'Tak for din besvarelse.';
-    if(cb)cb.disabled=false;
-  });
-  if(cb)cb.addEventListener('click',function(){window.close();});
-}
-function buildSendBox(){
-  return'<div class="send-box" id="send-box-wrap">'
-    +'<h3>Dine resultater er gemt</h3>'
-    +'<p id="send-status" style="font-size:14px;color:var(--t2);margin-bottom:12px">Gemmer dine svar...</p>'
-    +'<div class="nav" style="margin-top:12px;flex-wrap:wrap;gap:8px">'
-    +'<button id="btn-dl" class="btn btna">\u2b07 Download resultat som billede</button>'
-    +'<button id="btn-close" class="btn btnp">\u2715 Luk vindue</button>'
-    +'</div></div>';
+function calcR(){
+  var vals=Object.values(qs.answers).reduce(function(a,v){return a.concat(Array.isArray(v)?v:[v])},[]);
+  return SC.outcomes.map(function(o){
+    var hits=o.keywords.filter(function(k){return vals.indexOf(k)>=0}).length;
+    var pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;
+    return Object.assign({},o,{pct:pct});
+  }).sort(function(a,b){return b.pct-a.pct});
 }
 async function sendToGitHub(){
-  if(!GH_REPO||GH_REPO==='null')return false;
-  var token=(GH_T1||'')+(GH_T2||'')+(GH_T3||'');
+  if(!GH_REPO)return false;
+  var token=GH_T1+GH_T2+GH_T3;
   if(!token||token.length<10)return false;
   try{
     var resp={id:uid(),timestamp:Date.now(),contact:qs.contact,answers:qs.answers,topOutcome:calcR()[0]&&calcR()[0].title||null,completed:true};
@@ -830,12 +828,112 @@ async function sendToGitHub(){
     return r.status===204;
   }catch(e){return false}
 }
-function dlAnswers(){downloadResultImage()}
-function downloadResultImage(){
+function render(){
+  var c=document.getElementById('app');
+  if(!qs.contactDone){renderContact(c);return}
+  if(!SC.questions.length){c.innerHTML='<p>Ingen sp\u00f8rgsm\u00e5l.</p>';return}
+  if(qs.done||qs.qIdx===-1){renderResult(c);return}
+  var q=SC.questions[qs.qIdx];if(!q){renderResult(c);return}
+  var sel=qs.answers[q.id]||null;
+  var selArr=Array.isArray(sel)?sel:(sel?[sel]:[]);
+  var pct=Math.round((qs.qIdx+1)/SC.questions.length*100);
+  var hasAns=q.type==='multi'?selArr.length>0:(!!sel||q.type==='text');
+  var opts='';
+  if(q.type==='text'){
+    opts='<textarea id="ti" placeholder="Skriv dit svar...">'+(sel?esc(Array.isArray(sel)?sel.join(', '):sel):'')+'</textarea>';
+  } else if(q.type==='multi'){
+    opts='<div class="mhint">\u2611 V\u00e6lg en eller flere</div>';
+    (q.options||[]).forEach(function(o){
+      var on=selArr.indexOf(o.id)>=0;
+      opts+='<button class="obtn'+(on?' sel':'')+'" data-qid="'+esc(q.id)+'" data-oid="'+esc(o.id)+'" data-multi="1"><div class="rc" style="border-radius:3px"><div class="rd"></div></div>'+esc(o.label)+'</button>';
+    });
+  } else {
+    (q.options||[]).forEach(function(o){
+      opts+='<button class="obtn'+(sel===o.id?' sel':'')+'" data-qid="'+esc(q.id)+'" data-oid="'+esc(o.id)+'" data-single="1"><div class="rc"><div class="rd"></div></div>'+esc(o.label)+'</button>';
+    });
+  }
+  c.innerHTML='<div class="pbg"><div class="pf" style="width:'+Math.max(2,pct)+'%"></div></div>'
+    +'<div class="qlbl">Sp\u00f8rgsm\u00e5l '+(qs.qIdx+1)+' af '+SC.questions.length+'</div>'
+    +(q.image?'<img src="'+q.image+'" class="qimg" alt="">':'')
+    +'<div class="qt">'+esc(q.text)+'</div>'
+    +(q.sub?'<div class="qs">'+esc(q.sub)+'</div>':'<div style="margin-bottom:1.25rem"></div>')
+    +opts
+    +'<div class="nav">'
+    +(qs.qIdx>0?'<button id="btn-bk" class="btn">\u2190 Tilbage</button>':'')
+    +'<button id="btn-nx" class="btn btnp" '+(hasAns?'':'disabled')+'>'+(qs.qIdx===SC.questions.length-1?'Se resultat \u2192':'N\u00e6ste \u2192')+'</button>'
+    +'</div>';
+  c.querySelectorAll('[data-single]').forEach(function(b){b.addEventListener('click',function(){qs.answers[b.dataset.qid]=b.dataset.oid;render()})});
+  c.querySelectorAll('[data-multi]').forEach(function(b){b.addEventListener('click',function(){var cur=Array.isArray(qs.answers[b.dataset.qid])?qs.answers[b.dataset.qid]:[];var i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qs.answers[b.dataset.qid]=cur.slice();render()})});
+  var nx=document.getElementById('btn-nx');if(nx)nx.addEventListener('click',function(){goNext(q.id,q.type)});
+  var bk=document.getElementById('btn-bk');if(bk)bk.addEventListener('click',function(){if(qs.history.length){qs.qIdx=qs.history.pop();qs.done=false;render()}});
+}
+function goNext(qid,type){
+  if(type==='text'){var ta=document.getElementById('ti');if(ta)qs.answers[qid]=ta.value.trim()}
+  var q=SC.questions[qs.qIdx];var ans=qs.answers[qid];var first=Array.isArray(ans)?ans[0]:ans;
+  qs.history.push(qs.qIdx);
+  var next=getNext(q,first);
+  if(next===-1)qs.done=true;else qs.qIdx=next;
+  render();
+}
+function renderContact(c){
+  c.innerHTML='<div class="card" style="margin-bottom:0"><h2 style="font-size:18px;font-weight:500;margin-bottom:6px">Inden vi starter</h2><p style="font-size:14px;color:var(--t2)">Udfyld venligst dit navn.</p></div>'
+    +'<div class="card" style="margin-top:1px">'
+    +'<div style="margin-bottom:16px"><label>Navn <span style="color:#8b1f1f">*</span></label>'
+    +'<input type="text" id="c-name" placeholder="Dit fulde navn" value="'+(qs.contact&&qs.contact.name?esc(qs.contact.name):'')+'"></div>'
+    +'<div id="c-err" style="font-size:13px;color:#8b1f1f;margin-bottom:10px;display:none">Udfyld venligst dit navn.</div>'
+    +'<button id="btn-start" class="btn btnp">Start sp\u00f8rgeskema \u2192</button>'
+    +'</div>';
+  var btn=document.getElementById('btn-start');
+  if(btn)btn.addEventListener('click',submitContact);
+  var inp=document.getElementById('c-name');
+  if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitContact()});
+}
+function submitContact(){
+  var name=document.getElementById('c-name').value.trim();
+  var err=document.getElementById('c-err');
+  if(!name){err.style.display='block';return}
+  err.style.display='none';
+  qs.contact={name:name};
+  qs.contactDone=true;
+  render();
+}
+function renderResult(c){
   var results=calcR().filter(function(r){return r.pct>0});
-  var W=640,pad=36,H=0;
+  var html='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div>'
+    +'<div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Baseret p\u00e5 dine svar</div>';
+  if(!results.length){html+='<p style="color:var(--t2)">Ingen matchende udfald.</p>'}
+  else{results.slice(0,4).forEach(function(r,i){
+    html+='<div class="rcard'+(i===0?' top':'')+'">'
+      +(i===0?'<div class="badge ba" style="margin-bottom:8px">\u2605 Bedste match</div>':'')
+      +'<div style="font-size:17px;font-weight:500;color:'+(i===0?'var(--tod)':'var(--t)')+';margin-bottom:4px">'+esc(r.title)+'</div>'
+      +'<div style="font-size:14px;color:'+(i===0?'var(--tod2)':'var(--t2)')+';line-height:1.6;margin-bottom:10px">'+esc(r.desc)+'</div>'
+      +(r.tags&&r.tags.length?'<div class="tags">'+r.tags.map(function(t){return'<span class="tag">'+esc(t)+'</span>'}).join('')+'</div>':'')
+      +'<div class="sbg" style="margin-top:10px"><div class="sf" style="width:'+r.pct+'%"></div></div>'
+      +'<div style="font-size:12px;color:'+(i===0?'var(--fg)':'var(--t2)')+';margin-top:4px">'+r.pct+'% match</div>'
+      +'</div>';
+  })}
+  html+='<div class="send-box"><h3>Dine svar er registreret</h3>'
+    +'<p id="send-status">Gemmer dine svar...</p>'
+    +'<div class="nav">'
+    +'<button id="btn-jpg" class="btn btna">\u2b07 Download resultat som billede</button>'
+    +'<button id="btn-close" class="btn btnp" disabled>\u2715 Afslut</button>'
+    +'</div></div>';
+  c.innerHTML=html;
+  var cb=document.getElementById('btn-close');
+  var st=document.getElementById('send-status');
+  sendToGitHub().then(function(ok){
+    if(st)st.textContent=ok?'Dine svar er gemt. Tak for din besvarelse.':'Tak for din besvarelse.';
+    if(cb)cb.disabled=false;
+  });
+  if(cb)cb.addEventListener('click',function(){window.close();history.go(-history.length)});
+  var jb=document.getElementById('btn-jpg');
+  if(jb)jb.addEventListener('click',downloadJPG);
+}
+function downloadJPG(){
+  var results=calcR().filter(function(r){return r.pct>0});
+  var W=640,pad=36;
   var rows=results.slice(0,4);
-  H=64+48+(rows.length*100)+pad+40;
+  var H=64+48+(rows.length*96)+pad+20;
   var canvas=document.createElement('canvas');
   canvas.width=W;canvas.height=H;
   var ctx=canvas.getContext('2d');
@@ -851,131 +949,48 @@ function downloadResultImage(){
   ctx.fillStyle='#8a8d80';ctx.font='13px system-ui,sans-serif';
   ctx.fillText(new Date().toLocaleDateString('da-DK'),pad,y);y+=24;
   rows.forEach(function(r,i){
-    var isTop=i===0,cH=84,bY=y+cH-18;
-    function rr(x,y,w,h,rad){ctx.beginPath();ctx.moveTo(x+rad,y);ctx.lineTo(x+w-rad,y);ctx.quadraticCurveTo(x+w,y,x+w,y+rad);ctx.lineTo(x+w,y+h-rad);ctx.quadraticCurveTo(x+w,y+h,x+w-rad,y+h);ctx.lineTo(x+rad,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-rad);ctx.lineTo(x,y+rad);ctx.quadraticCurveTo(x,y,x+rad,y);ctx.closePath();ctx.fill();}
+    var isTop=i===0,cH=80;
+    function rr(x,y,w,h,rad){ctx.beginPath();ctx.moveTo(x+rad,y);ctx.lineTo(x+w-rad,y);ctx.quadraticCurveTo(x+w,y,x+w,y+rad);ctx.lineTo(x+w,y+h-rad);ctx.quadraticCurveTo(x+w,y+h,x+w-rad,y+h);ctx.lineTo(x+rad,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-rad);ctx.lineTo(x,y+rad);ctx.quadraticCurveTo(x,y,x+rad,y);ctx.closePath();ctx.fill()}
     ctx.fillStyle=isTop?'#333C35':'#F7F5EF';rr(pad,y,W-pad*2,cH,4);
-    if(isTop){ctx.fillStyle='#F0FE89';rr(pad+10,y+8,100,16,3);ctx.fillStyle='#252900';ctx.font='500 11px system-ui,sans-serif';ctx.fillText('\u2605 Bedste match',pad+16,y+20);}
+    if(isTop){ctx.fillStyle='#F0FE89';rr(pad+10,y+8,100,16,3);ctx.fillStyle='#252900';ctx.font='500 11px system-ui,sans-serif';ctx.fillText('\u2605 Bedste match',pad+16,y+20)}
     ctx.fillStyle=isTop?'#EFECE4':'#333127';ctx.font='500 15px system-ui,sans-serif';
     ctx.fillText(r.title,pad+10,y+(isTop?40:22));
     ctx.fillStyle=isTop?'#ABB892':'#5a5d53';ctx.font='13px system-ui,sans-serif';
-    var desc=(r.desc||'').slice(0,72);ctx.fillText(desc,pad+10,y+(isTop?58:40));
-    var barW=W-pad*2-20;
-    ctx.fillStyle=isTop?'rgba(239,236,228,.2)':'rgba(51,49,39,.1)';rr(pad+10,bY,barW,5,2);
-    ctx.fillStyle=isTop?'#F0FE89':'#ABB892';rr(pad+10,bY,Math.round(barW*r.pct/100),5,2);
-    ctx.fillStyle=isTop?'#ABB892':'#8a8d80';ctx.font='12px system-ui,sans-serif';
+    ctx.fillText((r.desc||'').slice(0,70),pad+10,y+(isTop?58:40));
+    var bY=y+cH-14,bW=W-pad*2-20;
+    ctx.fillStyle=isTop?'rgba(239,236,228,.2)':'rgba(51,49,39,.1)';rr(pad+10,bY,bW,5,2);
+    ctx.fillStyle=isTop?'#F0FE89':'#ABB892';rr(pad+10,bY,Math.round(bW*r.pct/100),5,2);
+    ctx.fillStyle=isTop?'#ABB892':'#8a8d80';ctx.font='11px system-ui,sans-serif';
     ctx.fillText(r.pct+'% match',pad+10,bY+16);
     y+=cH+8;
   });
-  var a=document.createElement('a');a.href=canvas.toDataURL('image/png');
+  var a=document.createElement('a');
+  a.href=canvas.toDataURL('image/jpeg',0.95);
   var nm=qs.contact&&qs.contact.name?qs.contact.name.replace(/\s+/g,'-'):'resultat';
-  a.download='resultat-'+nm+'.png';a.click();
+  a.download='resultat-'+nm+'.jpg';
+  a.click();
 }
-
 render();
 <\/script></body></html>`;
 }
 
-function getNI(q,aid){const o=(q.options||[]).find(x=>x.id===aid);if(o&&o.nextQ==='__end__')return -1;if(o&&o.nextQ){const i=schema.questions.findIndex(x=>x.id===o.nextQ);return i>=0?i:-1}const c=schema.questions.findIndex(x=>x.id===q.id);return c+1<schema.questions.length?c+1:-1}
-function calcResults(){const vals=Object.values(qstate.answers).flatMap(v=>Array.isArray(v)?v:[v]);return schema.outcomes.map(o=>{const hits=o.keywords.filter(k=>vals.includes(k)).length;const pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;return{...o,pct}}).sort((a,b)=>b.pct-a.pct)}
-function renderQuiz(){const c=document.getElementById('qcontainer');if(!schema.questions.length){c.innerHTML=`<div class="notice ni-warn"><span>⚠</span><span>Ingen spørgsmål endnu.</span></div>`;return}if(qstate.done||qstate.qIdx===-1){renderQResult(c);return}const qs=schema.questions;const qi=qstate.qIdx;if(qi>=qs.length){renderQResult(c);return}const q=qs[qi];const sel=qstate.answers[q.id]||null;const pct=Math.round(qi/qs.length*100);let opts='';
-  const selArr=Array.isArray(sel)?sel:(sel?[sel]:[]);
-  if(q.type==='text'){opts=`<textarea id="ti" style="width:100%;min-height:80px;font-family:var(--font);font-size:14px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);outline:none;resize:vertical;margin-bottom:1rem" placeholder="Skriv dit svar...">${esc(Array.isArray(sel)?sel.join(', '):sel||'')}</textarea>`}
-  else if(q.type==='multi'){
-    opts='<div style="font-size:12px;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:5px"><span>☑</span> Vælg en eller flere muligheder</div>'+(q.options||[]).map(o=>`<button class="obtn ${selArr.includes(o.id)?'sel':''}" onclick="selMulti('${q.id}','${o.id}')"><div class="rc" style="border-radius:3px"><div class="rd" style="border-radius:2px;width:10px;height:10px"></div></div>${esc(o.label)}</button>`).join('')
-  }else{opts=(q.options||[]).map(o=>`<button class="obtn ${sel===o.id?'sel':''}" onclick="selA('${q.id}','${o.id}')"><div class="rc"><div class="rd"></div></div>${esc(o.label)}</button>`).join('')}
-  const hasAns=q.type==='multi'?selArr.length>0:(!!sel||q.type==='text');
-  c.innerHTML=`<div class="pbg"><div class="pf" style="width:${Math.max(2,pct)}%"></div></div><div class="qsl">Spørgsmål ${qi+1} af ${qs.length}</div>${q.image?`<img src="${q.image}" class="q-img" alt="">`:''}  <div class="qt">${esc(q.text)}</div>${q.sub?`<div class="qsub">${esc(q.sub)}</div>`:'<div style="margin-bottom:1.25rem"></div>'}${opts}<div class="qnav">${qi>0?`<button class="btn" onclick="goBack()">← Tilbage</button>`:''}<button class="btn btnp" onclick="goNxt('${q.id}','${q.type}')" ${!hasAns?'disabled':''}>${qi===qs.length-1?'Se resultat →':'Næste →'}</button></div>`}
-function selA(qid,oid){qstate.answers[qid]=oid;renderQuiz()}
-function selMulti(qid,oid){const cur=Array.isArray(qstate.answers[qid])?qstate.answers[qid]:[];const i=cur.indexOf(oid);if(i>=0)cur.splice(i,1);else cur.push(oid);qstate.answers[qid]=[...cur];renderQuiz()}
-function goNxt(qid,type){if(type==='text'){const ta=document.getElementById('ti');if(ta)qstate.answers[qid]=ta.value.trim()}const q=schema.questions[qstate.qIdx];const ans=qstate.answers[qid];const hasAns=type==='multi'?(qstate.answers[qid]&&qstate.answers[qid].length>0):!!ans;if(!hasAns&&type!=='text')return;qstate.history.push(qstate.qIdx);const next=getNI(q,Array.isArray(ans)?ans[0]:ans);if(next===-1){qstate.done=true;const res=calcResults();responses.push({id:uid(),timestamp:Date.now(),answers:{...qstate.answers},topOutcome:res[0]?.title||null,completed:true});saveR()}else{qstate.qIdx=next}renderQuiz()}
-function goBack(){if(!qstate.history.length)return;qstate.qIdx=qstate.history.pop();qstate.done=false;renderQuiz()}
-function renderQResult(c){const results=calcResults().filter(r=>r.pct>0);let html=`<div class="qt">Dine resultater</div><div class="qsub">Baseret på dine svar</div>`;if(!results.length){html+=`<div class="notice ni-warn"><span>⚠</span><span>Ingen matchende udfald.</span></div>`}else{results.slice(0,4).forEach((r,i)=>{html+=`<div class="rcard ${i===0?'top':''}">  ${i===0?`<div class="badge bg-a" style="margin-bottom:8px">★ Bedste match</div>`:''}<div class="rtitle">${esc(r.title)}</div><div class="rdesc">${esc(r.desc)}</div>${r.tags?.length?`<div class="tags">${r.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}<div class="sbg" style="margin-top:10px"><div class="sf" style="width:${r.pct}%"></div></div><div class="spct">${r.pct}% match</div></div>`})}html+=`<button class="btn" onclick="qstate=fq();renderQuiz()" style="margin-top:8px">↺ Start forfra</button>`;c.innerHTML=html}
-
-function renderData(){const el=document.getElementById('dcontent');const total=responses.length;if(!total){el.innerHTML=`<div class="notice ni-info"><span>ℹ</span><span>Ingen svar endnu.</span></div>`;return}const comp=responses.filter(r=>r.completed).length;const oc={};schema.outcomes.forEach(o=>oc[o.title]=0);responses.forEach(r=>{if(r.topOutcome&&oc[r.topOutcome]!==undefined)oc[r.topOutcome]++});const mx=Math.max(...Object.values(oc),1);let h=`<div class="sgrid"><div class="sc"><div class="sn">${total}</div><div class="sl">Besvarelser</div></div><div class="sc"><div class="sn">${Math.round(comp/total*100)}%</div><div class="sl">Fuldført</div></div><div class="sc"><div class="sn">${schema.questions.length}</div><div class="sl">Spørgsmål</div></div></div><div class="slbl">Udfald-fordeling</div><div class="card">`;Object.entries(oc).forEach(([t,n])=>{h+=`<div class="brow"><div class="blbl">${esc(t)}</div><div class="btrk"><div class="bfil" style="width:${Math.round(n/mx*100)}%"></div></div><div class="bcnt">${n}</div></div>`});h+=`</div><div class="slbl">Alle besvarelser</div>`;responses.slice().reverse().forEach((r,i)=>{const d=new Date(r.timestamp);const ds=d.toLocaleDateString('da-DK')+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});h+=`<div class="ri"><div class="rh"><div><span style="font-size:13px;font-weight:500">Besvarelse #${responses.length-i}</span>${r.contact?` <span style="font-size:13px;color:var(--text2)">— ${esc(r.contact.name)}</span>`:''}</div><span style="font-size:12px;color:var(--text2)">${ds}</span></div>${r.contact?`<div style="display:flex;gap:16px;margin-bottom:10px;font-size:13px"><span>👤 ${esc(r.contact.name)}</span></div>`:''} ${r.topOutcome?`<div class="badge bg-f" style="margin-bottom:10px">${esc(r.topOutcome)}</div>`:''}<div class="rag">${schema.questions.map(q=>{const a=r.answers[q.id];if(!a)return'';const l=Array.isArray(a)?a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(', '):(q.options||[]).find(o=>o.id===a)?.label||a;return`<div><div class="rq">${esc(q.text)}</div><div class="ra">${esc(l)}</div></div>`}).join('')}</div></div>`});h+=`<button class="btn btnd" onclick="clearR()" style="margin-top:8px">🗑 Slet alle svar</button>`;el.innerHTML=h}
-function clearR(){if(!confirm('Slet alle svar?'))return;responses=[];saveR();renderData()}
-
-function renderExport(){document.getElementById('ebox').textContent=JSON.stringify(schema,null,2)}
-function copyExport(){navigator.clipboard.writeText(JSON.stringify(schema,null,2)).then(()=>toast('Kopieret!')).catch(()=>toast('Brug Ctrl+C'))}
-function downloadExport(){const b=new Blob([JSON.stringify(schema,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(schema.title||'spørgeskema').replace(/\s+/g,'-').toLowerCase()+'.json';a.click()}
-function doImport(){const raw=document.getElementById('ibox').value.trim();if(!raw){alert('Indsæt JSON først.');return}try{const d=JSON.parse(raw);if(!d.questions||!Array.isArray(d.questions)){alert('Ugyldigt format.');return}if(!confirm('Erstat nuværende spørgeskema?'))return;schema=d;saveAll();document.getElementById('ibox').value='';renderBuild();alert('Importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
-function importResponses(){const raw=document.getElementById('rbox').value.trim();if(!raw){alert('Indsæt svar-JSON først.');return}try{const d=JSON.parse(raw);if(!Array.isArray(d)){alert('Ugyldigt format — forventede et array.');return}responses=[...responses,...d];saveR();document.getElementById('rbox').value='';toast(`${d.length} svar importeret!`);alert(`${d.length} svar importeret succesfuldt!`)}catch(e){alert('Ugyldig JSON: '+e.message)}}
-function downloadResponses(fmt){let content,filename,mime;if(fmt==='json'){content=JSON.stringify(responses,null,2);filename='svar.json';mime='application/json'}else{const cols=['id','timestamp','navn','topOutcome',...schema.questions.map(q=>q.text)];const rows=responses.map(r=>[r.id,new Date(r.timestamp).toISOString(),r.contact?.name||'',r.topOutcome||'',...schema.questions.map(q=>{const a=r.answers[q.id];if(Array.isArray(a))return a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(' | ');return(q.options||[]).find(o=>o.id===a)?.label||a||''})]);content=[cols,...rows].map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');filename='svar.csv';mime='text/csv;charset=utf-8'}const b=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=filename;a.click()}
-
-function downloadAdminConfig(){
-  if(!ghConfig||!ghConfig.token){
-    alert('Du skal v\u00e6re logget ind med GitHub-token for at generere en konfigureret fil.');
-    return;
-  }
-  const pw=(document.getElementById('share-admin-pw')||{}).value||'OSK2026';
-  const tok=ghConfig.token||'';
-  const p1=tok.slice(0,8),p2=tok.slice(8,24),p3=tok.slice(24);
-  const repo=ghConfig.repo||'';
-  const fname=ghConfig.filename||'data.json';
-
-  // Generate a tiny loader page that sets credentials then redirects to admin
-  const adminUrl='https://os-le12.github.io/spoergeskema_admin/';
-  const stub=`<!DOCTYPE html>
-<html lang="da"><head><meta charset="UTF-8">
-<title>Konfigurerer admin...</title>
-<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;flex-direction:column;gap:16px}
-.box{background:#F7F5EF;color:#333127;border-radius:8px;padding:2rem;max-width:360px;text-align:center}
-h2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53;line-height:1.6}</style>
-</head><body>
-<div class="box">
-<h2>Konfigurerer adgang...</h2>
-<p>Et \u00f8jeblik \u2014 du omdirigeres til admin-siden.</p>
-</div>
-<script>
-(function(){
-  var t1='${p1}',t2='${p2}',t3='${p3}';
-  var tok=t1+t2+t3;
-  var cfg={token:tok,repo:'${repo}',filename:'${fname}'};
-  localStorage.setItem('qs_gh_config',JSON.stringify(cfg));
-  localStorage.setItem('qs_admin_pw','${pw}');
-  localStorage.setItem('qs_logged_in','1');
-  window.location.href='${adminUrl}';
-})();
-<\/script></body></html>`;
-
-  const blob=new Blob([stub],{type:'text/html;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='admin-adgang.html';
-  a.click();
-  toast('Adgangsfil downloadet!');
-}
-let tt;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2200)}
 // ── Bootstrap ──
 (async function(){
-  try{ const s=localStorage.getItem('qs_gh_config'); if(s)ghConfig=JSON.parse(s); }catch(e){}
-  const hasPw=!!localStorage.getItem(ADMIN_PW_KEY);
-  const isLoggedIn=localStorage.getItem('qs_logged_in')==='1';
-  // Also auto-login if config was set by admin-adgang.html stub
-  const hasConfig=!!localStorage.getItem('qs_gh_config');
-  if((hasPw&&isLoggedIn)||(hasConfig&&isLoggedIn)){
-    document.getElementById('login-overlay').classList.add('hidden');
-    document.getElementById('gh-bar').style.display='flex';
-    initApp();
-    if(ghConfig){
-      setGhStatus('saving','Forbinder til GitHub...');
-      ghPull(true).then(()=>{}).catch(()=>setGhStatus('error','Kunne ikke forbinde'));
-    } else {
-      setGhStatus('local','Lokal tilstand');
-    }
-    return;
-  }
+  try{const s=localStorage.getItem(LSG);if(s)ghConfig=JSON.parse(s)}catch(e){}
+  const hasPw=!!localStorage.getItem(LSP);
+  const isLoggedIn=localStorage.getItem(LSL)==='1';
+  if(hasPw&&isLoggedIn){openAdmin();return}
   if(ghConfig){
-    const tf=document.getElementById('login-token');
-    const rf=document.getElementById('login-repo');
-    const ff=document.getElementById('login-filename');
-    if(tf)tf.value=ghConfig.token||'';
-    if(rf)rf.value=ghConfig.repo||'';
-    if(ff)ff.value=ghConfig.filename||'data.json';
+    document.getElementById('login-token').value=ghConfig.token||'';
+    document.getElementById('login-repo').value=ghConfig.repo||'';
+    document.getElementById('login-filename').value=ghConfig.filename||'data.json';
   }
-  ['login-pw','login-token','login-repo','login-filename'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+  ['login-pw','login-token','login-repo','login-filename'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
   });
   document.getElementById('login-btn').addEventListener('click',doLogin);
 })();
-</script></body></html>
+</script>
+</body>
+</html>
