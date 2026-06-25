@@ -649,14 +649,27 @@ function downloadUserFile(){
 }
 
 function downloadAdminAccess(){
-  if(!ghConfig||!ghConfig.token){alert('Log ind med GitHub-token først.');return}
+  if(!ghConfig||!ghConfig.token){alert('Log ind med GitHub-token f\u00f8rst.');return}
   const pw=document.getElementById('share-pw').value.trim()||'OSK2026';
   const t=ghConfig.token;
   const p1=t.slice(0,8),p2=t.slice(8,24),p3=t.slice(24);
   const repo=ghConfig.repo||'';
   const fname=ghConfig.filename||'data.json';
-  const adminUrl='https://'+repo.split('/')[0].toLowerCase()+'.github.io/'+repo.split('/')[1]+'/';
-  const stub=`<!DOCTYPE html>\n<html lang="da"><head><meta charset="UTF-8"><title>Konfigurerer...</title>\n<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;text-align:center;padding:1rem}\n.box{background:#F7F5EF;color:#333127;border-radius:8px;padding:2rem;max-width:320px}\nh2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53}</style>\n</head><body><div class="box"><h2>Konfigurerer admin...</h2><p>Du videresendes om et \u00f8jeblik.</p></div>\n<script>\n(function(){\n  var p1='${p1}',p2='${p2}',p3='${p3}';\n  var tok=p1+p2+p3;\n  localStorage.setItem('qs_v3_ghconfig',JSON.stringify({token:tok,repo:'${repo}',filename:'${fname}'}));\n  localStorage.setItem('qs_v3_pw','${pw}');\n  localStorage.setItem('qs_v3_loggedin','1');\n  window.location.href='${adminUrl}';\n})();\n<\/script></body></html>`;
+  // Build admin URL
+  const parts=repo.split('/');
+  const adminUrl='https://'+parts[0].toLowerCase()+'.github.io/'+(parts[1]||'')+'/';
+  // Encode credentials as base64 payload passed via URL hash
+  const payload=btoa(unescape(encodeURIComponent(JSON.stringify({p1,p2,p3,repo,fname,pw}))));
+  const redirectUrl=adminUrl+'#cfg='+payload;
+  const stub=`<!DOCTYPE html>
+<html lang="da"><head><meta charset="UTF-8"><title>Konfigurerer admin...</title>
+<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;text-align:center;padding:1rem}
+.box{background:#F7F5EF;color:#333127;border-radius:8px;padding:2rem;max-width:320px}
+h2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53;line-height:1.6}</style>
+</head><body>
+<div class="box"><h2>Konfigurerer adgang...</h2><p>Du videresendes til admin. Vent et \u00f8jeblik.</p></div>
+<script>window.location.href='${redirectUrl}';<\/script>
+</body></html>`;
   dl(stub,'admin-adgang.html','text/html;charset=utf-8');
   toast('admin-adgang.html downloadet!');
 }
@@ -976,6 +989,24 @@ render();
 
 // ── Bootstrap ──
 (async function(){
+  // Check for credential payload in URL hash (from admin-adgang.html)
+  const hash=window.location.hash;
+  if(hash&&hash.startsWith('#cfg=')){
+    try{
+      const raw=decodeURIComponent(escape(atob(hash.slice(5))));
+      const cfg=JSON.parse(raw);
+      const tok=(cfg.p1||'')+(cfg.p2||'')+(cfg.p3||'');
+      ghConfig={token:tok,repo:cfg.repo||'',filename:cfg.fname||'data.json'};
+      localStorage.setItem(LSG,JSON.stringify(ghConfig));
+      if(cfg.pw)localStorage.setItem(LSP,cfg.pw);
+      localStorage.setItem(LSL,'1');
+      // Clear hash from URL without reload
+      history.replaceState(null,'',window.location.pathname+window.location.search);
+      openAdmin();
+      return;
+    }catch(e){console.warn('Hash config parse error:',e)}
+  }
+  // Normal login flow
   try{const s=localStorage.getItem(LSG);if(s)ghConfig=JSON.parse(s)}catch(e){}
   const hasPw=!!localStorage.getItem(LSP);
   const isLoggedIn=localStorage.getItem(LSL)==='1';
