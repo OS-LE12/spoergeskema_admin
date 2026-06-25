@@ -24,7 +24,7 @@
       },
       {
         "id": "_0fucb8",
-        "text": "Hvad synes du skal ÃÂ¦ndres?",
+        "text": "Hvad synes du skal ændres?",
         "sub": "",
         "type": "multi",
         "options": [
@@ -80,18 +80,18 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Tak for svar. MÃÂ¥ vi kontakte dig?",
+        "text": "Tak for svar. Må vi kontakte dig?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Ja, det mÃÂ¥ i gerne",
+            "label": "Ja, det må i gerne",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Nej tak, jeg gÃÂ¸r det selv",
+            "label": "Nej tak, jeg gør det selv",
             "nextQ": null
           }
         ]
