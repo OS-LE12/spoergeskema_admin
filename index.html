@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="da">
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spørgeskema — Admin</title>
+<title>Sp&oslash;rgeskema &mdash; Admin</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -18,7 +18,7 @@
 }
 body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100vh}
 
-/* ── Login ── */
+/* Login */
 #login-overlay{position:fixed;inset:0;background:var(--dg);display:flex;align-items:center;justify-content:center;z-index:9999;padding:1rem}
 #login-overlay.hidden{display:none}
 .login-box{width:100%;max-width:360px;background:var(--cb);border-radius:var(--rl);padding:2rem}
@@ -37,7 +37,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .lskip{width:100%;text-align:center;margin-top:10px;font-size:12px;color:var(--t3);background:none;border:none;cursor:pointer;font-family:var(--font)}
 .lskip:hover{color:var(--t2)}
 
-/* ── Layout ── */
+/* Layout */
 .shell{display:flex;min-height:100vh}
 .sidebar{width:220px;background:var(--dg);display:flex;flex-direction:column;flex-shrink:0}
 .slogo{padding:1.25rem 1.25rem 1rem;border-bottom:.5px solid var(--bdd)}
@@ -57,7 +57,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .dot.error{background:#e07070}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
 
-/* ── GitHub bar ── */
+/* GitHub bar */
 #gh-bar{background:var(--dg);padding:6px 1.25rem;display:none;align-items:center;gap:8px;border-bottom:.5px solid var(--bdd);flex-wrap:wrap}
 .gh-info{flex:1;font-size:12px;color:var(--tod2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gh-actions{display:flex;gap:6px;flex-shrink:0}
@@ -66,24 +66,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .ghbtn.p{background:var(--ac);color:var(--at);border-color:var(--ac)}
 .ghbtn.p:hover{background:#ddf000}
 
-/* ── Pages ── */
+/* Pages */
 .page{display:none;flex:1;overflow-y:auto}
 .page.active{display:block}
 .inner{max-width:700px;margin:0 auto;padding:2rem 1.5rem 4rem}
 
-/* ── Typography ── */
+/* Typography */
 .ptitle{font-size:22px;font-weight:500;margin-bottom:4px}
 .psub{font-size:14px;color:var(--t2);margin-bottom:1.75rem;line-height:1.6}
 .slbl{font-size:11px;font-weight:500;color:var(--t3);letter-spacing:.07em;text-transform:uppercase;margin:1rem 0 8px}
 .divid{height:.5px;background:var(--bd);margin:1rem 0}
 
-/* ── Cards ── */
+/* Cards */
 .card{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px}
 .card.hl{border:1.5px solid var(--dg)}
 .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .ct{font-size:15px;font-weight:500}
 
-/* ── Form ── */
+/* Form */
 label{font-size:13px;color:var(--t2);display:block;margin-bottom:4px}
 input[type=text],input[type=email],input[type=password],textarea,select{
   width:100%;font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);
@@ -97,7 +97,7 @@ select{cursor:pointer}
 .row>*{flex:1;min-width:0}
 .fhint{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.5}
 
-/* ── Buttons ── */
+/* Buttons */
 .btn{padding:8px 16px;border:.5px solid var(--bd2);border-radius:var(--r);background:transparent;color:var(--t);font-size:14px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:background .12s}
 .btn:hover{background:var(--bg2)}
 .btn:disabled{opacity:.38;cursor:not-allowed}
@@ -112,13 +112,13 @@ select{cursor:pointer}
 .btnda{border-style:dashed;color:var(--t2)}
 .btnda:hover{color:var(--t);background:var(--bg2)}
 
-/* ── Notices ── */
+/* Notices */
 .notice{padding:10px 14px;border-radius:var(--r);font-size:14px;margin-bottom:1rem;border:.5px solid;display:flex;gap:8px;line-height:1.5}
 .notice-info{background:#d4e8f5;border-color:rgba(13,61,99,.2);color:#0d3d63}
 .notice-ok{background:#d8edcc;border-color:rgba(30,74,10,.2);color:#1e4a0a}
 .notice-warn{background:#fdf3d0;border-color:rgba(107,74,0,.2);color:#6b4a00}
 
-/* ── Question cards ── */
+/* Question cards */
 .qcard{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);margin-bottom:8px;overflow:hidden}
 .qch{display:flex;align-items:center;gap:10px;padding:12px 1.25rem;cursor:pointer;user-select:none}
 .qch:hover{background:var(--bg2)}
@@ -133,7 +133,7 @@ select{cursor:pointer}
 .orow input{flex:1}
 .onxt{flex-shrink:0;font-size:13px;padding:6px 8px;width:185px}
 
-/* ── Badges / keywords ── */
+/* Badges / keywords */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r);font-size:12px;font-weight:500;border:none;cursor:default}
 .bg-g{background:var(--dg);color:var(--fg)}
 .bg-f{background:#d8e2cf;color:#2d4028}
@@ -144,7 +144,7 @@ select{cursor:pointer}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .tag{font-size:12px;padding:3px 9px;border-radius:var(--r);background:var(--bg2);color:var(--t2);border:.5px solid var(--bd)}
 
-/* ── Stats ── */
+/* Stats */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
 .sc{background:var(--dg);border-radius:var(--r);padding:1rem;text-align:center}
 .sn{font-size:26px;font-weight:500;color:var(--tod)}
@@ -160,22 +160,22 @@ select{cursor:pointer}
 .rq{font-size:12px;color:var(--t2);margin-bottom:1px}
 .ra{font-size:14px;font-weight:500}
 
-/* ── Img upload ── */
+/* Img upload */
 .imgup{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:.5px dashed var(--bd2);border-radius:var(--r);font-size:13px;color:var(--t2);cursor:pointer}
 .imgup:hover{background:var(--bg2);color:var(--t)}
 .imgprev{position:relative;display:inline-block}
 .imgprev img{max-width:100%;max-height:160px;border-radius:var(--rl);border:.5px solid var(--bd);display:block}
 .imgprev .rmimg{position:absolute;top:5px;right:5px;padding:3px 8px;background:rgba(51,49,39,.7);color:#fff;border:none;border-radius:var(--r);font-size:12px;cursor:pointer}
 
-/* ── Code box ── */
+/* Code box */
 .cbox{background:var(--bg2);border:.5px solid var(--bd);border-radius:var(--r);padding:12px;font-family:monospace;font-size:13px;color:var(--t2);word-break:break-all;max-height:120px;overflow-y:auto;margin-bottom:10px}
 .iarea{width:100%;min-height:100px;font-family:monospace;font-size:13px}
 
-/* ── Toast ── */
+/* Toast */
 #toast{position:fixed;bottom:20px;right:20px;background:var(--ac);color:var(--at);padding:10px 16px;border-radius:var(--r);font-size:14px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10000}
 #toast.show{opacity:1}
 
-/* ── Mobile ── */
+/* Mobile */
 @media(max-width:640px){
   .sidebar{width:52px}
   .slogo,.nsec,.nitem span,.sbot p,.sdot span{display:none}
@@ -199,15 +199,15 @@ select{cursor:pointer}
   <div class="login-box">
     <div class="login-logo">
       <div class="badge bg-a" style="margin-bottom:10px">Admin</div>
-      <h1>Spørgeskema-system</h1>
-      <p>Log ind for at fortsætte</p>
+      <h1>Sp&oslash;rgeskema-system</h1>
+      <p>Log ind for at forts&aelig;tte</p>
     </div>
     <div class="lf">
       <label>Adgangskode</label>
       <input type="password" id="login-pw" placeholder="Din adgangskode" autocomplete="current-password">
     </div>
     <div class="login-err" id="login-err"></div>
-    <button class="lbtn" id="login-btn">Log ind →</button>
+    <button class="lbtn" id="login-btn">Log ind &#8594;</button>
     <div class="sep"></div>
     <details style="font-size:13px;color:var(--t2)">
       <summary style="cursor:pointer;color:var(--t3);font-size:12px">GitHub-synkronisering (valgfrit)</summary>
@@ -215,7 +215,7 @@ select{cursor:pointer}
         <div class="lf">
           <label>Personal Access Token</label>
           <input type="password" id="login-token" placeholder="github_pat_xxxx" autocomplete="off">
-          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">GitHub → Settings → Developer settings → Fine-grained tokens. Giv Contents: Read &amp; Write på dit admin-repo.</div>
+          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">GitHub &#8594; Settings &#8594; Developer settings &#8594; Fine-grained tokens. Giv Contents: Read &amp; Write p&aring; dit admin-repo.</div>
         </div>
         <div class="lf">
           <label>Repository</label>
@@ -235,26 +235,26 @@ select{cursor:pointer}
   <div class="dot" id="gh-dot"></div>
   <div class="gh-info" id="gh-info">Ikke tilsluttet</div>
   <div class="gh-actions">
-    <button class="ghbtn p" onclick="ghSave()">↑ Gem</button>
-    <button class="ghbtn" onclick="ghPull(false)">↓ Hent</button>
+    <button class="ghbtn p" onclick="ghSave()">&#8593; Gem</button>
+    <button class="ghbtn" onclick="ghPull(false)">&#8595; Hent</button>
     <button class="ghbtn" onclick="doLogout()">Log ud</button>
   </div>
 </div>
 
 <div class="shell">
 <nav class="sidebar">
-  <div class="slogo"><h1>Spørgeskema</h1><p>Beslutningssystem</p></div>
+  <div class="slogo"><h1>Sp&oslash;rgeskema</h1><p>Beslutningssystem</p></div>
   <div class="nsec">Admin</div>
-  <button class="nitem active" onclick="showPage('build',this)"><span class="ni">⚙</span><span>Byg spørgeskema</span></button>
-  <button class="nitem" onclick="showPage('outcomes',this)"><span class="ni">🎯</span><span>Udfald &amp; logik</span></button>
-  <button class="nitem" onclick="showPage('data',this)"><span class="ni">📊</span><span>Indsamlede svar</span></button>
-  <button class="nitem" onclick="showPage('share',this)"><span class="ni">🔗</span><span>Del med brugere</span></button>
-  <button class="nitem" onclick="showPage('export',this)"><span class="ni">↗</span><span>Eksport / import</span></button>
+  <button class="nitem active" onclick="showPage('build',this)"><span class="ni">&#9881;</span><span>Byg sp&oslash;rgeskema</span></button>
+  <button class="nitem" onclick="showPage('outcomes',this)"><span class="ni">&#127919;</span><span>Udfald &amp; logik</span></button>
+  <button class="nitem" onclick="showPage('data',this)"><span class="ni">&#128202;</span><span>Indsamlede svar</span></button>
+  <button class="nitem" onclick="showPage('share',this)"><span class="ni">&#128279;</span><span>Del med brugere</span></button>
+  <button class="nitem" onclick="showPage('export',this)"><span class="ni">&#8599;</span><span>Eksport / import</span></button>
   <div class="ndiv"></div>
   <div class="nsec">Bruger</div>
-  <button class="nitem" onclick="showPage('quiz',this)"><span class="ni">▶</span><span>Afspil spørgeskema</span></button>
+  <button class="nitem" onclick="showPage('quiz',this)"><span class="ni">&#9654;</span><span>Afspil sp&oslash;rgeskema</span></button>
   <div class="sbot">
-    <div class="sdot"><div class="dot" id="sb-dot"></div><span id="qcnt">0 spørgsmål</span></div>
+    <div class="sdot"><div class="dot" id="sb-dot"></div><span id="qcnt">0 sp&oslash;rgsm&aring;l</span></div>
   </div>
 </nav>
 <main class="main">
@@ -262,31 +262,31 @@ select{cursor:pointer}
 <!-- BUILD -->
 <div class="page active" id="page-build">
 <div class="inner">
-  <div class="ptitle">Byg spørgeskema</div>
-  <div class="psub">Tilføj spørgsmål, svarmuligheder og forgreningslogik.</div>
+  <div class="ptitle">Byg sp&oslash;rgeskema</div>
+  <div class="psub">Tilf&oslash;j sp&oslash;rgsm&aring;l, svarmuligheder og forgreningslogik.</div>
   <div class="card">
     <div class="slbl">Generelt</div>
     <div class="field"><label>Titel</label><input type="text" id="s-title" oninput="schema.title=this.value;updateBadge()"></div>
     <div class="field"><label>Beskrivelse</label><textarea id="s-desc" oninput="schema.description=this.value"></textarea></div>
   </div>
   <div class="slbl" style="display:flex;justify-content:space-between;align-items:center">
-    <span id="qslbl">Spørgsmål (0)</span>
+    <span id="qslbl">Sp&oslash;rgsm&aring;l (0)</span>
     <button class="btn btnsm" onclick="collapseAll()">Fold alle</button>
   </div>
   <div id="qlist"></div>
-  <button class="btn btnda btnbl" onclick="addQ()" style="margin-bottom:1.5rem">+ Tilføj spørgsmål</button>
-  <button class="btn btnp btnbl" onclick="saveAll()">💾 Gem alt</button>
+  <button class="btn btnda btnbl" onclick="addQ()" style="margin-bottom:1.5rem">+ Tilf&oslash;j sp&oslash;rgsm&aring;l</button>
+  <button class="btn btnp btnbl" onclick="saveAll()">&#128190; Gem alt</button>
 </div></div>
 
 <!-- OUTCOMES -->
 <div class="page" id="page-outcomes">
 <div class="inner">
   <div class="ptitle">Udfald &amp; logik</div>
-  <div class="psub">Klik på svar-badges for at knytte dem til et udfald. Systemet beregner matchprocent automatisk.</div>
-  <div class="notice notice-info"><span>ℹ</span><span>Matchprocent = (matchende svar ÷ antal nøgleord) × 100. Højeste score vises som "Bedste match".</span></div>
+  <div class="psub">Klik p&aring; svar-badges for at knytte dem til et udfald. Systemet beregner matchprocent automatisk.</div>
+  <div class="notice notice-info"><span>&#8505;</span><span>Matchprocent = (matchende svar &#247; antal n&oslash;gleord) &#215; 100. H&oslash;jeste score vises som "Bedste match".</span></div>
   <div id="olist"></div>
-  <button class="btn btnda btnbl" onclick="addOutcome()" style="margin-bottom:1.5rem">+ Tilføj udfald</button>
-  <button class="btn btnp btnbl" onclick="saveAll()">💾 Gem alt</button>
+  <button class="btn btnda btnbl" onclick="addOutcome()" style="margin-bottom:1.5rem">+ Tilf&oslash;j udfald</button>
+  <button class="btn btnp btnbl" onclick="saveAll()">&#128190; Gem alt</button>
 </div></div>
 
 <!-- DATA -->
@@ -304,18 +304,18 @@ select{cursor:pointer}
   <div class="psub">Generer brugerfilen og del den via QR-kode eller link.</div>
   <div class="card hl">
     <div class="ct" style="margin-bottom:8px">Download brugerfil</div>
-    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Filen indeholder spørgeskemaet. Upload den som <code>index.html</code> til dit bruger-repository på GitHub Pages.</p>
-    <button class="btn btna" onclick="downloadUserFile()">⬇ Download brugerfil</button>
+    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Filen indeholder sp&oslash;rgeskemaet. Upload den som <code>index.html</code> til dit bruger-repository p&aring; GitHub Pages.</p>
+    <button class="btn btna" onclick="downloadUserFile()">&#11015; Download brugerfil</button>
   </div>
   <div class="card hl" style="margin-top:12px">
     <div class="ct" style="margin-bottom:8px">Del admin-adgang</div>
-    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Generer en adgangsfil til en kollega. De åbner filen i browseren og viderestilles automatisk til admin med alle indstillinger klar.</p>
+    <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Generer en adgangsfil til en kollega. De &aring;bner filen i browseren og viderestilles automatisk til admin med alle indstillinger klar.</p>
     <div class="field"><label>Kollegaens adgangskode</label><input type="text" id="share-pw" value="OSK2026"></div>
-    <button class="btn btnp" onclick="downloadAdminAccess()">⬇ Download admin-adgang.html</button>
+    <button class="btn btnp" onclick="downloadAdminAccess()">&#11015; Download admin-adgang.html</button>
   </div>
   <div class="card" style="margin-top:12px">
-    <div class="ct" style="margin-bottom:8px">Sådan deler du filen</div>
-    <p style="font-size:14px;color:var(--t2);line-height:1.7">1. Download brugerfilen og upload den til GitHub<br>2. Del QR-kode eller URL med brugerne<br>3. Svar sendes automatisk til GitHub — åbn admin og klik <strong>↓ Hent</strong> for at se dem</p>
+    <div class="ct" style="margin-bottom:8px">S&aring;dan deler du filen</div>
+    <p style="font-size:14px;color:var(--t2);line-height:1.7">1. Download brugerfilen og upload den til GitHub<br>2. Del QR-kode eller URL med brugerne<br>3. Svar sendes automatisk til GitHub &mdash; &aring;bn admin og klik <strong>&#8595; Hent</strong> for at se dem</p>
   </div>
 </div></div>
 
@@ -323,30 +323,30 @@ select{cursor:pointer}
 <div class="page" id="page-export">
 <div class="inner">
   <div class="ptitle">Eksport &amp; import</div>
-  <div class="psub">Sikkerhedskopiér eller flyt dit spørgeskema.</div>
+  <div class="psub">Sikkerhedskopi&#233;r eller flyt dit sp&oslash;rgeskema.</div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">Eksportér spørgeskema</div>
+    <div class="ct" style="margin-bottom:10px">Eksport&#233;r sp&oslash;rgeskema</div>
     <div class="cbox" id="ebox"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btnp" onclick="copyExport()">📋 Kopiér</button>
-      <button class="btn" onclick="downloadExport()">⬇ Download .json</button>
+      <button class="btn btnp" onclick="copyExport()">&#128203; Kopi&#233;r</button>
+      <button class="btn" onclick="downloadExport()">&#11015; Download .json</button>
     </div>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">Importér spørgeskema</div>
+    <div class="ct" style="margin-bottom:10px">Import&#233;r sp&oslash;rgeskema</div>
     <div class="field"><textarea class="iarea" id="ibox" placeholder='{"title":"...","questions":[]}'></textarea></div>
-    <button class="btn btnp" onclick="doImport()">⬆ Importér</button>
+    <button class="btn btnp" onclick="doImport()">&#11014; Import&#233;r</button>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">Importér brugersvar (JSON)</div>
+    <div class="ct" style="margin-bottom:10px">Import&#233;r brugersvar (JSON)</div>
     <div class="field"><textarea class="iarea" id="rbox" placeholder='[{"id":"...","answers":{...}}]'></textarea></div>
-    <button class="btn btnp" onclick="importResponses()">⬆ Importér svar</button>
+    <button class="btn btnp" onclick="importResponses()">&#11014; Import&#233;r svar</button>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">Eksportér svardata</div>
+    <div class="ct" style="margin-bottom:10px">Eksport&#233;r svardata</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn" onclick="downloadResponses('json')">⬇ JSON</button>
-      <button class="btn" onclick="downloadResponses('csv')">⬇ CSV</button>
+      <button class="btn" onclick="downloadResponses('json')">&#11015; JSON</button>
+      <button class="btn" onclick="downloadResponses('csv')">&#11015; CSV</button>
     </div>
   </div>
 </div></div>
@@ -354,33 +354,33 @@ select{cursor:pointer}
 <!-- QUIZ PREVIEW -->
 <div class="page" id="page-quiz">
 <div class="inner" style="max-width:560px">
-  <div class="notice notice-warn" style="margin-bottom:1.5rem"><span>⚠</span><span>Forhåndsvisning — svar gemmes ikke.</span></div>
+  <div class="notice notice-warn" style="margin-bottom:1.5rem"><span>&#9888;</span><span>Forh&aring;ndsvisning &mdash; svar gemmes ikke.</span></div>
   <div id="qcontainer"></div>
 </div></div>
 
 </main>
 </div>
-<div id="toast">Gemt ✓</div>
+<div id="toast">Gemt &#10003;</div>
 
 <script>
-// ── Constants ──
+// Constants --
 const LSS='qs_v3_schema',LSR='qs_v3_responses',LSG='qs_v3_ghconfig',LSP='qs_v3_pw',LSL='qs_v3_loggedin';
 
-// ── State ──
+// State --
 let schema=null,responses=[],ghConfig=null,qstate={qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null},openCards={};
 
-// ── Helpers ──
+// Helpers --
 function uid(){return '_'+Math.random().toString(36).slice(2,8)}
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
 function fq(){return{qIdx:0,answers:{},history:[],done:false,contactDone:false,contact:null}}
-function ds(){return{title:'Mit spørgeskema',description:'Beskriv formålet her.',questions:[],outcomes:[]}}
+function ds(){return{title:'Mit sp\u00f8rgeskema',description:'Beskriv form\u00e5let her.',questions:[],outcomes:[]}}
 
-// ── Local storage ──
+// Local storage --
 function loadSchema(){try{return JSON.parse(localStorage.getItem(LSS))||ds()}catch(e){return ds()}}
 function loadResponses(){try{return JSON.parse(localStorage.getItem(LSR))||[]}catch(e){return[]}}
 function saveLocal(){localStorage.setItem(LSS,JSON.stringify(schema));localStorage.setItem(LSR,JSON.stringify(responses))}
 
-// ── Auth ──
+// Auth --
 function getPw(){return localStorage.getItem(LSP)||''}
 function checkPw(pw){const s=getPw();if(!s){localStorage.setItem(LSP,pw);return true}return pw===s}
 
@@ -420,24 +420,24 @@ function openAdmin(){
     setGhStatus('saving','Forbinder...');
     ghPull(true);
   } else {
-    setGhStatus('local','Lokal tilstand — ingen GitHub');
+    setGhStatus('local','Lokal tilstand &mdash; ingen GitHub');
   }
 }
 
-// ── GitHub API ──
+// GitHub API --
 async function ghPull(silent){
   if(!ghConfig)return;
   setGhStatus('saving','Henter fra GitHub...');
   try{
     const r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
       {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
-    if(r.status===404){setGhStatus('ok','Tilsluttet — ingen data endnu');return}
+    if(r.status===404){setGhStatus('ok','Tilsluttet &mdash; ingen data endnu');return}
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
     const data=JSON.parse(atob(j.content.replace(/\n/g,'')));
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
     if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
-    setGhStatus('ok','Hentet — '+new Date().toLocaleTimeString('da-DK'));
+    setGhStatus('ok','Hentet &mdash; '+new Date().toLocaleTimeString('da-DK'));
     if(!silent){renderBuild();toast('Hentet fra GitHub!')}
   }catch(e){setGhStatus('error','Fejl: '+e.message);if(!silent)toast('Fejl: '+e.message)}
 }
@@ -465,10 +465,10 @@ async function ghSave(){
       headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
-    if(r.status===409){setGhStatus('error','Konflikt — klik ↓ Hent og prøv igen');toast('Konflikt — hent først');return}
+    if(r.status===409){setGhStatus('error','Konflikt &mdash; klik \u2193 Hent og pr\u00f8v igen');toast('Konflikt &mdash; hent f\u00f8rst');return}
     if(!r.ok)throw new Error('HTTP '+r.status);
-    setGhStatus('ok','Gemt — '+new Date().toLocaleTimeString('da-DK'));
-    toast('Gemt til GitHub ✓');
+    setGhStatus('ok','Gemt &mdash; '+new Date().toLocaleTimeString('da-DK'));
+    toast('Gemt til GitHub \u2713');
   }catch(e){setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message)}
 }
 
@@ -482,9 +482,9 @@ function setGhStatus(state,msg){
   info.textContent=msg;
 }
 
-// ── Build ──
-function saveAll(){saveLocal();if(ghConfig)ghSave();else toast('Gemt lokalt ✓');updateBadge()}
-function updateBadge(){document.getElementById('qcnt').textContent=schema.questions.length+' spørgsmål'}
+// Build --
+function saveAll(){saveLocal();if(ghConfig)ghSave();else toast('Gemt lokalt \u2713');updateBadge()}
+function updateBadge(){document.getElementById('qcnt').textContent=schema.questions.length+' sp\u00f8rgsm\u00e5l'}
 
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -501,7 +501,7 @@ function showPage(id,btn){
 function renderBuild(){
   document.getElementById('s-title').value=schema.title||'';
   document.getElementById('s-desc').value=schema.description||'';
-  document.getElementById('qslbl').textContent='Spørgsmål ('+schema.questions.length+')';
+  document.getElementById('qslbl').textContent='Sp\u00f8rgsm\u00e5l ('+schema.questions.length+')';
   updateBadge();
   document.getElementById('qlist').innerHTML=schema.questions.map((q,i)=>renderQCard(q,i)).join('');
 }
@@ -514,10 +514,10 @@ function renderQCard(q,qi){
     return `<div class="orow">
       <input type="text" value="${esc(o.label)}" placeholder="Svarmulighed..." oninput="setOL('${q.id}','${o.id}',this.value)">
       <select class="onxt" onchange="setON('${q.id}','${o.id}',this.value)">
-        <option value="">Næste i rækkefølge</option>${nx}
+        <option value="">N\u00e6ste i r\u00e6kkef\u00f8lge</option>${nx}
         <option value="__end__" ${o.nextQ==='__end__'?'selected':''}>Afslut</option>
       </select>
-      <button class="btn btnsm btnd" onclick="delOpt('${q.id}','${o.id}')">✕</button>
+      <button class="btn btnsm btnd" onclick="delOpt('${q.id}','${o.id}')">\u2715</button>
     </div>`;
   }).join('');
   return `<div class="qcard ${open?'':'collapsed'}" id="qc-${q.id}">
@@ -525,16 +525,16 @@ function renderQCard(q,qi){
       <div class="qnb">${qi+1}</div>
       <div class="qtp">${esc(q.text)||'(tomt)'}</div>
       <div class="qtt">${tl}</div>
-      <span class="chev">▼</span>
+      <span class="chev">\u25bc</span>
     </div>
     <div class="qcb">
-      <div class="field"><label>Spørgsmålstekst</label><input type="text" value="${esc(q.text)}" oninput="setQT('${q.id}',this.value)"></div>
+      <div class="field"><label>Sp\u00f8rgsm\u00e5lstekst</label><input type="text" value="${esc(q.text)}" oninput="setQT('${q.id}',this.value)"></div>
       <div class="field"><label>Undertekst (valgfri)</label><input type="text" value="${esc(q.sub||'')}" oninput="setQS('${q.id}',this.value)"></div>
       <div class="field">
         <label>Billede (valgfrit)</label>
         ${q.image
-          ?`<div class="imgprev"><img src="${q.image}" alt=""><button class="rmimg" onclick="rmImg('${q.id}')">✕ Fjern</button></div>`
-          :`<label class="imgup" for="img-${q.id}">📷 Vælg billede</label><input type="file" id="img-${q.id}" accept="image/*" style="display:none" onchange="uploadImg('${q.id}',this)">`}
+          ?`<div class="imgprev"><img src="${q.image}" alt=""><button class="rmimg" onclick="rmImg('${q.id}')">\u2715 Fjern</button></div>`
+          :`<label class="imgup" for="img-${q.id}">\u1f4f7 V\u00e6lg billede</label><input type="file" id="img-${q.id}" accept="image/*" style="display:none" onchange="uploadImg('${q.id}',this)">`}
       </div>
       <div class="field"><label>Svartype</label>
         <select style="width:auto" onchange="setQType('${q.id}',this.value)">
@@ -543,12 +543,12 @@ function renderQCard(q,qi){
           <option value="text" ${q.type==='text'?'selected':''}>Fritekst</option>
         </select>
       </div>
-      ${q.type!=='text'?`<div class="slbl">Svarmuligheder &amp; forgrening</div>${opts}<button class="btn btnsm" onclick="addOpt('${q.id}')" style="margin-top:4px">+ Tilføj svar</button>`:''}
+      ${q.type!=='text'?`<div class="slbl">Svarmuligheder &amp; forgrening</div>${opts}<button class="btn btnsm" onclick="addOpt('${q.id}')" style="margin-top:4px">+ Tilf\u00f8j svar</button>`:''}
       <div class="divid"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${qi>0?`<button class="btn btnsm" onclick="moveQ('${q.id}',-1)">↑ Op</button>`:''}
-        ${qi<schema.questions.length-1?`<button class="btn btnsm" onclick="moveQ('${q.id}',1)">↓ Ned</button>`:''}
-        <button class="btn btnsm btnd" onclick="delQ('${q.id}')">🗑 Slet</button>
+        ${qi>0?`<button class="btn btnsm" onclick="moveQ('${q.id}',-1)">\u2191 Op</button>`:''}
+        ${qi<schema.questions.length-1?`<button class="btn btnsm" onclick="moveQ('${q.id}',1)">\u2193 Ned</button>`:''}
+        <button class="btn btnsm btnd" onclick="delQ('${q.id}')">\u1f5d1 Slet</button>
       </div>
     </div>
   </div>`;
@@ -556,7 +556,7 @@ function renderQCard(q,qi){
 
 function toggleCard(id){openCards[id]=openCards[id]===false;renderBuild()}
 function collapseAll(){schema.questions.forEach(q=>openCards[q.id]=false);renderBuild()}
-function setQT(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.text=v;document.getElementById('qslbl').textContent='Spørgsmål ('+schema.questions.length+')'}
+function setQT(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.text=v;document.getElementById('qslbl').textContent='Sp\u00f8rgsm\u00e5l ('+schema.questions.length+')'}
 function setQS(id,v){const q=schema.questions.find(x=>x.id===id);if(q)q.sub=v}
 function setQType(id,v){const q=schema.questions.find(x=>x.id===id);if(!q)return;q.type=v;if(v==='text')q.options=[];else if(!q.options||!q.options.length)q.options=[{id:uid(),label:'',nextQ:null},{id:uid(),label:'',nextQ:null}];renderBuild()}
 function setOL(qid,oid,v){const q=schema.questions.find(x=>x.id===qid);if(q){const o=q.options.find(x=>x.id===oid);if(o)o.label=v}}
@@ -564,22 +564,22 @@ function setON(qid,oid,v){const q=schema.questions.find(x=>x.id===qid);if(q){con
 function addOpt(qid){const q=schema.questions.find(x=>x.id===qid);if(q){q.options.push({id:uid(),label:'',nextQ:null});renderBuild()}}
 function delOpt(qid,oid){const q=schema.questions.find(x=>x.id===qid);if(q){q.options=q.options.filter(x=>x.id!==oid);renderBuild()}}
 function addQ(){schema.questions.push({id:uid(),text:'',sub:'',type:'single',options:[{id:uid(),label:'',nextQ:null},{id:uid(),label:'',nextQ:null}]});renderBuild()}
-function delQ(id){if(!confirm('Slet spørgsmål?'))return;schema.questions=schema.questions.filter(x=>x.id!==id);renderBuild()}
+function delQ(id){if(!confirm('Slet sp\u00f8rgsm\u00e5l?'))return;schema.questions=schema.questions.filter(x=>x.id!==id);renderBuild()}
 function moveQ(id,dir){const i=schema.questions.findIndex(x=>x.id===id);const j=i+dir;if(j<0||j>=schema.questions.length)return;[schema.questions[i],schema.questions[j]]=[schema.questions[j],schema.questions[i]];renderBuild()}
 function uploadImg(qid,inp){const f=inp.files[0];if(!f)return;if(f.size>2*1024*1024){alert('Max 2 MB');return}const r=new FileReader();r.onload=e=>{const q=schema.questions.find(x=>x.id===qid);if(q){q.image=e.target.result;renderBuild()}};r.readAsDataURL(f)}
 function rmImg(qid){const q=schema.questions.find(x=>x.id===qid);if(q){q.image=null;renderBuild()}}
 
-// ── Outcomes ──
+// Outcomes --
 function renderOutcomes(){
   const allO=schema.questions.flatMap(q=>q.options||[]);
   document.getElementById('olist').innerHTML=schema.outcomes.map(o=>{
     const kw=allO.map(opt=>{const on=o.keywords.includes(opt.id);return`<button class="badge bc ${on?'bg-g':'bg-gr'}" onclick="toggleKw('${o.id}','${opt.id}')">${esc(opt.label)||opt.id}</button>`}).join('');
     return`<div class="card">
-      <div class="ch"><span class="ct">${esc(o.title)||'Nyt udfald'}</span><button class="btn btnsm btnd" onclick="delOutcome('${o.id}')">🗑</button></div>
+      <div class="ch"><span class="ct">${esc(o.title)||'Nyt udfald'}</span><button class="btn btnsm btnd" onclick="delOutcome('${o.id}')">\u1f5d1</button></div>
       <div class="field"><label>Titel</label><input type="text" value="${esc(o.title)}" oninput="setO('${o.id}','title',this.value)"></div>
       <div class="field"><label>Beskrivelse</label><textarea oninput="setO('${o.id}','desc',this.value)">${esc(o.desc)}</textarea></div>
       <div class="field"><label>Tags (kommasepareret)</label><input type="text" value="${esc((o.tags||[]).join(', '))}" oninput="setOTags('${o.id}',this.value)"></div>
-      <div class="slbl">Nøgleord</div><div class="tags">${kw||'<span style="font-size:13px;color:var(--t3)">Ingen svarmuligheder endnu.</span>'}</div>
+      <div class="slbl">N\u00f8gleord</div><div class="tags">${kw||'<span style="font-size:13px;color:var(--t3)">Ingen svarmuligheder endnu.</span>'}</div>
     </div>`;
   }).join('');
 }
@@ -589,40 +589,40 @@ function toggleKw(oid,kid){const o=schema.outcomes.find(x=>x.id===oid);if(!o)ret
 function addOutcome(){schema.outcomes.push({id:uid(),title:'Nyt udfald',desc:'',tags:[],keywords:[]});renderOutcomes()}
 function delOutcome(id){if(!confirm('Slet udfald?'))return;schema.outcomes=schema.outcomes.filter(x=>x.id!==id);renderOutcomes()}
 
-// ── Data ──
+// Data --
 function renderData(){
   const el=document.getElementById('dcontent');
   const total=responses.length;
-  if(!total){el.innerHTML='<div class="notice notice-info"><span>ℹ</span><span>Ingen svar endnu.</span></div>';return}
+  if(!total){el.innerHTML='<div class="notice notice-info"><span>\u2139</span><span>Ingen svar endnu.</span></div>';return}
   const comp=responses.filter(r=>r.completed).length;
   const oc={};schema.outcomes.forEach(o=>oc[o.title]=0);
   responses.forEach(r=>{if(r.topOutcome&&oc[r.topOutcome]!==undefined)oc[r.topOutcome]++});
   const mx=Math.max(...Object.values(oc),1);
   let h=`<div class="sgrid">
     <div class="sc"><div class="sn">${total}</div><div class="sl">Besvarelser</div></div>
-    <div class="sc"><div class="sn">${Math.round(comp/total*100)}%</div><div class="sl">Fuldført</div></div>
-    <div class="sc"><div class="sn">${schema.questions.length}</div><div class="sl">Spørgsmål</div></div>
+    <div class="sc"><div class="sn">${Math.round(comp/total*100)}%</div><div class="sl">Fuldf\u00f8rt</div></div>
+    <div class="sc"><div class="sn">${schema.questions.length}</div><div class="sl">Sp\u00f8rgsm\u00e5l</div></div>
   </div><div class="slbl">Fordeling</div><div class="card">`;
   Object.entries(oc).forEach(([t,n])=>{h+=`<div class="brow"><div class="blbl">${esc(t)}</div><div class="btrk"><div class="bfil" style="width:${Math.round(n/mx*100)}%"></div></div><div class="bcnt">${n}</div></div>`});
   h+=`</div><div class="slbl">Alle besvarelser</div>`;
   responses.slice().reverse().forEach((resp,i)=>{
     const d=new Date(resp.timestamp);
     const ds=d.toLocaleDateString('da-DK')+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
-    h+=`<div class="ri"><div class="rh"><span style="font-size:13px;font-weight:500">Besvarelse #${responses.length-i}${resp.contact?' — '+esc(resp.contact.name):''}</span><span style="font-size:12px;color:var(--t2)">${ds}</span></div>
+    h+=`<div class="ri"><div class="rh"><span style="font-size:13px;font-weight:500">Besvarelse #${responses.length-i}${resp.contact?' &mdash; '+esc(resp.contact.name):''}</span><span style="font-size:12px;color:var(--t2)">${ds}</span></div>
       ${resp.topOutcome?`<div class="badge bg-f" style="margin-bottom:8px">${esc(resp.topOutcome)}</div>`:''}
       <div class="rag">${schema.questions.map(q=>{const a=resp.answers[q.id];if(!a)return'';const l=Array.isArray(a)?a.map(id=>(q.options||[]).find(o=>o.id===id)?.label||id).join(', '):(q.options||[]).find(o=>o.id===a)?.label||a;return`<div><div class="rq">${esc(q.text)}</div><div class="ra">${esc(l)}</div></div>`}).join('')}</div>
     </div>`;
   });
-  h+=`<button class="btn btnd" onclick="clearR()" style="margin-top:8px">🗑 Slet alle svar</button>`;
+  h+=`<button class="btn btnd" onclick="clearR()" style="margin-top:8px">\u1f5d1 Slet alle svar</button>`;
   el.innerHTML=h;
 }
 function clearR(){if(!confirm('Slet alle svar?'))return;responses=[];saveLocal();if(ghConfig)ghSave();renderData()}
 
-// ── Export ──
+// Export --
 function renderExport(){document.getElementById('ebox').textContent=JSON.stringify(schema,null,2)}
 function copyExport(){navigator.clipboard.writeText(JSON.stringify(schema,null,2)).then(()=>toast('Kopieret!')).catch(()=>toast('Brug Ctrl+C'))}
 function downloadExport(){dl(JSON.stringify(schema,null,2),(schema.title||'sq').replace(/\s+/g,'-')+'.json','application/json')}
-function doImport(){const raw=document.getElementById('ibox').value.trim();if(!raw){alert('Indsæt JSON først');return}try{const d=JSON.parse(raw);if(!d.questions)throw new Error('Mangler questions');if(!confirm('Erstat?'))return;schema=d;saveAll();document.getElementById('ibox').value='';renderBuild();alert('Importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
+function doImport(){const raw=document.getElementById('ibox').value.trim();if(!raw){alert('Inds\u00e6t JSON f\u00f8rst');return}try{const d=JSON.parse(raw);if(!d.questions)throw new Error('Mangler questions');if(!confirm('Erstat?'))return;schema=d;saveAll();document.getElementById('ibox').value='';renderBuild();alert('Importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
 function importResponses(){const raw=document.getElementById('rbox').value.trim();if(!raw)return;try{const d=JSON.parse(raw);if(!Array.isArray(d))throw new Error('Forventede array');responses=[...responses,...d];saveLocal();if(ghConfig)ghSave();document.getElementById('rbox').value='';toast(d.length+' svar importeret!')}catch(e){alert('Ugyldig JSON: '+e.message)}}
 function downloadResponses(fmt){
   let content,fname,mime;
@@ -637,7 +637,7 @@ function downloadResponses(fmt){
 }
 function dl(content,fname,mime){const b=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fname;a.click()}
 
-// ── Share ──
+// Share --
 function downloadUserFile(){
   const sd=JSON.stringify(schema).replace(/</g,'\\u003c').replace(/>/g,'\\u003e');
   const r=ghConfig?ghConfig.repo:'';
@@ -645,7 +645,7 @@ function downloadUserFile(){
   const f=ghConfig?ghConfig.filename:'data.json';
   const t1=t.slice(0,8),t2=t.slice(8,24),t3=t.slice(24);
   const userHtml=buildUserHTML(sd,r,t1,t2,t3,f);
-  dl(userHtml,(schema.title||'spørgeskema').replace(/\s+/g,'-')+'-bruger.html','text/html;charset=utf-8');
+  dl(userHtml,(schema.title||'sp\u00f8rgeskema').replace(/\s+/g,'-')+'-bruger.html','text/html;charset=utf-8');
 }
 
 function downloadAdminAccess(){
@@ -674,7 +674,7 @@ h2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53;line-height:1
   toast('admin-adgang.html downloadet!');
 }
 
-// ── Quiz preview (admin) ──
+// Quiz preview (admin) --
 function calcResultsAdmin(){
   const vals=Object.values(qstate.answers).flatMap(v=>Array.isArray(v)?v:[v]);
   return schema.outcomes.map(o=>{
@@ -686,7 +686,7 @@ function calcResultsAdmin(){
 
 function renderQuiz(){
   const c=document.getElementById('qcontainer');
-  if(!schema.questions.length){c.innerHTML='<div class="notice notice-warn"><span>⚠</span><span>Ingen spørgsmål endnu.</span></div>';return}
+  if(!schema.questions.length){c.innerHTML='<div class="notice notice-warn"><span>\u26a0</span><span>Ingen sp\u00f8rgsm\u00e5l endnu.</span></div>';return}
   if(qstate.done||qstate.qIdx===-1){renderQResult(c);return}
   const qs=schema.questions;const qi=qstate.qIdx;
   if(qi>=qs.length){renderQResult(c);return}
@@ -696,21 +696,21 @@ function renderQuiz(){
   let opts='';
   if(q.type==='text'){opts=`<textarea id="ti" style="width:100%;min-height:80px;font-family:var(--font);font-size:14px;padding:8px 10px;border:.5px solid var(--bd2);border-radius:var(--r);outline:none;resize:vertical;margin-bottom:1rem">${esc(sel||'')}</textarea>`}
   else if(q.type==='multi'){
-    opts='<div style="font-size:12px;color:var(--t3);margin-bottom:8px">Vælg en eller flere</div>';
+    opts='<div style="font-size:12px;color:var(--t3);margin-bottom:8px">V\u00e6lg en eller flere</div>';
     opts+=(q.options||[]).map(o=>`<button class="obtn${selArr.includes(o.id)?' sel':''}" data-qid="${q.id}" data-oid="${o.id}" data-multi="1"><div class="rc" style="border-radius:3px"><div class="rd"></div></div>${esc(o.label)}</button>`).join('');
   } else {
     opts=(q.options||[]).map(o=>`<button class="obtn${sel===o.id?' sel':''}" data-qid="${q.id}" data-oid="${o.id}" data-single="1"><div class="rc"><div class="rd"></div></div>${esc(o.label)}</button>`).join('');
   }
   const hasAns=q.type==='multi'?selArr.length>0:(!!sel||q.type==='text');
   c.innerHTML=`<div style="height:3px;background:var(--bd);margin-bottom:1.75rem"><div style="height:3px;background:var(--dg);width:${Math.max(2,pct)}%;transition:width .4s"></div></div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:6px">Spørgsmål ${qi+1} af ${qs.length}</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:6px">Sp\u00f8rgsm\u00e5l ${qi+1} af ${qs.length}</div>
     ${q.image?`<img src="${q.image}" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--rl);margin-bottom:1.25rem;border:.5px solid var(--bd)">`:''}
     <div style="font-size:20px;font-weight:500;margin-bottom:6px;line-height:1.4">${esc(q.text)}</div>
     ${q.sub?`<div style="font-size:14px;color:var(--t2);margin-bottom:1.25rem;line-height:1.5">${esc(q.sub)}</div>`:'<div style="margin-bottom:1.25rem"></div>'}
     ${opts}
     <div style="display:flex;gap:10px;margin-top:10px">
-      ${qi>0?'<button id="btn-bk" class="btn">← Tilbage</button>':''}
-      <button id="btn-nx" class="btn btnp" ${!hasAns?'disabled':''}>${qi===qs.length-1?'Se resultat →':'Næste →'}</button>
+      ${qi>0?'<button id="btn-bk" class="btn">\u2190 Tilbage</button>':''}
+      <button id="btn-nx" class="btn btnp" ${!hasAns?'disabled':''}>${qi===qs.length-1?'Se resultat \u2192':'N\u00e6ste \u2192'}</button>
     </div>`;
   c.querySelectorAll('[data-single]').forEach(b=>b.addEventListener('click',()=>{qstate.answers[b.dataset.qid]=b.dataset.oid;renderQuiz()}));
   c.querySelectorAll('[data-multi]').forEach(b=>b.addEventListener('click',()=>{const cur=Array.isArray(qstate.answers[b.dataset.qid])?qstate.answers[b.dataset.qid]:[];const i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qstate.answers[b.dataset.qid]=[...cur];renderQuiz()}));
@@ -731,22 +731,22 @@ function quizNext(qid,type){
 
 function renderQResult(c){
   const res=calcResultsAdmin().filter(r=>r.pct>0);
-  let h='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div><div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forhåndsvisning</div>';
+  let h='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div><div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forh\u00e5ndsvisning</div>';
   res.slice(0,4).forEach((r,i)=>{h+=`<div style="border:${i===0?'1.5px solid var(--dg)':'0.5px solid var(--bd)'};border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;background:${i===0?'var(--dg)':'var(--cb)'}">
-    ${i===0?'<div class="badge bg-a" style="margin-bottom:8px">★ Bedste match</div>':''}
+    ${i===0?'<div class="badge bg-a" style="margin-bottom:8px">\u2605 Bedste match</div>':''}
     <div style="font-size:17px;font-weight:500;color:${i===0?'var(--tod)':'var(--t)'};margin-bottom:4px">${esc(r.title)}</div>
     <div style="font-size:14px;color:${i===0?'var(--tod2)':'var(--t2)'};margin-bottom:10px;line-height:1.6">${esc(r.desc)}</div>
     <div style="height:4px;background:${i===0?'rgba(239,236,228,.2)':'var(--bd)'}"><div style="height:4px;background:${i===0?'var(--ac)':'var(--fg)'};width:${r.pct}%"></div></div>
     <div style="font-size:12px;color:${i===0?'var(--fg)':'var(--t2)'};margin-top:4px">${r.pct}% match</div>
   </div>`});
-  h+='<button class="btn" onclick="qstate=Object.assign({},{qIdx:0,answers:{},history:[],done:false,contactDone:true});renderQuiz()" style="margin-top:8px">↺ Start forfra</button>';
+  h+='<button class="btn" onclick="qstate=Object.assign({},{qIdx:0,answers:{},history:[],done:false,contactDone:true});renderQuiz()" style="margin-top:8px">\u21ba Start forfra</button>';
   c.innerHTML=h;
 }
 
-// ── Toast ──
+// Toast --
 let tt;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2400)}
 
-// ── User HTML builder ──
+// User HTML builder --
 function buildUserHTML(sd,repo,t1,t2,t3,fname){
   return`<!DOCTYPE html>
 <html lang="da"><head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -987,7 +987,7 @@ render();
 <\/script></body></html>`;
 }
 
-// ── Bootstrap ──
+// Bootstrap --
 (async function(){
   // Check for credential payload in URL hash (from admin-adgang.html)
   const hash=window.location.hash;
