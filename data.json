@@ -104,13 +104,13 @@
         "options": [
           {
             "id": "_70xiwd",
-            "label": "Ja",
-            "nextQ": null
+            "label": "Jaaaa",
+            "nextQ": "_yv9oey"
           },
           {
             "id": "_x3p4c3",
-            "label": "Nej",
-            "nextQ": null
+            "label": "Nah",
+            "nextQ": "_yv9oey"
           }
         ]
       },
