@@ -87,12 +87,12 @@
           {
             "id": "_8pzeq1",
             "label": "Ja, det må i gerne",
-            "nextQ": "_lx802h"
+            "nextQ": null
           },
           {
             "id": "_ukhy9m",
             "label": "Nej tak, jeg gør det selv",
-            "nextQ": "_lx802h"
+            "nextQ": null
           }
         ]
       },
@@ -105,28 +105,28 @@
           {
             "id": "_70xiwd",
             "label": "Ja",
-            "nextQ": "_ywl06j"
+            "nextQ": null
           },
           {
             "id": "_x3p4c3",
             "label": "Nej",
-            "nextQ": "_ywl06j"
+            "nextQ": null
           }
         ]
       },
       {
-        "id": "_ywl06j",
+        "id": "_yv9oey",
         "text": "Helt sikker?",
         "sub": "",
         "type": "single",
         "options": [
           {
-            "id": "_thl4y2",
+            "id": "_a7pk58",
             "label": "Ja",
             "nextQ": null
           },
           {
-            "id": "_tu84ep",
+            "id": "_1z5d44",
             "label": "Nej",
             "nextQ": null
           }
