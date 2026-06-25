@@ -87,12 +87,12 @@
           {
             "id": "_8pzeq1",
             "label": "Ja, det må i gerne",
-            "nextQ": null
+            "nextQ": "_lx802h"
           },
           {
             "id": "_ukhy9m",
             "label": "Nej tak, jeg gør det selv",
-            "nextQ": null
+            "nextQ": "_lx802h"
           }
         ]
       },
@@ -110,6 +110,24 @@
           {
             "id": "_x3p4c3",
             "label": "Nej",
+            "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_ywl06j",
+        "text": "Helt sikker?",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_thl4y2",
+            "label": "",
+            "nextQ": null
+          },
+          {
+            "id": "_tu84ep",
+            "label": "",
             "nextQ": null
           }
         ]
