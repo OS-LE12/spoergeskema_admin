@@ -1,11 +1,11 @@
 {
   "schema": {
-    "title": "Test spørgsmål",
-    "description": "Her komme en række testspørgsmål.",
+    "title": "Test spÃ¸rgsmÃ¥l",
+    "description": "Her komme en rÃ¦kke testspÃ¸rgsmÃ¥l.",
     "questions": [
       {
         "id": "q1",
-        "text": "Kan du lide layoutet i spørgeskemaet?",
+        "text": "Kan du lide layoutet i spÃ¸rgeskemaet?",
         "sub": "",
         "type": "single",
         "options": [
@@ -24,7 +24,7 @@
       },
       {
         "id": "_0fucb8",
-        "text": "Hvad synes du skal ændres?",
+        "text": "Hvad synes du skal Ã¦ndres?",
         "sub": "",
         "type": "multi",
         "options": [
@@ -80,18 +80,36 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Tak for svar. Må vi kontakte dig?",
+        "text": "Tak for svar. MÃ¥ vi kontakte dig?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Ja, det må i gerne",
+            "label": "Ja, det mÃ¥ i gerne",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Nej tak, jeg gør det selv",
+            "label": "Nej tak, jeg gÃ¸r det selv",
+            "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_lx802h",
+        "text": "Virker det?",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_70xiwd",
+            "label": "Ja",
+            "nextQ": null
+          },
+          {
+            "id": "_x3p4c3",
+            "label": "Nej",
             "nextQ": null
           }
         ]
@@ -101,7 +119,7 @@
       {
         "id": "o1",
         "title": "Visuelt orienteret",
-        "desc": "Du har ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¸je for det visuelle.",
+        "desc": "Du har ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¸je for det visuelle.",
         "tags": [],
         "keywords": [
           "_nv4nxx",
