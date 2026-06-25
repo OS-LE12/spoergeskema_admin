@@ -1,11 +1,11 @@
 {
   "schema": {
     "title": "Test spørgeskema",
-    "description": "Her komme en rÃÂ¦kke testspÃÂ¸rgsmÃÂ¥l.",
+    "description": "Her komme en række testspørgsmål.",
     "questions": [
       {
         "id": "q1",
-        "text": "Kan du lide layoutet i spÃÂ¸rgeskemaet?",
+        "text": "Kan du lide layoutet i spørgeskemaet?",
         "sub": "",
         "type": "single",
         "options": [
