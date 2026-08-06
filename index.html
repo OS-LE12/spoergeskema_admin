@@ -388,7 +388,7 @@ function openAdmin(){
     setGhStatus('saving','Forbinder...');
     ghPull(true);
   } else {
-    setGhStatus('local','Lokal tilstand');
+    setGhStatus('local','Lokal tilstand – åbn via admin-adgang.html for at synkronisere');
   }
 }
 
@@ -452,7 +452,16 @@ function setGhStatus(state,msg){
 }
 
 // \u2500\u2500 Save \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-function saveAll(){saveLocal();if(ghConfig)ghSave();else toast('Gemt lokalt \u2713');updateBadge()}
+function saveAll(){
+  saveLocal();
+  if(ghConfig){
+    ghSave();
+  } else {
+    toast('Gemt lokalt – ingen GitHub-forbindelse');
+    setGhStatus('local','Lokal tilstand – ikke gemt til GitHub');
+  }
+  updateBadge();
+}
 function updateBadge(){
   document.getElementById('qcnt').textContent=schema.questions.length+' sp\u00f8rgsm\u00e5l';
 }
