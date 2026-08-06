@@ -388,7 +388,7 @@ function openAdmin(){
     setGhStatus('saving','Forbinder...');
     ghPull(true);
   } else {
-    setGhStatus('local','Lokal tilstand – åbn via admin-adgang.html for at synkronisere');
+    setGhStatus('local','Lokal tilstand');
   }
 }
 
@@ -406,7 +406,8 @@ async function ghPull(silent){
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
     if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
     setGhStatus('ok','Hentet \u2014 '+new Date().toLocaleTimeString('da-DK'));
-    if(!silent){renderBuild();toast('Hentet fra GitHub!')}
+    renderBuild();
+    if(!silent){toast('Hentet fra GitHub!')}
   }catch(e){setGhStatus('error','Fejl: '+e.message);if(!silent)toast('Fejl: '+e.message)}
 }
 
@@ -452,16 +453,7 @@ function setGhStatus(state,msg){
 }
 
 // \u2500\u2500 Save \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-function saveAll(){
-  saveLocal();
-  if(ghConfig){
-    ghSave();
-  } else {
-    toast('Gemt lokalt – ingen GitHub-forbindelse');
-    setGhStatus('local','Lokal tilstand – ikke gemt til GitHub');
-  }
-  updateBadge();
-}
+function saveAll(){saveLocal();if(ghConfig)ghSave();else toast('Gemt lokalt \u2713');updateBadge()}
 function updateBadge(){
   document.getElementById('qcnt').textContent=schema.questions.length+' sp\u00f8rgsm\u00e5l';
 }
@@ -886,7 +878,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname){
 +'    opts="<div style=\\"font-size:12px;color:var(--t3);margin-bottom:8px\\">V\\u00e6lg en eller flere</div>";\n'
 +'    (q.options||[]).forEach(function(o){\n'
 +'      var on=selArr.indexOf(o.id)>=0;\n'
-+'      opts+="<button class=\\"obtn"+(on?" sel":"")+"\\" data-qid=\\""+q.id+"\\" data-oid=\\""+o.id+"\\" data-multi=\\"1\\"><div class=\\"rc\\" style=\\"border-radius:3px\\"><div class=\\"rd\\"></div></div>"+esc(o.label)+"</button>";\n'
++'      opts+="<button class=\\"obtn"+(on?" sel":"")+"\\" data-qid=\\""+o.id+"\\" data-oid=\\""+o.id+"\\" data-multi=\\"1\\"><div class=\\"rc\\" style=\\"border-radius:3px\\"><div class=\\"rd\\"></div></div>"+esc(o.label)+"</button>";\n'
 +'    });\n'
 +'  } else {\n'
 +'    (q.options||[]).forEach(function(o){\n'
