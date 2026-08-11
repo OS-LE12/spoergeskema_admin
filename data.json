@@ -39,111 +39,166 @@
       },
       {
         "id": "_0fucb8",
-        "text": "Hvad synes du skal ændres?",
+        "text": "Hvad synes du er interessant?",
         "sub": "",
         "type": "multi",
         "options": [
           {
             "id": "_nv4nxx",
-            "label": "Faverne",
-            "nextQ": "_1rd36r"
+            "label": "Transport og logistik",
+            "nextQ": null
           },
           {
             "id": "_het213",
-            "label": "Knapperne",
-            "nextQ": "_1rd36r"
+            "label": "Matematik og fysik",
+            "nextQ": null
           },
           {
             "id": "_598d3a",
-            "label": "Flere billeder",
-            "nextQ": "_1rd36r"
+            "label": "Køretøjer og motorer",
+            "nextQ": null
           },
           {
             "id": "_txby6r",
-            "label": "Skrifttypen",
-            "nextQ": "_1rd36r"
+            "label": "Teknisk udstyr og små dele",
+            "nextQ": null
+          },
+          {
+            "id": "_0s02m3",
+            "label": "Lager og forsyning",
+            "nextQ": null
+          },
+          {
+            "id": "_0qvsxc",
+            "label": "At få tiden til at gå .... inden jeg skal hjem!",
+            "nextQ": null
           }
         ]
       },
       {
         "id": "_410tkn",
-        "text": "Hvad synes du det mangler?",
+        "text": "Hvor er du bedst?",
         "sub": "",
-        "type": "multi",
+        "type": "single",
         "options": [
           {
             "id": "_mtxnca",
-            "label": "Et valgfrit felt",
-            "nextQ": "_1rd36r"
+            "label": "Når jeg får lov at være praktisk",
+            "nextQ": null
           },
           {
             "id": "_mzzkcm",
-            "label": "Ikoner",
-            "nextQ": "_1rd36r"
+            "label": "Når jeg får lov at skabe overblik og være analytisk",
+            "nextQ": null
           },
           {
             "id": "_ipxcoy",
-            "label": "Lyd",
-            "nextQ": "_1rd36r"
+            "label": "Når jeg får lov at være grundig",
+            "nextQ": null
           },
           {
             "id": "_jxcyxo",
-            "label": "Video",
-            "nextQ": "_1rd36r"
+            "label": "Når jeg møder sent og går tidligt",
+            "nextQ": null
+          },
+          {
+            "id": "_lhp2pc",
+            "label": "Når der er brug for jeg laver hurtige løsninger, der virker",
+            "nextQ": null
           }
         ]
       },
       {
         "id": "_1rd36r",
-        "text": "Tak for svar. Må vi kontakte dig?",
+        "text": "Hvad gør du når noget går i stykker?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Ja, det må i gerne",
+            "label": "Skiller det ad for at finde fejlen",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Nej tak, jeg gør det selv",
+            "label": "Søger viden om \"systemet/maskinen\" først",
+            "nextQ": null
+          },
+          {
+            "id": "_qryajz",
+            "label": "Finder en praktisk løsning - om nødvendigt også med gaffatape",
+            "nextQ": null
+          },
+          {
+            "id": "_t4wj7j",
+            "label": "Hjælper med at organisere arbejdet omkring opgaven",
+            "nextQ": null
+          },
+          {
+            "id": "_cccjdx",
+            "label": "Håber en anden fixer det..",
             "nextQ": null
           }
         ]
       },
       {
         "id": "_lx802h",
-        "text": "Virker det?",
+        "text": "Hvad beskriver dig bedst?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_70xiwd",
-            "label": "Jaaaa",
-            "nextQ": "_yv9oey"
+            "label": "Detaljerorienteret",
+            "nextQ": null
           },
           {
             "id": "_x3p4c3",
-            "label": "Nah",
-            "nextQ": "_yv9oey"
+            "label": "Tænker ud af boksen",
+            "nextQ": null
+          },
+          {
+            "id": "_jvqc16",
+            "label": "Er detektiv og fejlfinder problemer",
+            "nextQ": null
+          },
+          {
+            "id": "_ju4odo",
+            "label": "Læser instruktioner og manualer",
+            "nextQ": null
+          },
+          {
+            "id": "_51vjaz",
+            "label": "Er af natur lidt små doven",
+            "nextQ": null
           }
         ]
       },
       {
         "id": "_yv9oey",
-        "text": "Helt sikker?",
+        "text": "Når jeg står over for en fejl eller svær opgave gør jeg oftest....",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_a7pk58",
-            "label": "Ja",
-            "nextQ": "__end__"
+            "label": "Fejlsøger systematisk",
+            "nextQ": null
           },
           {
             "id": "_1z5d44",
-            "label": "Nej",
-            "nextQ": "__end__"
+            "label": "Tester forskellige muligheder",
+            "nextQ": null
+          },
+          {
+            "id": "_0b3su8",
+            "label": "Lukker øjnene og forventer det løser sig selv",
+            "nextQ": null
+          },
+          {
+            "id": "_luvzor",
+            "label": "Løser opgaven, spørger også gerne om hjælp. Sikrer at det bliver fixet.",
+            "nextQ": null
           }
         ]
       }
