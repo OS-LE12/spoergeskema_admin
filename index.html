@@ -406,8 +406,7 @@ async function ghPull(silent){
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
     if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
     setGhStatus('ok','Hentet \u2014 '+new Date().toLocaleTimeString('da-DK'));
-    renderBuild();
-    if(!silent){toast('Hentet fra GitHub!')}
+    if(!silent){renderBuild();toast('Hentet fra GitHub!')}
   }catch(e){setGhStatus('error','Fejl: '+e.message);if(!silent)toast('Fejl: '+e.message)}
 }
 
@@ -672,17 +671,47 @@ function downloadAdminAccess(){
   var fname=ghConfig.filename||'data.json';
   var parts=repo.split('/');
   var adminUrl='https://'+parts[0].toLowerCase()+'.github.io/'+(parts[1]||'')+'/';
-  // Encode config as base64 payload in URL hash
   var payload=b64encode(JSON.stringify({p1:p1,p2:p2,p3:p3,repo:repo,fname:fname,pw:pw}));
   var redirectUrl=adminUrl+'#cfg='+payload;
-  var stub='<!DOCTYPE html>\n<html lang="da"><head><meta charset="UTF-8"><title>Konfigurerer...</title>\n'
-    +'<style>body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;text-align:center;padding:1rem}'
-    +'.box{background:#F7F5EF;color:#333127;border-radius:8px;padding:2rem;max-width:320px}'
-    +'h2{font-size:18px;margin-bottom:8px}p{font-size:14px;color:#5a5d53}</style>\n'
-    +'</head><body><div class="box"><h2>Konfigurerer adgang...</h2><p>Du videresendes om et \u00f8jeblik.</p></div>\n'
-    +'<script>window.location.href=\''+redirectUrl+'\';<\/script></body></html>';
+
+  // Show the link directly in the UI — no local file needed
+  var existing=document.getElementById('admin-link-box');
+  if(existing)existing.remove();
+
+  var box=document.createElement('div');
+  box.id='admin-link-box';
+  box.style.cssText='margin-top:14px;padding:14px;background:var(--bg2);border:.5px solid var(--bd);border-radius:var(--rl)';
+  box.innerHTML='<div style="font-size:12px;color:var(--t3);margin-bottom:6px">Send dette link til din kollega</div>'
+    +'<div style="display:flex;gap:8px;align-items:center">'
+    +'<input id="admin-link-inp" type="text" value="'+redirectUrl+'" readonly '
+    +'style="flex:1;font-size:11px;padding:7px 9px;background:#fff;border:.5px solid var(--bd2);border-radius:var(--r);color:var(--t);cursor:text">'
+    +'<button onclick="var i=document.getElementById('admin-link-inp');i.select();navigator.clipboard.writeText(i.value).then(function(){toast('Link kopieret!')}).catch(function(){i.select()})" '
+    +'class="btn btna btnsm">Kopiér</button>'
+    +'</div>'
+    +'<div style="font-size:12px;color:var(--t3);margin-top:8px">Kollegan klikker linket → logger ind med adgangskoden → klar.</div>';
+
+  // Insert after the download button
+  var btn=document.querySelector('[onclick="downloadAdminAccess()"]');
+  if(btn&&btn.parentNode)btn.parentNode.insertBefore(box,btn.nextSibling);
+
+  // Also still generate the HTML file as fallback for desktop users
+  var stub='<!DOCTYPE html>\n<html lang="da"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin-adgang</title>\n'
+    +'<style>'
+    +'*{box-sizing:border-box;margin:0;padding:0}'
+    +'body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#333C35;color:#EFECE4;text-align:center;padding:1.5rem}'
+    +'.box{background:#F7F5EF;color:#333127;border-radius:10px;padding:2rem 1.5rem;max-width:340px;width:100%}'
+    +'h2{font-size:20px;font-weight:600;margin-bottom:10px}'
+    +'p{font-size:14px;color:#5a5d53;margin-bottom:1.5rem;line-height:1.5}'
+    +'.btn{display:block;width:100%;padding:14px;background:#333C35;color:#EFECE4;border:none;border-radius:6px;font-size:16px;font-weight:500;cursor:pointer;text-decoration:none;text-align:center}'
+    +'</style>\n'
+    +'</head><body><div class="box">'
+    +'<h2>Admin-adgang klar</h2>'
+    +'<p>Tryk p\u00e5 knappen for at \u00e5bne admin-panelet.</p>'
+    +'<a class="btn" href="'+redirectUrl+'">\u00c5bn admin-panel \u2192</a>'
+    +'</div>'
+    +'</body></html>';
   dlFile(stub,'admin-adgang.html','text/html;charset=utf-8');
-  toast('admin-adgang.html downloadet!');
+  toast('Link genereret og fil downloadet!');
 }
 
 // \u2500\u2500 Quiz preview \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
