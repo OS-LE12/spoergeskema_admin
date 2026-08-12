@@ -944,7 +944,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname){
 +'    +"<div style=\\"font-size:20px;font-weight:500;margin-bottom:6px;line-height:1.4\\">"+esc(q.text)+"</div>"\n'
 +'    +(q.sub?"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.25rem;line-height:1.5\\">"+esc(q.sub)+"</div>":"<div style=\\"margin-bottom:1.25rem\\"></div>")\n'
 +'    +"<div style=\\\"display:flex;flex-direction:column\\\">"\\n'
-+'    +opts\\n'
++'    +"<div style=\"display:block\">"+opts+"</div>"\\n'
 +'    +"<div class=\\\"nav\\\">"+(qs.qIdx>0?"<button id=\\"btn-bk\\" class=\\"btn\\">\\u2190 Tilbage</button>":"")\n'
 +'    +"<button id=\\"btn-nx\\" class=\\"btn btnp\\" "+(hasAns?"":"disabled")+">"+(qs.qIdx===SC.questions.length-1?"Se resultat \\u2192":"N\\u00e6ste \\u2192")+"</button>"\n'
 +'    +"</div>";\n'
