@@ -650,8 +650,12 @@ function dlFile(content,fname,mime){
 }
 
 // \u2500\u2500 Share \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-function downloadUserFile(){
-  // Schema is embedded as JSON \u2014 no encoding issues since it's parsed JS
+async function downloadUserFile(){
+  // Always pull latest from GitHub before generating user file
+  if(ghConfig){
+    setGhStatus('saving','Henter nyeste data f\u00f8r download...');
+    await ghPull(true);
+  }
   var sd=JSON.stringify(schema);
   var repo=ghConfig&&ghConfig.repo||'';
   var tok=ghConfig&&ghConfig.token||'';
