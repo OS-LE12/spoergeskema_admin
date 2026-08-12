@@ -656,7 +656,10 @@ async function downloadUserFile(){
     setGhStatus('saving','Henter nyeste data f\u00f8r download...');
     await ghPull(true);
   }
-  var sd=JSON.stringify(schema);
+  // Escape all non-ASCII chars to \uXXXX so user file works in all browsers
+  var sd=JSON.stringify(schema).replace(/[\u0080-\uFFFF]/g,function(c){
+    return '\\u'+('0000'+c.charCodeAt(0).toString(16)).slice(-4);
+  });
   var repo=ghConfig&&ghConfig.repo||'';
   var tok=ghConfig&&ghConfig.token||'';
   var fname=ghConfig&&ghConfig.filename||'data.json';
@@ -876,7 +879,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname){
 +'@media(max-width:500px){.wrap{padding:1.5rem 1rem 3rem}}\n'
 +'</style></head><body>\n'
 +'<div class="hdr"><h1>'+esc(schema.title||'Sp\u00f8rgeskema')+'</h1>'
-+(schema.description?'<p>'+esc(schema.description)+'</p>':'')+'</div>\n'
++(schema.description?'<p>'+esc(schema.description).replace(/\\n/g,'<br>')+'</p>':'')+'</div>\n'
 +'<div class="wrap"><div id="app"></div></div>\n'
 +'<script>\n'
 // b64encode/decode helpers \u2014 same as admin, needed for sendToGitHub
