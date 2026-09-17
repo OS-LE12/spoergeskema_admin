@@ -402,16 +402,35 @@ function openAdmin(){
 }
 
 // \u2500\u2500 GitHub API \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+// IMPORTANT: the Contents API only inlines base64 `content` for files up to 1 MB.
+// Above that it answers with encoding:"none" and an EMPTY content field, which used
+// to end in JSON.parse("") -> "unexpected end of data". We therefore ask for the raw
+// media type and parse the text directly; fetch decodes UTF-8 for us, so no base64
+// step is involved and the encoding stays correct at any file size.
+var GH_API='https://api.github.com/repos/';
+function ghUrl(){return GH_API+ghConfig.repo+'/contents/'+ghConfig.filename}
+async function ghGetRaw(){
+  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
+  if(r.status===404)return{missing:true};
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  var txt=(await r.text()).trim();
+  return{data:txt?JSON.parse(txt):{schema:null,responses:[]}};
+}
+async function ghGetSha(){
+  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
+  if(r.status===404)return null;
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  var j=await r.json();
+  return j.sha||null;
+}
+
 async function ghPull(silent){
   if(!ghConfig)return;
   setGhStatus('saving','Henter...');
   try{
-    var r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
-      {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
-    if(r.status===404){setGhStatus('ok','Tilsluttet \u2014 ingen data endnu');return}
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    var j=await r.json();
-    var data=JSON.parse(b64decode(j.content));  // <-- TextDecoder, always correct
+    var res=await ghGetRaw();
+    if(res.missing){setGhStatus('ok','Tilsluttet \u2014 ingen data endnu');return}
+    var data=res.data;
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
     if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
     setGhStatus('ok','Hentet \u2014 '+new Date().toLocaleTimeString('da-DK'));
@@ -424,30 +443,42 @@ async function ghSave(){
   setGhStatus('saving','Gemmer...');
   saveLocal();
   try{
-    var sha=null,mergedResponses=responses;
-    var ex=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,
-      {headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
-    if(ex.ok){
-      var j=await ex.json();
-      sha=j.sha;
-      try{
-        var remote=JSON.parse(b64decode(j.content));  // <-- TextDecoder
-        if(remote.responses&&remote.responses.length>responses.length)mergedResponses=remote.responses;
-      }catch(e){}
+    // Read remote BEFORE writing. If it cannot be read we must not PUT at all:
+    // overwriting blind would delete answers the workflow added since our last
+    // pull. The old code swallowed that read error in a silent catch.
+    var sha=null,merged=responses;
+    var res=await ghGetRaw();
+    if(!res.missing){
+      sha=await ghGetSha();
+      merged=mergeResponses(res.data.responses||[],responses);
     }
-    var payload=JSON.stringify({schema:schema,responses:mergedResponses},null,2);
+    var payload=JSON.stringify({schema:schema,responses:merged},null,2);
     var body={message:'Opdateret '+new Date().toISOString(),content:b64encode(payload)};  // <-- TextEncoder
     if(sha)body.sha=sha;
-    var r=await fetch('https://api.github.com/repos/'+ghConfig.repo+'/contents/'+ghConfig.filename,{
+    var r=await fetch(ghUrl(),{
       method:'PUT',
       headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
     if(r.status===409){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
     if(!r.ok)throw new Error('HTTP '+r.status);
+    responses=merged;localStorage.setItem(LSR,JSON.stringify(responses));
     setGhStatus('ok','Gemt \u2014 '+new Date().toLocaleTimeString('da-DK'));
     toast('Gemt til GitHub \u2713');
   }catch(e){setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message)}
+}
+
+// Union by id: no answer is ever dropped, whether it came from the workflow or
+// from this browser. Entries without an id are kept as-is (cannot be deduped).
+function mergeResponses(a,b){
+  var seen={},out=[];
+  a.concat(b).forEach(function(r){
+    if(!r)return;
+    if(!r.id){out.push(r);return}
+    if(seen[r.id])return;
+    seen[r.id]=1;out.push(r);
+  });
+  return out.sort(function(x,y){return (x.timestamp||0)-(y.timestamp||0)});
 }
 
 function setGhStatus(state,msg){
