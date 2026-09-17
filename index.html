@@ -118,6 +118,14 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
 .bc{cursor:pointer;transition:opacity .12s}.bc:hover{opacity:.75}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .tag{font-size:12px;padding:3px 9px;border-radius:var(--r);background:var(--bg2);color:var(--t2);border:.5px solid var(--bd)}
+/* Diagnostik (taelletrae) */
+.diag{font-size:12px;line-height:1.65;padding:9px 11px;border-radius:var(--r);margin-top:8px}
+.diag b{font-weight:600}
+.diag .dl{margin-top:4px}
+.diag-bad{background:rgba(139,31,31,.06);border:.5px solid rgba(139,31,31,.22);color:#8b1f1f}
+.diag-warn{background:#fdf3d0;border:.5px solid rgba(107,74,0,.2);color:#6b4a00}
+.diag-ok{background:var(--bg2);border:.5px solid var(--bd);color:var(--t2)}
+.diag .btn{margin-top:6px}
 /* Stats */
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
 .sc{background:var(--dg);border-radius:var(--r);padding:1rem;text-align:center}
@@ -246,6 +254,7 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
   <div class="ptitle">Udfald &amp; logik</div>
   <div class="psub">Klik p&#229; svar-badges for at knytte dem til et udfald.</div>
   <div class="ni-info"><span>&#8505;</span><span>Matchprocent = (matchende svar &#247; antal n&#248;gleord) &#215; 100.</span></div>
+  <div id="odiag"></div>
   <div id="olist"></div>
   <button class="btn btnda btnbl" onclick="addOutcome()" style="margin-bottom:1.5rem">+ Tilf&#248;j udfald</button>
   <button class="btn btnp btnbl" onclick="saveAll()">&#128190; Gem alt</button>
@@ -547,8 +556,103 @@ function uploadImg(qid,inp){var f=inp.files[0];if(!f)return;if(f.size>2*1024*102
 function rmImg(qid){var q=schema.questions.find(function(x){return x.id===qid});if(q){q.image=null;renderBuild()}}
 
 // \u2500\u2500 Outcomes \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+// \u2500\u2500 Counting tree: static analysis \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+// A keyword is an option ID. In a single-choice question the user can only pick
+// ONE option, so if an outcome has several keywords inside the same single-choice
+// question they can never all be hit -> the outcome gets a ceiling below 100%.
+// Same for keywords pointing at deleted options. Both checks are O(n), run live.
+function optIndex(){
+  var m={};
+  schema.questions.forEach(function(q,qi){
+    (q.options||[]).forEach(function(o){m[o.id]={q:q,qi:qi,opt:o}});
+  });
+  return m;
+}
+function analyzeOutcome(o,ix){
+  ix=ix||optIndex();
+  var byQ={},orphans=[];
+  (o.keywords||[]).forEach(function(k){
+    var e=ix[k];
+    if(!e){orphans.push(k);return}
+    if(!byQ[e.q.id])byQ[e.q.id]={q:e.q,qi:e.qi,n:0};
+    byQ[e.q.id].n++;
+  });
+  var max=0,clashes=[];
+  Object.keys(byQ).forEach(function(qid){
+    var e=byQ[qid];
+    if(e.q.type==='multi'){max+=e.n;return}
+    max+=1;                       // enkeltvalg: h\u00f8jst \u00e9t n\u00f8gleord kan rammes
+    if(e.n>1)clashes.push(e);
+  });
+  var total=(o.keywords||[]).length;
+  return{total:total,max:max,
+    ceiling:total?Math.round(max/total*100):0,
+    perHit:total?Math.round(1000/total)/10:0,
+    orphans:orphans,clashes:clashes};
+}
+function deadOptions(){
+  var used={};
+  schema.outcomes.forEach(function(o){(o.keywords||[]).forEach(function(k){used[k]=true})});
+  var dead=[];
+  schema.questions.forEach(function(q,qi){
+    (q.options||[]).forEach(function(o){if(!used[o.id])dead.push({q:q,qi:qi,opt:o})});
+  });
+  return dead;
+}
+function cleanOrphans(oid){
+  var ix=optIndex(),n=0;
+  schema.outcomes.forEach(function(o){
+    if(oid&&o.id!==oid)return;
+    var before=(o.keywords||[]).length;
+    o.keywords=(o.keywords||[]).filter(function(k){return !!ix[k]});
+    n+=before-o.keywords.length;
+  });
+  if(!n){toast('Ingen for\u00e6ldede n\u00f8gleord');return}
+  saveLocal();renderOutcomes();
+  toast(n+' for\u00e6ldet'+(n===1?'':'e')+' n\u00f8gleord fjernet \u2713');
+}
+function outcomeDiag(o,ix){
+  var a=analyzeOutcome(o,ix);
+  if(!a.total)return '<div class="diag diag-bad"><b>Ingen n\u00f8gleord</b> \u2014 dette udfald kan aldrig vinde. V\u00e6lg mindst \u00e9t svar ovenfor.</div>';
+  var h='';
+  if(a.ceiling<100){
+    h+='<div class="diag diag-bad"><b>Loft: '+a.ceiling+'% match</b> \u2014 kan h\u00f8jst ramme '+a.max+' af '+a.total+' n\u00f8gleord og n\u00e5r derfor aldrig 100%.';
+    a.clashes.forEach(function(c){
+      h+='<div class="dl">\u00b7 '+c.n+' n\u00f8gleord ligger i samme enkeltvalg (sp. '+(c.qi+1)+': \u201c'+esc((c.q.text||'').slice(0,38))+'\u201d) \u2014 brugeren kan kun v\u00e6lge \u00e9t af dem.</div>';
+    });
+    if(a.orphans.length){
+      h+='<div class="dl">\u00b7 '+a.orphans.length+' n\u00f8gleord peger p\u00e5 slettede svarmuligheder og kan aldrig rammes.</div>'
+        +'<button class="btn btnsm" onclick="cleanOrphans(\''+o.id+'\')">Fjern for\u00e6ldede n\u00f8gleord</button>';
+    }
+    h+='</div>';
+  }
+  h+='<div class="diag diag-ok">'+a.total+' n\u00f8gleord \u00b7 '+String(a.perHit).replace('.',',')+' pp pr. matchende svar \u00b7 loft '+a.ceiling+'%</div>';
+  return h;
+}
+function renderOutcomeSummary(ix){
+  var el=document.getElementById('odiag');if(!el)return;
+  var dead=deadOptions(),orph=0;
+  schema.outcomes.forEach(function(o){orph+=analyzeOutcome(o,ix).orphans.length});
+  var h='';
+  if(orph){
+    h+='<div class="diag diag-bad"><b>'+orph+' for\u00e6ldet'+(orph===1?'':'e')+' n\u00f8gleord</b> peger p\u00e5 svarmuligheder der er slettet. De t\u00e6ller med i n\u00e6vneren og s\u00e6nker matchprocenten permanent.'
+      +'<div class="dl"><button class="btn btnsm" onclick="cleanOrphans()">Ryd op i alle udfald</button></div></div>';
+  }
+  if(dead.length){
+    h+='<div class="diag diag-warn"><b>'+dead.length+' svarmulighed'+(dead.length===1?'':'er')+' indg\u00e5r i intet udfald</b> \u2014 de p\u00e5virker ikke resultatet:';
+    dead.slice(0,8).forEach(function(d){
+      h+='<div class="dl">\u00b7 Sp. '+(d.qi+1)+': '+esc(d.opt.label||'(tom)')+'</div>';
+    });
+    if(dead.length>8)h+='<div class="dl">\u00b7 \u2026 og '+(dead.length-8)+' mere</div>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+}
+
 function renderOutcomes(){
   var allO=schema.questions.flatMap(function(q){return q.options||[]});
+  var ix=optIndex();
+  renderOutcomeSummary(ix);
   document.getElementById('olist').innerHTML=schema.outcomes.map(function(o){
     var kw=allO.map(function(opt){
       var on=o.keywords.includes(opt.id);
@@ -562,6 +666,7 @@ function renderOutcomes(){
       +'<div class="field"><label>Tags (kommasepareret)</label><input type="text" value="'+esc((o.tags||[]).join(', '))+'" oninput="setOTags(\''+o.id+'\',this.value)"></div>'
       +'<div class="slbl">N\u00f8gleord</div>'
       +'<div class="tags">'+(kw||'<span style="font-size:13px;color:var(--t3)">Ingen svarmuligheder endnu.</span>')+'</div>'
+      +outcomeDiag(o,ix)
       +'</div>';
   }).join('');
 }
