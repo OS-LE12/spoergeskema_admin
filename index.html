@@ -409,17 +409,22 @@ function openAdmin(){
 // step is involved and the encoding stays correct at any file size.
 var GH_API='https://api.github.com/repos/';
 function ghUrl(){return GH_API+ghConfig.repo+'/contents/'+ghConfig.filename}
+async function ghErr(r){
+  var m='';
+  try{var j=await r.clone().json();m=j.message||'';if(j.errors&&j.errors.length)m+=' '+JSON.stringify(j.errors)}catch(e){}
+  return new Error('HTTP '+r.status+(m?' \u2014 '+m:''));
+}
 async function ghGetRaw(){
   var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
   if(r.status===404)return{missing:true};
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  if(!r.ok)throw await ghErr(r);
   var txt=(await r.text()).trim();
   return{data:txt?JSON.parse(txt):{schema:null,responses:[]}};
 }
 async function ghGetSha(){
   var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
   if(r.status===404)return null;
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  if(!r.ok)throw await ghErr(r);
   var j=await r.json();
   return j.sha||null;
 }
@@ -455,13 +460,23 @@ async function ghSave(){
     var payload=JSON.stringify({schema:schema,responses:merged},null,2);
     var body={message:'Opdateret '+new Date().toISOString(),content:b64encode(payload)};  // <-- TextEncoder
     if(sha)body.sha=sha;
-    var r=await fetch(ghUrl(),{
-      method:'PUT',
-      headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    if(r.status===409){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
-    if(!r.ok)throw new Error('HTTP '+r.status);
+    async function put(){
+      return fetch(ghUrl(),{
+        method:'PUT',
+        headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+    }
+    var r=await put();
+    if(r.status===409||r.status===422){
+      // sha missing/stale (e.g. the workflow committed a new answer in between): refetch sha and retry once.
+      // GitHub's real error text for a stale sha ("<file> does not match <sha>") does not contain the word
+      // "sha", so we can't gate the retry on message content \u2014 always retry once on 409/422 instead.
+      var fresh=await ghGetSha();
+      if(fresh&&fresh!==body.sha){body.sha=fresh;r=await put()}
+    }
+    if(r.status===409||r.status===422){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
+    if(!r.ok)throw await ghErr(r);
     responses=merged;localStorage.setItem(LSR,JSON.stringify(responses));
     setGhStatus('ok','Gemt \u2014 '+new Date().toLocaleTimeString('da-DK'));
     toast('Gemt til GitHub \u2713');
