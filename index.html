@@ -473,9 +473,15 @@ async function ghSave(){
       // GitHub's real error text for a stale sha ("<file> does not match <sha>") does not contain the word
       // "sha", so we can't gate the retry on message content \u2014 always retry once on 409/422 instead.
       var fresh=await ghGetSha();
-      if(fresh&&fresh!==body.sha){body.sha=fresh;r=await put()}
+      var wasStale=fresh&&fresh!==body.sha;
+      if(wasStale){body.sha=fresh;r=await put()}
+      if(r.status===409||r.status===422){
+        if(wasStale){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
+        // sha was already current \u2014 this isn't a save race, so surface GitHub's real reason
+        // (e.g. branch protection, required signed commits) instead of a misleading conflict message.
+        throw await ghErr(r);
+      }
     }
-    if(r.status===409||r.status===422){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
     if(!r.ok)throw await ghErr(r);
     responses=merged;localStorage.setItem(LSR,JSON.stringify(responses));
     setGhStatus('ok','Gemt \u2014 '+new Date().toLocaleTimeString('da-DK'));
