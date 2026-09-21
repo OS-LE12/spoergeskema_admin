@@ -109,6 +109,14 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
 .orow{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
 .orow input{flex:1;min-width:120px}
 .onxt{flex-shrink:0;font-size:13px;padding:6px 8px;width:185px}
+/* Quiz preview option buttons (same look as the published bruger/index.html) */
+.obtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:.5px solid var(--bd);border-radius:var(--rl);background:var(--cb);cursor:pointer;font-size:15px;color:var(--t);text-align:left;width:100%;margin-bottom:8px;transition:border-color .15s,background .15s;font-family:var(--font)}
+.obtn:hover{border-color:var(--fg);background:#EBE9E1}
+.obtn.sel{border:1.5px solid var(--dg);background:#d6ddd0;color:var(--dk)}
+.rc{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.obtn.sel .rc{border-color:var(--dg)}
+.rd{width:10px;height:10px;border-radius:50%;background:var(--dg);display:none}
+.obtn.sel .rd{display:block}
 /* Badges */
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r);font-size:12px;font-weight:500;border:none;cursor:default}
 .bg-g{background:var(--dg);color:var(--fg)}
