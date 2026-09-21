@@ -415,14 +415,18 @@ async function ghErr(r){
   return new Error('HTTP '+r.status+(m?' \u2014 '+m:''));
 }
 async function ghGetRaw(){
-  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
+  // cache:'no-store' — without it the browser can serve a stale cached 404 for this
+  // URL (e.g. from before the workflow bot first created the file), which makes ghSave
+  // think the file is missing forever and PUT without a sha, failing with 422 "sha
+  // wasn't supplied" even though the file has long since existed on GitHub.
+  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
   if(r.status===404)return{missing:true};
   if(!r.ok)throw await ghErr(r);
   var txt=(await r.text()).trim();
   return{data:txt?JSON.parse(txt):{schema:null,responses:[]}};
 }
 async function ghGetSha(){
-  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
+  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
   if(r.status===404)return null;
   if(!r.ok)throw await ghErr(r);
   var j=await r.json();
