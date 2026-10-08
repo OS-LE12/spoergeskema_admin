@@ -256,17 +256,55 @@
           },
           {
             "id": "_y0eu38",
-            "label": "At skabe noget fysisk med mine hænder",
+            "label": "At få hjulpet andre, så de kan løse deres opgaver ",
             "nextQ": null
           },
           {
             "id": "_76ovfs",
-            "label": "At have ansvar og få ting til at spiller bedst sammen",
+            "label": "At sørge for en vigtig opgave lykkes til tiden",
             "nextQ": null
           },
           {
             "id": "_unuw2b",
-            "label": "At arbejde kreativt med stof/læder/andet materiale og finish virker",
+            "label": "At forvandle noget gammelt til noget flot og brugtbart",
+            "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_7a7e9b",
+        "text": "Hvad motiverer dig mest?",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_8gh76e",
+            "label": "At løse mekaniske problemer, især når andre har opgivet",
+            "nextQ": null
+          },
+          {
+            "id": "_z85s7z",
+            "label": "At forstå teknologi, og det må gerne være kompliceret",
+            "nextQ": null
+          },
+          {
+            "id": "_3sifza",
+            "label": "At levere arbejde, hvor selv den mindste detaljer tælle",
+            "nextQ": null
+          },
+          {
+            "id": "_qm25b5",
+            "label": "At få hænder i opgaverne",
+            "nextQ": null
+          },
+          {
+            "id": "_u18z66",
+            "label": "At have ansvar og få ting til at spille sammen",
+            "nextQ": null
+          },
+          {
+            "id": "_j581x5",
+            "label": "At arbejde kreativt med materiale og finish",
             "nextQ": null
           }
         ]
