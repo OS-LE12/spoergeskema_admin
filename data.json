@@ -387,17 +387,42 @@
       },
       {
         "id": "_om1vgz",
-        "text": "",
+        "text": "Hvad er du mest nysgerrig på at lære?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_1423o0",
-            "label": "",
+            "label": "Hvordan mekanik egentlig fungerer",
             "nextQ": null
           },
           {
             "id": "_rcnt5j",
+            "label": "Hvordan robotter, droner og automatiske systemer virker",
+            "nextQ": null
+          },
+          {
+            "id": "_o0cjic",
+            "label": "Hvordan kan metal dele fremstilles",
+            "nextQ": null
+          },
+          {
+            "id": "_mzxkg3",
+            "label": "Hvordan fungerer et skib egentlig",
+            "nextQ": null
+          },
+          {
+            "id": "_wd623g",
+            "label": "Hvordan planlægger man og organiserer store opgaver?",
+            "nextQ": null
+          },
+          {
+            "id": "_kjral0",
+            "label": "Hvordan arbejder man med stof, farver og overfalder?",
+            "nextQ": null
+          },
+          {
+            "id": "_v205xp",
             "label": "",
             "nextQ": null
           }
