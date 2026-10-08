@@ -308,6 +308,44 @@
             "nextQ": null
           }
         ]
+      },
+      {
+        "id": "_m8f84h",
+        "text": "Hvilke kompetence vil du helst have?",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_sc0jk5",
+            "label": "Kunne høre præcis hvad der er galt med en motor",
+            "nextQ": null
+          },
+          {
+            "id": "_zmnaz3",
+            "label": "Kunne forstå alle elektroniske systemer",
+            "nextQ": null
+          },
+          {
+            "id": "_def7nq",
+            "label": "Kunne lave en perfekt reservedel på første forsøg",
+            "nextQ": null
+          },
+          {
+            "id": "_osvkw4",
+            "label": "Kunne bygge næsten hvad som helst - og selvfølgelig af metal",
+            "nextQ": null
+          },
+          {
+            "id": "_00dtdk",
+            "label": "Kunne få selv det mest kaotiske mission til at lykkedes",
+            "nextQ": null
+          },
+          {
+            "id": "_kjhhob",
+            "label": "Kunne få alle slidte ting til at se ud som nye",
+            "nextQ": null
+          }
+        ]
       }
     ],
     "outcomes": [
