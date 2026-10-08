@@ -5,33 +5,38 @@
     "questions": [
       {
         "id": "q1",
-        "text": "Hvilke opgaver synes du er spændende?",
+        "text": "Du har en hel dag til at prøve noget nyt - hvad vælger du?",
         "sub": "",
         "type": "multi",
         "options": [
           {
             "id": "a1",
-            "label": "Reparere køretøjer og maskiner",
+            "label": "Skruer på en motor og få den til at \"brøle\" igen",
             "nextQ": null
           },
           {
             "id": "a2",
-            "label": "Arbejde med elektronik og teknologi",
+            "label": "Hacker mig frem til løsningen på en teknisk gåde",
             "nextQ": null
           },
           {
             "id": "_av2eri",
-            "label": "Producere eller / fremstille dele",
+            "label": "Fremstiller en reservedel, der skal passe helt præcist",
             "nextQ": null
           },
           {
             "id": "_thbzft",
-            "label": "Planlægge og styre materialer og udstyr",
+            "label": "Bygger noget - og gerne af metal",
             "nextQ": null
           },
           {
             "id": "_mz0kjo",
-            "label": "arh.... jeg ved snart ikke om der er opgaver jeg kan lide...",
+            "label": "Planlægger en begivenhed, og sikrer alt fungerer",
+            "nextQ": null
+          },
+          {
+            "id": "_bccr98",
+            "label": "Giver noget slidt nyt liv",
             "nextQ": null
           }
         ],
@@ -39,38 +44,38 @@
       },
       {
         "id": "_0fucb8",
-        "text": "Hvad synes du er interessant?",
+        "text": "Hvad siger dine venner om dig?",
         "sub": "",
         "type": "multi",
         "options": [
           {
             "id": "_nv4nxx",
-            "label": "Transport og logistik",
+            "label": "Jeg kan altid finde ud af, hvorfor det ikke virker",
             "nextQ": null
           },
           {
             "id": "_het213",
-            "label": "Matematik og fysik",
+            "label": "Jeg er godt til computer og tekniske løsninger",
             "nextQ": null
           },
           {
             "id": "_598d3a",
-            "label": "Køretøjer og motorer",
+            "label": "Jeg opdager små fejl/detaljer",
             "nextQ": null
           },
           {
             "id": "_txby6r",
-            "label": "Teknisk udstyr og små dele",
+            "label": "Jeg er altid i gang med bygge / makke i noget",
             "nextQ": null
           },
           {
             "id": "_0s02m3",
-            "label": "Lager og forsyning",
+            "label": "Jeg er god til at holde styr på tingene og tiden!",
             "nextQ": null
           },
           {
             "id": "_0qvsxc",
-            "label": "At få tiden til at gå .... inden jeg skal hjem!",
+            "label": "Jeg er kreativ, og god til at få tingene til at se godt ud.",
             "nextQ": null
           }
         ],
