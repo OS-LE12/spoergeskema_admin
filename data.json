@@ -197,28 +197,56 @@
       },
       {
         "id": "_yv9oey",
-        "text": "Når jeg står over for en fejl eller svær opgave gør jeg oftest....",
+        "text": "Du er i gang med et svært spil. Hvordan kommer du videre?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_a7pk58",
-            "label": "Fejlsøger systematisk",
+            "label": "Jeg prøver at finde fejlen og tester forskellige løsninger",
             "nextQ": null
           },
           {
             "id": "_1z5d44",
-            "label": "Tester forskellige muligheder",
+            "label": "Jeg gennemskuer systemet og finder en smart genvej",
             "nextQ": null
           },
           {
             "id": "_0b3su8",
-            "label": "Lukker øjnene og håber det løser sig selv",
+            "label": "Jeg er tålmodighed og fokuserer på alle de små detaljer",
             "nextQ": null
           },
           {
             "id": "_luvzor",
-            "label": "Løser opgaven, spørger også gerne om hjælp. Sikrer at det bliver fixet.",
+            "label": "Jeg finder en løsning, gerne ved at finde på en ny mulighed.",
+            "nextQ": null
+          },
+          {
+            "id": "_8mpycx",
+            "label": "Jeg laver en plan, og fordele opgaverne",
+            "nextQ": null
+          },
+          {
+            "id": "_jv3c4u",
+            "label": "Jeg ændrer og forbedrer, så det eksisterende fortsat kan fungere.",
+            "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_c79gr5",
+        "text": "",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_q4y2ns",
+            "label": "",
+            "nextQ": null
+          },
+          {
+            "id": "_ih113l",
+            "label": "",
             "nextQ": null
           }
         ]
