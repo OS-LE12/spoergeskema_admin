@@ -454,6 +454,57 @@
         "desc": "Det ser ud til at du elsker at finde fejl. Du giver ikke op, bare fordi noget ikke virker, og vil gerne vide hvordan noget kan fikses!\nVi anbefaler dig at kigge nærmere på :\nFlytekniker\nLastvognsmekaniker\nEntreprenørmaskinmekaniker",
         "tags": [],
         "keywords": []
+      },
+      {
+        "id": "_w7xq0s",
+        "title": "TECH Geniet - du får teknologien til at spille",
+        "desc": "Det ser ud til at du er nysgerrig på teknik, elektronik og smarte systemer. Måske også at finde løsninger som ikke andre lige ser?\nKig du roligt nærmere på Datatekniker, Elektronikfagtekniker eller automatiktekniker",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_pl87io",
+        "title": "PRÆCISIONSMESTEREN - du har styr på detaljerne",
+        "desc": "Gad vide om du har det bedst når tingene passer perfekt sammen? Du er tålmodig og synes det er fedt at skabe, noget som virker.\nVi anbefaler at du kigger på våbenmekaniker, industritekniker eller flytekniker.",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_pg6024",
+        "title": "BYGGEMESTEREN - du skaber noget som holder!",
+        "desc": "Du bruger dine hænder, og er godt til at skabe og ikke mindst se resultaterne af dit arbejde.\nVi anbefaler du kigger på klejnsmed, skibsmontør - måske endda lastvognsmontør?",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_r8bv56",
+        "title": "Missionens tovholder - du får tingene til at ske!",
+        "desc": "Du er godt til at holde overblik, planlægge og sørge for, at det hele kommer til at fungere.\nDet kunne være interessant for dig at kigge på uddannelserne: \nLager- og logistikoperatør, Godschauffør eller kontorassistent",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_5ry1zg",
+        "title": "Kreativ og forvandlingskunstneren",
+        "desc": "Du ser mulighederne - også i lidt ældre ting! Og det at arbejde med forskellige typer materialer har du umiddelbart interesse for.\nHer anbefaler du at du kigger nærmere på Møbelpolstrer, Overfladebehandler - og måske også kleinsmed.",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_8pfpwu",
+        "title": "SYSTEMHELTEN - du holder det hele kørende!",
+        "desc": "Du har krydset af på at du er god til at forstå og se hvordan forskellige dele arbejder sammen.\nVi anbefaler klart at du kigger nærmere på Elektriker, Køletekniker og automatikteknikeren",
+        "tags": [],
+        "keywords": []
+      },
+      {
+        "id": "_yikpac",
+        "title": "TAK for din ærlighed!",
+        "desc": "Det kan jo også noget at være ærlig, og vi vil gerne kvittere med den samme respekt.\nMå vi derfor anbefale at du kigger på mulighed uden for Forsvaret.",
+        "tags": [],
+        "keywords": [
+          "_ruph85"
+        ]
       }
     ]
   },
