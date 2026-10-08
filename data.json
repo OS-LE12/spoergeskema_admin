@@ -420,10 +420,28 @@
             "id": "_kjral0",
             "label": "Hvordan arbejder man med stof, farver og overfalder?",
             "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_18eatv",
+        "text": "Det er jo vanvittigt med alle de spørgsmål!!!!",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_ruph85",
+            "label": "Jeg skal bare gå tidligt hver dag - meget tidligt",
+            "nextQ": null
           },
           {
-            "id": "_v205xp",
-            "label": "",
+            "id": "_0yzccf",
+            "label": "Men jeg klarede det - og det var egentlig meget sjovt",
+            "nextQ": null
+          },
+          {
+            "id": "_i10mhl",
+            "label": "Der var flere steder jeg synes det var svært at vælge",
             "nextQ": null
           }
         ]
