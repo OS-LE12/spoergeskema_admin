@@ -142,7 +142,7 @@
           },
           {
             "id": "_t4wj7j",
-            "label": "En metalkonstruktion, der skal repareres",
+            "label": "Få kølesystemet til at virke",
             "nextQ": null
           },
           {
@@ -449,93 +449,11 @@
     ],
     "outcomes": [
       {
-        "id": "o1",
-        "title": "Må vi anbefale dig at kigge nærmere på job / uddannelse inden for",
-        "desc": "motormekaniker området",
+        "id": "_f48x6s",
+        "title": "TEKNIK DETEKTIVEN",
+        "desc": "Det ser ud til at du elsker at finde fejl. Du giver ikke op, bare fordi noget ikke virker, og vil gerne vide hvordan noget kan fikses!\nVi anbefaler dig at kigge nærmere på :\nFlytekniker\nLastvognsmekaniker\nEntreprenørmaskinmekaniker",
         "tags": [],
-        "keywords": [
-          "a1",
-          "_598d3a",
-          "_ipxcoy",
-          "_jvqc16",
-          "_1z5d44"
-        ]
-      },
-      {
-        "id": "o2",
-        "title": "Du kan med fordel kigge på job / uddannelsesmulighederne som ",
-        "desc": "våbenmekaniker! De er vores \"schweizerknive\", der bare kan alt.....\n... eller næsten alt ;-).",
-        "tags": [],
-        "keywords": [
-          "a3",
-          "_ipxcoy",
-          "a2",
-          "_txby6r",
-          "_8pzeq1",
-          "_70xiwd",
-          "_ju4odo",
-          "_a7pk58",
-          "_luvzor",
-          "_1z5d44"
-        ]
-      },
-      {
-        "id": "_nbc1do",
-        "title": "Tak for din ærlighed. Vi vil gerne vise dig den samme respekt.",
-        "desc": "Må vi derfor anbefale dig, at du kigge efter gode karriereveje andre steder.",
-        "tags": [],
-        "keywords": [
-          "_mz0kjo",
-          "_0qvsxc",
-          "_jxcyxo",
-          "_cccjdx",
-          "_51vjaz",
-          "_0b3su8"
-        ]
-      },
-      {
-        "id": "_a9lfax",
-        "title": "Du ser ud til at have mange gode kompetencer, og særligt indenfor",
-        "desc": "Lager- og logistikoperatør\nTransport og logistik",
-        "tags": [],
-        "keywords": [
-          "_thbzft",
-          "_nv4nxx",
-          "_mtxnca",
-          "_mzzkcm",
-          "_t4wj7j",
-          "_luvzor"
-        ]
-      },
-      {
-        "id": "_53xbgy",
-        "title": "Vi mangler dig! Så vi kan kun anbefale at du kigger nærmere på",
-        "desc": "Elektronikfagtekniker",
-        "tags": [],
-        "keywords": [
-          "a2",
-          "_het213",
-          "_txby6r",
-          "_ipxcoy",
-          "_ukhy9m",
-          "_ju4odo",
-          "_1z5d44",
-          "_luvzor"
-        ]
-      },
-      {
-        "id": "_kr2p0p",
-        "title": "Du skal klart kigge efter jobmuligheder i første echelon.",
-        "desc": "Din nysgerrighed på at få fixet problemer er stærkt værdsat her.\nOg så gør det heller ikke noget at du er faglig kompetent - vi håber vi må byde dig velkommen her!",
-        "tags": [],
-        "keywords": [
-          "_mtxnca",
-          "_lhp2pc",
-          "_8pzeq1",
-          "_qryajz",
-          "_x3p4c3",
-          "_luvzor"
-        ]
+        "keywords": []
       }
     ]
   },
