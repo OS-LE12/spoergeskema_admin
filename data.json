@@ -121,33 +121,38 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Hvad gør du når noget går i stykker?",
+        "text": "Flere vigtige opgave er gået galt! Hvilken opgave vælger du først?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Skiller det ad for at finde fejlen",
+            "label": "En stor maskine, der ikke vil starte",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Søger viden om \"systemet/maskinen\" først",
+            "label": "Et digitalt system, der ikke vil samarbejde",
             "nextQ": null
           },
           {
             "id": "_qryajz",
-            "label": "Finder en praktisk løsning - om nødvendigt også med gaffatape",
+            "label": "En del, der skal justeres nøjagtigt for kampvognen kan køre",
             "nextQ": null
           },
           {
             "id": "_t4wj7j",
-            "label": "Hjælper med at organisere arbejdet omkring opgaven",
+            "label": "En metalkonstruktion, der skal repareres",
             "nextQ": null
           },
           {
             "id": "_cccjdx",
-            "label": "Håber en anden fixer det..",
+            "label": "Leveringen der står stille, og der skal laves ny rute",
+            "nextQ": null
+          },
+          {
+            "id": "_yinmi5",
+            "label": "Kontrol på helikopterens overflade, som ligner noget der skal repareres",
             "nextQ": null
           }
         ]
