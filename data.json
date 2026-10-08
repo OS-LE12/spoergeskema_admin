@@ -235,18 +235,38 @@
       },
       {
         "id": "_c79gr5",
-        "text": "",
+        "text": "Hvad ville gøre dig mest glad - og stolt?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_q4y2ns",
-            "label": "",
+            "label": "At få en helikopter gjort klar til næste flyvning",
             "nextQ": null
           },
           {
             "id": "_ih113l",
-            "label": "",
+            "label": "At få et avanceret elektronisk system til at virke",
+            "nextQ": null
+          },
+          {
+            "id": "_hrwqiv",
+            "label": "At fremstille en komponent/reservedel som er så nøjagtig og detaljeret at det hele bare spiller",
+            "nextQ": null
+          },
+          {
+            "id": "_y0eu38",
+            "label": "At skabe noget fysisk med mine hænder",
+            "nextQ": null
+          },
+          {
+            "id": "_76ovfs",
+            "label": "At have ansvar og få ting til at spiller bedst sammen",
+            "nextQ": null
+          },
+          {
+            "id": "_unuw2b",
+            "label": "At arbejde kreativt med stof/læder/andet materiale og finish virker",
             "nextQ": null
           }
         ]
