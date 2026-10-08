@@ -83,33 +83,38 @@
       },
       {
         "id": "_410tkn",
-        "text": "Hvor er du bedst?",
+        "text": "Du får en værktøjskasse - hvad håber du er i den?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_mtxnca",
-            "label": "Når jeg får lov at være praktisk",
+            "label": "Motorværktøj og udstyr til at finde mekaniske fejl",
             "nextQ": null
           },
           {
             "id": "_mzzkcm",
-            "label": "Når jeg får lov at skabe overblik og være analytisk",
+            "label": "En computer og elektronisk måleinstrumenter",
             "nextQ": null
           },
           {
             "id": "_ipxcoy",
-            "label": "Når jeg får lov at være grundig",
+            "label": "Mikrometre og værktøj til bittesmå dele",
             "nextQ": null
           },
           {
             "id": "_jxcyxo",
-            "label": "Når jeg møder sent og går tidligt",
+            "label": "Svejseudstyr ",
             "nextQ": null
           },
           {
             "id": "_lhp2pc",
-            "label": "Når der er brug for jeg laver hurtige løsninger, der virker",
+            "label": "En tablet med ruter, opgaver og leverencer",
+            "nextQ": null
+          },
+          {
+            "id": "_0897bg",
+            "label": "Stof, læder, maling og materialer",
             "nextQ": null
           }
         ]
