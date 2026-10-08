@@ -346,6 +346,62 @@
             "nextQ": null
           }
         ]
+      },
+      {
+        "id": "_bz5q92",
+        "text": "Hvilken udfordring vælger du?",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_176z4j",
+            "label": "Få en entreprenørmaskine på hjulene igen",
+            "nextQ": null
+          },
+          {
+            "id": "_r5pd4i",
+            "label": "Finde fejl i dronesystem eller helikopterens elektriske system",
+            "nextQ": null
+          },
+          {
+            "id": "_9wua9l",
+            "label": "Undersøge de mekaniske dele",
+            "nextQ": null
+          },
+          {
+            "id": "_43x4ro",
+            "label": "Reparere på et skib",
+            "nextQ": null
+          },
+          {
+            "id": "_4rd2w8",
+            "label": "Finde ud hvor reservedelene ikke er kommet frem",
+            "nextQ": null
+          },
+          {
+            "id": "_rn4d4i",
+            "label": "Give en overflade eller et nyt betræk ny finish",
+            "nextQ": null
+          }
+        ]
+      },
+      {
+        "id": "_om1vgz",
+        "text": "",
+        "sub": "",
+        "type": "single",
+        "options": [
+          {
+            "id": "_1423o0",
+            "label": "",
+            "nextQ": null
+          },
+          {
+            "id": "_rcnt5j",
+            "label": "",
+            "nextQ": null
+          }
+        ]
       }
     ],
     "outcomes": [
