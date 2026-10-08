@@ -159,33 +159,38 @@
       },
       {
         "id": "_lx802h",
-        "text": "Hvad beskriver dig bedst?",
+        "text": "Hvilke dag / arbejdsdag ville du glæde dig mest til?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_70xiwd",
-            "label": "Detaljerorienteret",
+            "label": "At arbejde med fly og helikoptere i en hangar",
             "nextQ": null
           },
           {
             "id": "_x3p4c3",
-            "label": "Tænker ud af boksen",
+            "label": "At løse problemer med IT og elektronik",
             "nextQ": null
           },
           {
             "id": "_jvqc16",
-            "label": "Er detektiv og fejlfinder problemer",
+            "label": "At fremstille præcise dele / reparere finmekanik",
             "nextQ": null
           },
           {
             "id": "_ju4odo",
-            "label": "Læser instruktioner og manualer",
+            "label": "At konstruere eller reparere noget på et stort skib",
             "nextQ": null
           },
           {
             "id": "_51vjaz",
-            "label": "Er af natur lidt små doven",
+            "label": "At være på farten, og have ansvar for transport og logistik",
+            "nextQ": null
+          },
+          {
+            "id": "_suthqu",
+            "label": "At arbejde med design, materialer og få gammelt til at se nyt ud",
             "nextQ": null
           }
         ]
