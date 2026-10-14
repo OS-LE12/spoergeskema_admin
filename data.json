@@ -341,19 +341,19 @@
       },
       {
         "id": "_18eatv",
-        "text": "Det er jo vanvittigt med alle de spørgsmål!!!!",
+        "text": "Er du interesseret i en uddannelse ved Forsvaret?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_ruph85",
-            "label": "Jeg skal absolut ikke i Forsvaret",
-            "nextQ": null
+            "label": "Nej Jeg skal absolut ikke i Forsvaret",
+            "nextQ": "__end__"
           },
           {
             "id": "_0yzccf",
-            "label": "Men jeg klarede det - og det var egentlig meget sjovt",
-            "nextQ": null
+            "label": "Jo kan jeg måske godt.",
+            "nextQ": "__end__"
           }
         ]
       }
