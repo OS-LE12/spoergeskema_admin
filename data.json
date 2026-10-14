@@ -72,11 +72,6 @@
             "id": "_0qvsxc",
             "label": "Jeg er kreativ, og god til at få tingene til at se godt ud.",
             "nextQ": null
-          },
-          {
-            "id": "_0vg0an",
-            "label": "Måske tænker de at jeg er lidt doven... og det er jeg vist også",
-            "nextQ": null
           }
         ],
         "image": null
@@ -148,11 +143,6 @@
           {
             "id": "_yinmi5",
             "label": "Helikopterne, Hercules og F35 flyene",
-            "nextQ": null
-          },
-          {
-            "id": "_fboqoc",
-            "label": "Absolut ingen af dem",
             "nextQ": null
           }
         ]
@@ -390,6 +380,76 @@
     ]
   },
   "responses": [
+    {
+      "answers": {
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_mtxnca",
+          "_jxcyxo"
+        ],
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "name": "Dan"
+      },
+      "id": "_7h3ozu",
+      "timestamp": 1782298286805,
+      "topOutcome": "Funktionalitet"
+    },
+    {
+      "answers": {
+        "_1rd36r": "_ukhy9m",
+        "_410tkn": [
+          "_mzzkcm"
+        ],
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "name": "Test"
+      },
+      "id": "_2n54gx",
+      "timestamp": 1782299168719,
+      "topOutcome": "Visuelt orienteret"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_598d3a"
+        ],
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_ipxcoy"
+        ],
+        "q1": "a2"
+      },
+      "completed": true,
+      "contact": {
+        "name": "Jonas"
+      },
+      "id": "_sryrhm",
+      "timestamp": 1782368975446,
+      "topOutcome": "Funktionalitet"
+    },
+    {
+      "answers": {
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_ipxcoy"
+        ],
+        "_lx802h": "_70xiwd",
+        "_yv9oey": "_1z5d44",
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "name": "Tommy"
+      },
+      "id": "_8r54x0",
+      "timestamp": 1782386281844,
+      "topOutcome": "Funktionalitet"
+    },
     {
       "answers": {
         "_0fucb8": [
