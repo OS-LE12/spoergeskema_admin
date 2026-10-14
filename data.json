@@ -7,7 +7,7 @@
         "id": "q1",
         "text": "Du har en hel dag til at prøve noget nyt - hvad vælger du?",
         "sub": "",
-        "type": "multi",
+        "type": "single",
         "options": [
           {
             "id": "a1",
@@ -21,32 +21,17 @@
           },
           {
             "id": "_av2eri",
-            "label": "Går straks i gang med at få små mekaniske dele renset og til at virke endnu bedre.",
-            "nextQ": null
-          },
-          {
-            "id": "_thbzft",
-            "label": "Fremstiller  - gerne ved at svejse - og makker i metal",
+            "label": "Får alle de små mekaniske dele renset og til at virke endnu bedre.",
             "nextQ": null
           },
           {
             "id": "_mz0kjo",
-            "label": "Rydder op på lageret, og springer gerne i lastbilen for at levere varer",
-            "nextQ": null
-          },
-          {
-            "id": "_bccr98",
-            "label": "Går i gang med at fixe det slidte materiel ",
+            "label": "Springer i lastbilen for at levere materiel til kasernerne ",
             "nextQ": null
           },
           {
             "id": "_zclmqw",
-            "label": "Går i \"skibsrummet\" og får vedligeholdt skibsmotor og dets grej",
-            "nextQ": null
-          },
-          {
-            "id": "_qj1d2p",
-            "label": "Der er for mange muligheder her",
+            "label": "Går i \"skibsrummet\" og checker skibsmotor og dets grej",
             "nextQ": null
           }
         ],
@@ -131,11 +116,6 @@
             "id": "_0897bg",
             "label": "Køleanlæg, tekniske systemer - og måske endda et skib at sejle på",
             "nextQ": null
-          },
-          {
-            "id": "_yccri0",
-            "label": "Monster, slik  og en seng at sove i",
-            "nextQ": null
           }
         ]
       },
@@ -166,11 +146,6 @@
             "nextQ": null
           },
           {
-            "id": "_cccjdx",
-            "label": "Får uniformer, udstyr og materiel opdateret og udleveret",
-            "nextQ": null
-          },
-          {
             "id": "_yinmi5",
             "label": "Helikopterne, Hercules og F35 flyene",
             "nextQ": null
@@ -184,9 +159,9 @@
       },
       {
         "id": "_lx802h",
-        "text": "Hvilke dag / arbejdsdag ville du glæde dig mest til?",
+        "text": "Hvilke dag vil du glæde dig mest til?",
         "sub": "",
-        "type": "single",
+        "type": "multi",
         "options": [
           {
             "id": "_70xiwd",
@@ -217,11 +192,6 @@
             "id": "_suthqu",
             "label": "At få de rigtige data ind i systemerne, og støtte kollegaer med vigtig viden - f.eks. rekruttering, løn og ferie",
             "nextQ": null
-          },
-          {
-            "id": "_sjd9h2",
-            "label": "At jeg kan møde sent, game lidt og gå meget tidligt",
-            "nextQ": null
           }
         ]
       },
@@ -250,22 +220,12 @@
             "id": "_luvzor",
             "label": "Jeg søger i manualer, på nettet og andre steder for at få erfaringer fra andre til at finde den bedste løsning",
             "nextQ": null
-          },
-          {
-            "id": "_8mpycx",
-            "label": "Jeg laver en plan, og fordele opgaverne",
-            "nextQ": null
-          },
-          {
-            "id": "_jv3c4u",
-            "label": "Jeg kalder på hjælp, - og lader gerne andre gøre det færdig",
-            "nextQ": null
           }
         ]
       },
       {
         "id": "_c79gr5",
-        "text": "Hvad ville gøre dig mest glad - og stolt?",
+        "text": "Hvad synes du er mest sej?",
         "sub": "",
         "type": "single",
         "options": [
@@ -291,50 +251,12 @@
           },
           {
             "id": "_unuw2b",
-            "label": "At forvandle noget gammelt til noget flot og brugtbart",
+            "label": "At vide alt om elektronik, teknik og fysik",
             "nextQ": null
           },
           {
-            "id": "_l2qxkg",
-            "label": "Det ved jeg simpelthen ikke..... ",
-            "nextQ": null
-          }
-        ]
-      },
-      {
-        "id": "_7a7e9b",
-        "text": "Hvad kan du bedst lide? (Hvad motiverer dig).",
-        "sub": "",
-        "type": "single",
-        "options": [
-          {
-            "id": "_8gh76e",
-            "label": "At løse mekaniske problemer, især når andre har opgivet",
-            "nextQ": null
-          },
-          {
-            "id": "_z85s7z",
-            "label": "At forstå teknologi, og det må gerne være kompliceret",
-            "nextQ": null
-          },
-          {
-            "id": "_3sifza",
-            "label": "At levere arbejde, hvor selv den mindste detaljer tælle",
-            "nextQ": null
-          },
-          {
-            "id": "_qm25b5",
-            "label": "At arbejde på opgaver, hvor selv den mindste detalje er afgørende",
-            "nextQ": null
-          },
-          {
-            "id": "_u18z66",
-            "label": "Både at få løst opgaven og have ansvar for at det virker, og jeg checker altid en ekstra gang",
-            "nextQ": null
-          },
-          {
-            "id": "_womgfy",
-            "label": "At andre gør tingene for mig",
+            "id": "_8bmvx0",
+            "label": "At makke i motoren og få det til at spille",
             "nextQ": null
           }
         ]
