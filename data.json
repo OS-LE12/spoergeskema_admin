@@ -260,7 +260,9 @@
           {
             "id": "_ruph85",
             "label": "Nej Jeg skal absolut ikke i Forsvaret",
-            "nextQ": "__end__"
+            "nextQ": null,
+            "knockout": true,
+            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Vi ønsker dig god vind på din vej, og skulle du alligevel være nysgerrig, så kig forbi vores stand. Vi vil super gerne fortælle dig om mulighederne."
           },
           {
             "id": "_0yzccf",
@@ -371,7 +373,6 @@
         "desc": "Det kan noget at være ærlig, og ikke alle er vilde med Forsvaret, men hvis du er interesseret - så kig forbi vores stand, så vil vi utrolig gerne i dialog med dig.",
         "tags": [],
         "keywords": [
-          "_ruph85",
           "_0yzccf",
           "_0vg0an",
           "_fboqoc"
