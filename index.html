@@ -173,6 +173,13 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
 .obtn.sel .rc{border-color:var(--dg)}
 .rd{width:10px;height:10px;border-radius:50%;background:var(--dg);display:none}
 .obtn.sel .rd{display:block}
+/* Screen-out (knockout) options */
+.kob{flex-shrink:0;font-size:12px;padding:6px 9px;white-space:nowrap}
+.kob.on{background:#8b1f1f;border-color:#8b1f1f;color:#fff}
+.korow{margin:-2px 0 10px;padding:8px 10px;background:rgba(139,31,31,.07);border:.5px solid rgba(139,31,31,.25);border-radius:var(--r);font-size:12px;color:#8b1f1f;line-height:1.5}
+.korow input{width:100%;margin-top:6px;font-size:13px;padding:6px 8px;color:var(--t)}
+.qscr{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--t2);margin:0 0 12px;cursor:pointer;line-height:1.5}
+.qscr input{width:16px;height:16px;margin:2px 0 0;flex-shrink:0}
 /* Publish to the test site */
 .pubtgl{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--t);margin:14px 0 0;cursor:pointer}
 .pubtgl input{width:16px;height:16px;margin:0;flex-shrink:0}
@@ -216,6 +223,11 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
         <div class="lf">
           <label>Filnavn</label>
           <input type="text" id="login-filename" value="data.json">
+        </div>
+        <div class="lf">
+          <label>Token til udgivelse (valgfrit)</label>
+          <input type="password" id="login-ptoken" placeholder="github_pat_xxxx" autocomplete="off">
+          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">Bruges til at udgive brugerfilen til bruger-repositoriet. Contents: Read &amp; Write.</div>
         </div>
       </div>
     </details>
@@ -302,7 +314,7 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
       <div class="field"><label>Bruger-repository</label><input type="text" id="pub-repo" onchange="savePubCfg()" placeholder="OS-LE12/spoergeskema"></div>
       <div class="field"><label>Filnavn</label><input type="text" id="pub-path" onchange="savePubCfg()" placeholder="index.html"></div>
       <div class="field"><label>Eget token til udgivelse (valgfrit)</label><input type="password" id="pub-token" onchange="savePubCfg()" placeholder="Tomt = brug admin-tokenet" autocomplete="off">
-        <div style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Tokenet skal have <em>Contents: Read and write</em> p&#229; bruger-repositoriet. Det gemmes kun i denne browser og l&#230;gges aldrig i brugerfilen.</div></div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Tokenet skal have <em>Contents: Read and write</em> p&#229; bruger-repositoriet. Det l&#230;gges aldrig i brugerfilen. Det f&#248;lger med i &#8222;Del admin-adgang&#8220;-linket nedenfor, s&#229; du kan logge ind p&#229; andre enheder.</div></div>
     </details>
   </div>
   <div class="card hl" style="margin-top:12px">
@@ -417,6 +429,8 @@ function doLogin(){
   err.style.display='none';
   if(!pw){err.textContent='Angiv en adgangskode.';err.style.display='block';return}
   if(!checkPw(pw)){err.textContent='Forkert adgangskode.';err.style.display='block';return}
+  var ptok=document.getElementById('login-ptoken').value.trim();
+  if(ptok)storePubCfg({token:ptok});
   if(token&&repo){
     ghConfig={token:token,repo:repo,filename:filename};
     localStorage.setItem(LSG,JSON.stringify(ghConfig));
@@ -613,18 +627,23 @@ function renderBuild(){
 function renderQCard(q,qi){
   var open=openCards[q.id]!==false;
   var tl={single:'Enkeltvalg',multi:'Flervalg',text:'Fritekst'}[q.type]||q.type;
+  if(q.screening)tl+=' \u00b7 Screening';
+  if((q.options||[]).some(function(o){return o.knockout}))tl+=' \u00b7 Diskvalifikation';
   var opts=(q.options||[]).map(function(o){
     var nx=schema.questions.filter(function(qq){return qq.id!==q.id}).map(function(qq){
       return '<option value="'+qq.id+'" '+(o.nextQ===qq.id?'selected':'')+'>'+esc(qq.text).slice(0,25)+'</option>';
     }).join('');
+    var ko=!!o.knockout;
     return '<div class="orow">'
       +'<input type="text" value="'+esc(o.label)+'" placeholder="Svarmulighed..." oninput="setOL(\''+q.id+'\',\''+o.id+'\',this.value)">'
-      +'<select class="onxt" onchange="setON(\''+q.id+'\',\''+o.id+'\',this.value)">'
-      +'<option value="">N\u00e6ste i r\u00e6kkef\u00f8lge</option>'+nx
-      +'<option value="__end__" '+(o.nextQ==='__end__'?'selected':'')+'>Afslut</option>'
-      +'</select>'
+      +(ko?'':'<select class="onxt" onchange="setON(\''+q.id+'\',\''+o.id+'\',this.value)">'
+        +'<option value="">N\u00e6ste i r\u00e6kkef\u00f8lge</option>'+nx
+        +'<option value="__end__" '+(o.nextQ==='__end__'?'selected':'')+'>Afslut</option>'
+        +'</select>')
+      +'<button class="btn btnsm kob'+(ko?' on':'')+'" aria-pressed="'+(ko?'true':'false')+'" title="Diskvalifikation (screen-out): dette svar udelukker brugeren fra udfaldet" onclick="toggleKO(\''+q.id+'\',\''+o.id+'\')">&#9940; Diskvalificer</button>'
       +'<button class="btn btnsm btnd" onclick="delOpt(\''+q.id+'\',\''+o.id+'\')">&#10005;</button>'
-      +'</div>';
+      +'</div>'
+      +(ko?'<div class="korow"><b>Diskvalifikation:</b> v\u00e6lger brugeren dette svar, afsluttes sp\u00f8rgeskemaet med det samme. Alle tidligere svar overstyres, og der vises intet udfald.<input type="text" value="'+esc(o.koMsg||'')+'" placeholder="Besked til brugeren (valgfri)" oninput="setKOMsg(\''+q.id+'\',\''+o.id+'\',this.value)"></div>':'');
   }).join('');
   return '<div class="qcard '+(open?'':'collapsed')+'" id="qc-'+q.id+'">'
     +'<div class="qch" onclick="toggleCard(\''+q.id+'\')">'
@@ -649,6 +668,7 @@ function renderQCard(q,qi){
     +'<option value="multi" '+(q.type==='multi'?'selected':'')+'>Flervalg</option>'
     +'<option value="text" '+(q.type==='text'?'selected':'')+'>Fritekst</option>'
     +'</select></div>'
+    +(q.type!=='text'?'<label class="qscr"><input type="checkbox" '+(q.screening?'checked ':'')+'onchange="setQScreen(\''+q.id+'\',this.checked)"><span><b>Screeningssp\u00f8rgsm\u00e5l</b> \u2014 svaret t\u00e6ller ikke med i udfaldet.</span></label>':'')
     +(q.type!=='text'
       ?'<div class="slbl">Svarmuligheder &amp; forgrening</div>'+opts
        +'<button class="btn btnsm" onclick="addOpt(\''+q.id+'\')" style="margin-top:4px">+ Tilf\u00f8j svar</button>'
@@ -743,6 +763,48 @@ async function compressExistingImages(){
   toast('Komprimeret: '+fmtBytes(before)+' \u2192 '+fmtBytes(after));
   saveAll();
 }
+// -- Screen-out (knockout) ----------------------------------------------------
+// q.screening: the question's answers never count towards an outcome.
+// o.knockout:  choosing this option disqualifies the user. The quiz ends at once, every
+//              earlier answer is overruled and no outcome is shown (o.koMsg = optional text).
+// Such options cannot be outcome keywords, so they are dropped from all outcomes.
+function optExcluded(q,o){return !!(q.screening||o.knockout)}
+function dropKeywords(ids){
+  var n=0;
+  schema.outcomes.forEach(function(oc){
+    var b=(oc.keywords||[]).length;
+    oc.keywords=(oc.keywords||[]).filter(function(k){return ids.indexOf(k)<0});
+    n+=b-oc.keywords.length;
+  });
+  return n;
+}
+function toggleKO(qid,oid){
+  var q=schema.questions.find(function(x){return x.id===qid});
+  var o=q&&(q.options||[]).find(function(x){return x.id===oid});
+  if(!o)return;
+  o.knockout=!o.knockout;
+  if(o.knockout){
+    o.nextQ=null;
+    var n=dropKeywords([o.id]);
+    if(n)toast('Fjernet som n\u00f8gleord fra '+n+' udfald');
+  }
+  renderBuild();
+}
+function setQScreen(qid,v){
+  var q=schema.questions.find(function(x){return x.id===qid});
+  if(!q)return;
+  q.screening=!!v;
+  if(v){
+    var n=dropKeywords((q.options||[]).map(function(o){return o.id}));
+    if(n)toast('Svarene er fjernet som n\u00f8gleord fra '+n+' udfald');
+  }
+  renderBuild();
+}
+function setKOMsg(qid,oid,v){
+  var q=schema.questions.find(function(x){return x.id===qid});
+  var o=q&&(q.options||[]).find(function(x){return x.id===oid});
+  if(o)o.koMsg=v;
+}
 function rmImg(qid){var q=schema.questions.find(function(x){return x.id===qid});if(q){q.image=null;renderBuild()}}
 
 // \u2500\u2500 Outcomes \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -754,7 +816,7 @@ function rmImg(qid){var q=schema.questions.find(function(x){return x.id===qid});
 function optIndex(){
   var m={};
   schema.questions.forEach(function(q,qi){
-    (q.options||[]).forEach(function(o){m[o.id]={q:q,qi:qi,opt:o}});
+    (q.options||[]).forEach(function(o){if(!optExcluded(q,o))m[o.id]={q:q,qi:qi,opt:o}});
   });
   return m;
 }
@@ -785,7 +847,7 @@ function deadOptions(){
   schema.outcomes.forEach(function(o){(o.keywords||[]).forEach(function(k){used[k]=true})});
   var dead=[];
   schema.questions.forEach(function(q,qi){
-    (q.options||[]).forEach(function(o){if(!used[o.id])dead.push({q:q,qi:qi,opt:o})});
+    (q.options||[]).forEach(function(o){if(!used[o.id]&&!optExcluded(q,o))dead.push({q:q,qi:qi,opt:o})});
   });
   return dead;
 }
@@ -840,7 +902,7 @@ function renderOutcomeSummary(ix){
 }
 
 function renderOutcomes(){
-  var allO=schema.questions.flatMap(function(q){return q.options||[]});
+  var allO=schema.questions.flatMap(function(q){return q.screening?[]:(q.options||[]).filter(function(o){return !o.knockout})});
   var ix=optIndex();
   renderOutcomeSummary(ix);
   document.getElementById('olist').innerHTML=schema.outcomes.map(function(o){
@@ -894,7 +956,7 @@ function renderData(){
       +(resp.contact?' \u2014 '+esc(resp.contact.name||'Anonym')+(resp.contact.age?', '+esc(resp.contact.age)+' \u00e5r':''):'')+'</span>'
       +'<span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--t2)">'+ds+'</span>'
       +(resp.id?'<button class="btn btnsm btnd" data-id="'+esc(resp.id)+'" onclick="delResponse(this.dataset.id)" title="Slet denne besvarelse">&#128465; Slet</button>':'')+'</span></div>'
-      +(resp.topOutcome?'<div class="badge bg-f" style="margin-bottom:8px">'+esc(resp.topOutcome)+'</div>':'')
+      +(resp.screenedOut?'<div class="badge" style="background:rgba(139,31,31,.1);color:#8b1f1f;margin-bottom:8px">Diskvalificeret</div>':(resp.topOutcome?'<div class="badge bg-f" style="margin-bottom:8px">'+esc(resp.topOutcome)+'</div>':''))
       +'<div class="rag">'+schema.questions.map(function(q){
         var a=resp.answers[q.id];if(!a)return'';
         var l=Array.isArray(a)?a.map(function(id){return(q.options||[]).find(function(o){return o.id===id})&&(q.options||[]).find(function(o){return o.id===id}).label||id}).join(', '):(q.options||[]).find(function(o){return o.id===a})&&(q.options||[]).find(function(o){return o.id===a}).label||a;
@@ -943,9 +1005,9 @@ function downloadResponses(fmt){
   var content,fname,mime;
   if(fmt==='json'){content=JSON.stringify(responses,null,2);fname='svar.json';mime='application/json'}
   else{
-    var cols=['id','timestamp','navn','alder','topOutcome'].concat(schema.questions.map(function(q){return q.text}));
+    var cols=['id','timestamp','navn','alder','topOutcome','diskvalificeret'].concat(schema.questions.map(function(q){return q.text}));
     var rows=responses.map(function(r){
-      return[r.id,new Date(r.timestamp).toISOString(),r.contact&&r.contact.name||'',r.contact&&r.contact.age||'',r.topOutcome||''].concat(
+      return[r.id,new Date(r.timestamp).toISOString(),r.contact&&r.contact.name||'',r.contact&&r.contact.age||'',r.topOutcome||'',r.screenedOut?'ja':''].concat(
         schema.questions.map(function(q){
           var a=r.answers[q.id];
           if(Array.isArray(a))return a.map(function(id){return(q.options||[]).find(function(o){return o.id===id})&&(q.options||[]).find(function(o){return o.id===id}).label||id}).join(' | ');
@@ -972,6 +1034,14 @@ function pubCfg(){
   var c={};try{c=JSON.parse(localStorage.getItem(LSU))||{}}catch(e){}
   var owner=((ghConfig&&ghConfig.repo)||'').split('/')[0]||'OS-LE12';
   return{auto:c.auto!==false,repo:c.repo||owner+'/spoergeskema',path:c.path||'index.html',token:c.token||''};
+}
+// merge settings (e.g. from a login or an admin-access link) into the saved publish config
+function storePubCfg(p){
+  var c={};try{c=JSON.parse(localStorage.getItem(LSU))||{}}catch(e){}
+  if(p.token)c.token=p.token;
+  if(p.repo)c.repo=p.repo;
+  if(p.path)c.path=p.path;
+  try{localStorage.setItem(LSU,JSON.stringify(c))}catch(e){}
 }
 function savePubCfg(){
   var c={auto:document.getElementById('pub-auto').checked,
@@ -1096,7 +1166,9 @@ function downloadAdminAccess(){
   var fname=ghConfig.filename||'data.json';
   var parts=repo.split('/');
   var adminUrl='https://'+parts[0].toLowerCase()+'.github.io/'+(parts[1]||'')+'/';
-  var payload=b64encode(JSON.stringify({p1:p1,p2:p2,p3:p3,repo:repo,fname:fname,pw:pw}));
+  var pc=pubCfg(),cfgObj={p1:p1,p2:p2,p3:p3,repo:repo,fname:fname,pw:pw};
+  if(pc.token)cfgObj.pub={repo:pc.repo,path:pc.path,token:pc.token};   // publish token travels with the link
+  var payload=b64encode(JSON.stringify(cfgObj));
   var redirectUrl=adminUrl+'#cfg='+payload;
 
   // Remove existing link box if present
@@ -1164,8 +1236,26 @@ function downloadAdminAccess(){
 }
 
 // \u2500\u2500 Quiz preview \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+var SCREEN_MSG='Ud fra dit svar opfylder du desv\u00e6rre ikke kravene lige nu.';
+function koOptOf(q,ans){
+  var a=Array.isArray(ans)?ans:[ans];
+  return (q.options||[]).find(function(o){return o.knockout&&a.indexOf(o.id)>=0})||null;
+}
+// answers that may count towards an outcome (no screening questions, no knockout options)
+function scoreVals(answers){
+  var out=[];
+  schema.questions.forEach(function(q){
+    if(q.screening)return;
+    var a=answers[q.id];if(a===undefined||a===null)return;
+    (Array.isArray(a)?a:[a]).forEach(function(v){
+      var o=(q.options||[]).find(function(x){return x.id===v});
+      if(!(o&&o.knockout))out.push(v);
+    });
+  });
+  return out;
+}
 function calcResultsAdmin(){
-  var vals=Object.values(qstate.answers).reduce(function(a,v){return a.concat(Array.isArray(v)?v:[v])},[]);
+  var vals=scoreVals(qstate.answers);
   return schema.outcomes.map(function(o){
     var hits=o.keywords.filter(function(k){return vals.indexOf(k)>=0}).length;
     var pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;
@@ -1210,12 +1300,15 @@ function renderQuiz(){
   c.querySelectorAll('[data-single]').forEach(function(b){b.addEventListener('click',function(){qstate.answers[b.dataset.qid]=b.dataset.oid;renderQuiz()})});
   c.querySelectorAll('[data-multi]').forEach(function(b){b.addEventListener('click',function(){var cur=Array.isArray(qstate.answers[b.dataset.qid])?qstate.answers[b.dataset.qid]:[];var i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qstate.answers[b.dataset.qid]=cur.slice();renderQuiz()})});
   var nx=document.getElementById('btn-nx');if(nx)nx.addEventListener('click',function(){quizNext(q.id,q.type)});
-  var bk=document.getElementById('btn-bk');if(bk)bk.addEventListener('click',function(){if(qstate.history.length){qstate.qIdx=qstate.history.pop();qstate.done=false;renderQuiz()}});
+  var bk=document.getElementById('btn-bk');if(bk)bk.addEventListener('click',function(){if(qstate.history.length){qstate.qIdx=qstate.history.pop();qstate.done=false;qstate.screened=null;renderQuiz()}});
 }
 function quizNext(qid,type){
   if(type==='text'){var ta=document.getElementById('ti');if(ta)qstate.answers[qid]=ta.value.trim()}
   var q=schema.questions[qstate.qIdx];var ans=qstate.answers[qid];var first=Array.isArray(ans)?ans[0]:ans;
   qstate.history.push(qstate.qIdx);
+  var ko=koOptOf(q,ans);
+  if(ko){qstate.screened={q:q.id,o:ko.id,msg:ko.koMsg||''};qstate.done=true;renderQuiz();return}
+  qstate.screened=null;
   var opt=(q.options||[]).find(function(o){return o.id===first});
   if(opt&&opt.nextQ==='__end__'){qstate.done=true}
   else if(opt&&opt.nextQ){var i=schema.questions.findIndex(function(x){return x.id===opt.nextQ});qstate.qIdx=i>=0?i:-1;if(i<0)qstate.done=true}
@@ -1223,6 +1316,13 @@ function quizNext(qid,type){
   renderQuiz();
 }
 function renderQResult(c){
+  if(qstate.screened){
+    c.innerHTML='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Tak for din besvarelse</div>'
+      +'<div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forh\u00e5ndsvisning \u2013 diskvalifikation</div>'
+      +'<div class="card" style="border-color:#8b1f1f"><div style="font-size:15px;line-height:1.6">'+esc(qstate.screened.msg||SCREEN_MSG).replace(/\n/g,'<br>')+'</div></div>'
+      +'<button class="btn" onclick="qstate={qIdx:0,answers:{},history:[],done:false,contactDone:true};renderQuiz()" style="margin-top:8px">&#8635; Start forfra</button>';
+    return;
+  }
   var res=calcResultsAdmin().filter(function(r){return r.pct>0});
   var h='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div>'
     +'<div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forh\u00e5ndsvisning</div>';
@@ -1470,8 +1570,25 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  var c=SC.questions.findIndex(function(x){return x.id===q.id});\n'
 +'  return c+1<SC.questions.length?c+1:-1;\n'
 +'}\n'
++'function koOpt(q,ans){\n'
++'  var a=Array.isArray(ans)?ans:[ans];\n'
++'  return (q.options||[]).find(function(o){return o.knockout&&a.indexOf(o.id)>=0})||null;\n'
++'}\n'
++'// answers that may count towards an outcome: no screening questions, no knockout options\n'
++'function scoreVals(){\n'
++'  var out=[];\n'
++'  SC.questions.forEach(function(q){\n'
++'    if(q.screening)return;\n'
++'    var a=qs.answers[q.id];if(a===undefined||a===null)return;\n'
++'    (Array.isArray(a)?a:[a]).forEach(function(v){\n'
++'      var o=(q.options||[]).find(function(x){return x.id===v});\n'
++'      if(!(o&&o.knockout))out.push(v);\n'
++'    });\n'
++'  });\n'
++'  return out;\n'
++'}\n'
 +'function calcR(){\n'
-+'  var vals=Object.values(qs.answers).reduce(function(a,v){return a.concat(Array.isArray(v)?v:[v])},[]);\n'
++'  var vals=scoreVals();\n'
 +'  return SC.outcomes.map(function(o){\n'
 +'    var hits=o.keywords.filter(function(k){return vals.indexOf(k)>=0}).length;\n'
 +'    var pct=o.keywords.length>0?Math.round(hits/o.keywords.length*100):0;\n'
@@ -1483,7 +1600,8 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  var token=GH_T1+GH_T2+GH_T3;\n'
 +'  if(!token||token.length<10)return false;\n'
 +'  try{\n'
-+'    var resp={id:uid(),timestamp:Date.now(),contact:qs.contact,answers:qs.answers,topOutcome:calcR()[0]&&calcR()[0].title||null,completed:true};\n'
++'    var resp={id:uid(),timestamp:Date.now(),contact:qs.contact,answers:qs.answers,topOutcome:qs.screened?null:(calcR()[0]&&calcR()[0].title||null),completed:true};\n'
++'    if(qs.screened){resp.screenedOut=true;resp.screenOut={q:qs.screened.q,o:qs.screened.o}}\n'
 +'    var r=await fetch("https://api.github.com/repos/"+GH_REPO+"/dispatches",{\n'
 +'      method:"POST",\n'
 +'      headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json","Content-Type":"application/json"},\n'
@@ -1528,12 +1646,15 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  c.querySelectorAll("[data-single]").forEach(function(b){b.addEventListener("click",function(){qs.answers[b.dataset.qid]=b.dataset.oid;render()})});\n'
 +'  c.querySelectorAll("[data-multi]").forEach(function(b){b.addEventListener("click",function(){var cur=Array.isArray(qs.answers[b.dataset.qid])?qs.answers[b.dataset.qid]:[];var i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qs.answers[b.dataset.qid]=cur.slice();render()})});\n'
 +'  var nx=document.getElementById("btn-nx");if(nx)nx.addEventListener("click",function(){goNext(q.id,q.type)});\n'
-+'  var bk=document.getElementById("btn-bk");if(bk)bk.addEventListener("click",function(){if(qs.history.length){qs.qIdx=qs.history.pop();qs.done=false;render()}});\n'
++'  var bk=document.getElementById("btn-bk");if(bk)bk.addEventListener("click",function(){if(qs.history.length){qs.qIdx=qs.history.pop();qs.done=false;qs.screened=null;render()}});\n'
 +'}\n'
 +'function goNext(qid,type){\n'
 +'  if(type==="text"){var ta=document.getElementById("ti");if(ta)qs.answers[qid]=ta.value.trim()}\n'
 +'  var q=SC.questions[qs.qIdx];var ans=qs.answers[qid];var first=Array.isArray(ans)?ans[0]:ans;\n'
 +'  qs.history.push(qs.qIdx);\n'
++'  var ko=koOpt(q,ans);\n'
++'  if(ko){qs.screened={q:q.id,o:ko.id,msg:ko.koMsg||""};qs.done=true;render();return}\n'
++'  qs.screened=null;\n'
 +'  var next=getNext(q,first);\n'
 +'  if(next===-1)qs.done=true;else qs.qIdx=next;\n'
 +'  render();\n'
@@ -1569,7 +1690,24 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  qs.contactDone=true;\n'
 +'  render();\n'
 +'}\n'
++'function renderScreenOut(c){\n'
++'  var msg=qs.screened.msg||"Ud fra dit svar opfylder du desv\\u00e6rre ikke kravene lige nu.";\n'
++'  c.innerHTML="<div style=\\"font-size:20px;font-weight:500;margin-bottom:4px\\">Tak for din besvarelse</div>"\n'
++'    +"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.5rem\\">Vi kan desv\\u00e6rre ikke vise dig et resultat</div>"\n'
++'    +"<div class=\\"rcard\\"><div style=\\"font-size:15px;line-height:1.6\\">"+esc(msg).replace(/\\n/g,"<br>")+"</div></div>"\n'
++'    +"<div class=\\"send-box\\"><h3>Dine svar er registreret</h3>"\n'
++'    +"<p id=\\"send-status\\">Gemmer dine svar...</p>"\n'
++'    +"<div class=\\"nav\\"><button id=\\"btn-close\\" class=\\"btn btnp\\" disabled>\\u2715 Afslut</button></div></div>";\n'
++'  var cb=document.getElementById("btn-close");\n'
++'  var st=document.getElementById("send-status");\n'
++'  sendToGitHub().then(function(ok){\n'
++'    if(st)st.textContent=ok?"Dine svar er gemt. Tak for din besvarelse.":"Tak for din besvarelse.";\n'
++'    if(cb)cb.disabled=false;\n'
++'  });\n'
++'  if(cb)cb.addEventListener("click",function(){window.close()});\n'
++'}\n'
 +'function renderResult(c){\n'
++'  if(qs.screened){renderScreenOut(c);return}\n'
 +'  var results=calcR().filter(function(r){return r.pct>0});\n'
 +'  var html="<div style=\\"font-size:20px;font-weight:500;margin-bottom:4px\\">Dine resultater</div>"\n'
 +'    +"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.5rem\\">Baseret p\\u00e5 dine svar</div>";\n'
@@ -1657,6 +1795,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
       ghConfig={token:tok,repo:cfg.repo||'',filename:cfg.fname||'data.json'};
       localStorage.setItem(LSG,JSON.stringify(ghConfig));
       if(cfg.pw)localStorage.setItem(LSP,cfg.pw);
+      if(cfg.pub)storePubCfg(cfg.pub);
       localStorage.setItem(LSL,'1');
       history.replaceState(null,'',window.location.pathname+window.location.search);
       openAdmin();
@@ -1674,7 +1813,8 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
     document.getElementById('login-repo').value=ghConfig.repo||'';
     document.getElementById('login-filename').value=ghConfig.filename||'data.json';
   }
-  ['login-pw','login-token','login-repo','login-filename'].forEach(function(id){
+  document.getElementById('login-ptoken').value=pubCfg().token;
+  ['login-pw','login-token','login-repo','login-filename','login-ptoken'].forEach(function(id){
     var el=document.getElementById(id);
     if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
   });
