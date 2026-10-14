@@ -35,7 +35,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .lskip{display:block;width:100%;text-align:center;margin-top:10px;font-size:12px;color:var(--t3);background:none;border:none;cursor:pointer;font-family:var(--font)}
 /* Layout */
 .shell{display:flex;min-height:100vh}
-.sidebar{width:220px;background:var(--dg);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;height:100vh;height:100dvh;overflow-y:auto;z-index:50;background:var(--dg);display:flex;flex-direction:column;flex-shrink:0}
 .slogo{padding:1.25rem;border-bottom:.5px solid var(--bdd);margin-bottom:.5rem}
 .slogo h1{font-size:15px;font-weight:500;color:var(--tod)}
 .slogo p{font-size:11px;color:var(--tod2);margin-top:2px}
@@ -49,7 +49,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--t);min-height:100v
 .sdot{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tod2)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--fg);flex-shrink:0;transition:background .3s}
 .dot.saving{background:var(--ac)}.dot.error{background:#e07070}
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.main{flex:1;min-width:0;margin-left:220px;display:flex;flex-direction:column}
 /* GitHub bar */
 #gh-bar{background:var(--dg);padding:6px 1.25rem;display:none;align-items:center;gap:8px;border-bottom:.5px solid var(--bdd);flex-wrap:wrap}
 .gh-info{flex:1;font-size:12px;color:var(--tod2);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -155,6 +155,7 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
 /* Mobile */
 @media(max-width:640px){
   .sidebar{width:52px}
+  .main{margin-left:52px}
   .slogo,.nsec,.nitem span,.sbot p,.sdot span{display:none}
   .nitem{justify-content:center;padding:12px}
   .inner{padding:1.25rem 1rem 3rem}
@@ -164,6 +165,14 @@ textarea{resize:vertical;min-height:60px;line-height:1.5}
   .gh-info{display:none}
 }
 @media(max-width:400px){.lbox{padding:1.5rem 1rem}}
+/* Quiz preview option buttons (same look as the published bruger/index.html) */
+.obtn{display:flex;align-items:center;gap:12px;padding:13px 16px;border:.5px solid var(--bd);border-radius:var(--rl);background:var(--cb);cursor:pointer;font-size:15px;color:var(--t);text-align:left;width:100%;margin-bottom:8px;transition:border-color .15s,background .15s;font-family:var(--font)}
+.obtn:hover{border-color:var(--fg);background:#EBE9E1}
+.obtn.sel{border:1.5px solid var(--dg);background:#d6ddd0;color:var(--dk)}
+.rc{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.obtn.sel .rc{border-color:var(--dg)}
+.rd{width:10px;height:10px;border-radius:50%;background:var(--dg);display:none}
+.obtn.sel .rd{display:block}
 /* Publish to the test site */
 .pubtgl{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--t);margin:14px 0 0;cursor:pointer}
 .pubtgl input{width:16px;height:16px;margin:0;flex-shrink:0}
@@ -445,19 +454,43 @@ function openAdmin(){
 // step is involved and the encoding stays correct at any file size.
 var GH_API='https://api.github.com/repos/';
 function ghUrl(){return GH_API+ghConfig.repo+'/contents/'+ghConfig.filename}
+async function ghErr(r){
+  var m='';
+  try{var j=await r.clone().json();m=j.message||'';if(j.errors&&j.errors.length)m+=' '+JSON.stringify(j.errors)}catch(e){}
+  return new Error('HTTP '+r.status+(m?' \u2014 '+m:''));
+}
 async function ghGetRaw(){
-  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
+  // cache:'no-store' - without it the browser can serve a stale cached 404 for this
+  // URL (e.g. from before the workflow bot first created the file), which makes ghSave
+  // think the file is missing forever and PUT without a sha, failing with 422 "sha
+  // wasn't supplied" even though the file has long since existed on GitHub.
+  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
   if(r.status===404)return{missing:true};
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  if(!r.ok)throw await ghErr(r);
   var txt=(await r.text()).trim();
   return{data:txt?JSON.parse(txt):{schema:null,responses:[]}};
 }
 async function ghGetSha(){
-  var r=await fetch(ghUrl(),{headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
+  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
   if(r.status===404)return null;
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  if(!r.ok)throw await ghErr(r);
   var j=await r.json();
   return j.sha||null;
+}
+
+// -- Deleted answers ---------------------------------------------------------
+// mergeResponses() unions remote and local answers so nothing is lost, which would
+// also bring a deleted answer back. Deletions are therefore remembered ("tombstones",
+// kept in localStorage until a save has succeeded) and removed again from every merge.
+var LSD='qs_v4_deleted';
+function getDel(){var d={};try{d=JSON.parse(localStorage.getItem(LSD))||{}}catch(e){}return{ids:d.ids||[],before:d.before||0}}
+function setDel(d){try{localStorage.setItem(LSD,JSON.stringify(d))}catch(e){}}
+function respTs(r){var t=r&&r.timestamp;return typeof t==='number'?t:(Date.parse(t)||0)}
+function applyDel(list,d){
+  d=d||getDel();
+  if(!d.ids.length&&!d.before)return list;
+  var ids={};d.ids.forEach(function(i){ids[i]=1});
+  return list.filter(function(r){return !(r&&((r.id&&ids[r.id])||(d.before&&respTs(r)<=d.before)))});
 }
 
 async function ghPull(silent){
@@ -468,38 +501,54 @@ async function ghPull(silent){
     if(res.missing){setGhStatus('ok','Tilsluttet \u2014 ingen data endnu');return true}
     var data=res.data;
     if(data.schema){schema=data.schema;localStorage.setItem(LSS,JSON.stringify(schema))}
-    if(data.responses){responses=data.responses;localStorage.setItem(LSR,JSON.stringify(responses))}
+    if(data.responses){responses=applyDel(data.responses);localStorage.setItem(LSR,JSON.stringify(responses))}
     setGhStatus('ok','Hentet \u2014 '+new Date().toLocaleTimeString('da-DK'));
     if(!silent){renderBuild();toast('Hentet fra GitHub!')}
     return true;
   }catch(e){setGhStatus('error','Fejl: '+e.message);if(!silent)toast('Fejl: '+e.message);return false}
 }
 
+// Saves run one at a time: two overlapping PUTs would race on the file's sha.
+var ghBusy=false,ghAgain=false;
 async function ghSave(){
   if(!ghConfig){saveLocal();toast('Gemt lokalt');return}
+  if(ghBusy){ghAgain=true;return}
+  ghBusy=true;
+  try{await ghSaveOnce()}finally{ghBusy=false}
+  if(ghAgain){ghAgain=false;return ghSave()}
+}
+async function ghSaveOnce(){
   setGhStatus('saving','Gemmer...');
   saveLocal();
   try{
-    // Read remote BEFORE writing. If it cannot be read we must not PUT at all:
-    // overwriting blind would delete answers the workflow added since our last
-    // pull. The old code swallowed that read error in a silent catch.
-    var sha=null,merged=responses;
-    var res=await ghGetRaw();
-    if(!res.missing){
-      sha=await ghGetSha();
-      merged=mergeResponses(res.data.responses||[],responses);
+    var r=null,merged=null,del=null;
+    for(var attempt=0;attempt<3;attempt++){
+      if(attempt)await new Promise(function(ok){setTimeout(ok,400*attempt)});
+      // Read the sha FIRST, then the content. If the workflow commits a new answer in
+      // between, our sha is stale and GitHub rejects the PUT (409/422) - we then loop and
+      // re-merge - instead of silently overwriting that answer. If the remote cannot be
+      // read at all we must not PUT: overwriting blind would delete answers.
+      var sha=await ghGetSha();
+      var res=await ghGetRaw();
+      del=getDel();
+      merged=res.missing?applyDel(responses,del):applyDel(mergeResponses(res.data.responses||[],responses),del);
+      var payload=JSON.stringify({schema:schema,responses:merged},null,2);
+      var body={message:'Opdateret '+new Date().toISOString(),content:b64encode(payload)};
+      if(sha)body.sha=sha;
+      r=await fetch(ghUrl(),{
+        method:'PUT',
+        headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify(body)
+      });
+      if(r.ok||(r.status!==409&&r.status!==422))break;
     }
-    var payload=JSON.stringify({schema:schema,responses:merged},null,2);
-    var body={message:'Opdateret '+new Date().toISOString(),content:b64encode(payload)};  // <-- TextEncoder
-    if(sha)body.sha=sha;
-    var r=await fetch(ghUrl(),{
-      method:'PUT',
-      headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    if(r.status===409){setGhStatus('error','Konflikt \u2014 klik Hent og pr\u00f8v igen');toast('Konflikt \u2014 hent f\u00f8rst');return}
-    if(!r.ok)throw new Error('HTTP '+r.status);
+    if(!r.ok)throw await ghErr(r);
     responses=merged;localStorage.setItem(LSR,JSON.stringify(responses));
+    // forget only the deletions this save has carried out
+    var cur=getDel();
+    cur.ids=cur.ids.filter(function(i){return del.ids.indexOf(i)<0});
+    if(cur.before===del.before)cur.before=0;
+    setDel(cur);
     setGhStatus('ok','Gemt \u2014 '+new Date().toLocaleTimeString('da-DK'));
     toast('Gemt til GitHub \u2713');
   }catch(e){setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message)}
@@ -842,8 +891,9 @@ function renderData(){
     var ds=d.toLocaleDateString('da-DK')+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'});
     h+='<div class="ri"><div class="rh">'
       +'<span style="font-size:13px;font-weight:500">Besvarelse #'+(responses.length-i)
-      +(resp.contact?' \u2014 '+esc(resp.contact.name):'')+'</span>'
-      +'<span style="font-size:12px;color:var(--t2)">'+ds+'</span></div>'
+      +(resp.contact?' \u2014 '+esc(resp.contact.name||'Anonym')+(resp.contact.age?', '+esc(resp.contact.age)+' \u00e5r':''):'')+'</span>'
+      +'<span style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--t2)">'+ds+'</span>'
+      +(resp.id?'<button class="btn btnsm btnd" data-id="'+esc(resp.id)+'" onclick="delResponse(this.dataset.id)" title="Slet denne besvarelse">&#128465; Slet</button>':'')+'</span></div>'
       +(resp.topOutcome?'<div class="badge bg-f" style="margin-bottom:8px">'+esc(resp.topOutcome)+'</div>':'')
       +'<div class="rag">'+schema.questions.map(function(q){
         var a=resp.answers[q.id];if(!a)return'';
@@ -854,7 +904,25 @@ function renderData(){
   h+='<button class="btn btnd" onclick="clearR()" style="margin-top:8px">&#128465; Slet alle svar</button>';
   el.innerHTML=h;
 }
-function clearR(){if(!confirm('Slet alle svar?'))return;responses=[];saveLocal();if(ghConfig)ghSave();renderData()}
+function delResponse(id){
+  var r=responses.find(function(x){return x.id===id});
+  if(!r)return;
+  var who=r.contact&&r.contact.name?'besvarelsen fra '+r.contact.name:'denne besvarelse';
+  if(!confirm('Slet '+who+'?'))return;
+  if(ghConfig){var d=getDel();d.ids.push(id);setDel(d)}
+  responses=responses.filter(function(x){return x.id!==id});
+  saveLocal();if(ghConfig)ghSave();renderData();
+}
+function clearR(){
+  if(!confirm('Slet alle svar?'))return;
+  if(ghConfig){
+    // every answer we know of, plus anything received up to now that we have not pulled yet
+    var d=getDel();
+    responses.forEach(function(r){if(r.id&&d.ids.indexOf(r.id)<0)d.ids.push(r.id)});
+    d.before=Date.now();setDel(d);
+  }
+  responses=[];saveLocal();if(ghConfig)ghSave();renderData();
+}
 
 // \u2500\u2500 Export \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 function renderExport(){document.getElementById('ebox').textContent=JSON.stringify(schema,null,2)}
@@ -875,9 +943,9 @@ function downloadResponses(fmt){
   var content,fname,mime;
   if(fmt==='json'){content=JSON.stringify(responses,null,2);fname='svar.json';mime='application/json'}
   else{
-    var cols=['id','timestamp','navn','topOutcome'].concat(schema.questions.map(function(q){return q.text}));
+    var cols=['id','timestamp','navn','alder','topOutcome'].concat(schema.questions.map(function(q){return q.text}));
     var rows=responses.map(function(r){
-      return[r.id,new Date(r.timestamp).toISOString(),r.contact&&r.contact.name||'',r.topOutcome||''].concat(
+      return[r.id,new Date(r.timestamp).toISOString(),r.contact&&r.contact.name||'',r.contact&&r.contact.age||'',r.topOutcome||''].concat(
         schema.questions.map(function(q){
           var a=r.answers[q.id];
           if(Array.isArray(a))return a.map(function(id){return(q.options||[]).find(function(o){return o.id===id})&&(q.options||[]).find(function(o){return o.id===id}).label||id}).join(' | ');
@@ -1158,7 +1226,7 @@ function renderQResult(c){
   var res=calcResultsAdmin().filter(function(r){return r.pct>0});
   var h='<div style="font-size:20px;font-weight:500;margin-bottom:4px">Dine resultater</div>'
     +'<div style="font-size:14px;color:var(--t2);margin-bottom:1.5rem">Forh\u00e5ndsvisning</div>';
-  res.slice(0,4).forEach(function(r,i){
+  res.slice(0,2).forEach(function(r,i){
     h+='<div style="border:'+(i===0?'1.5px solid var(--dg)':'0.5px solid var(--bd)')+';border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;background:'+(i===0?'var(--dg)':'var(--cb)')+';">'
       +(i===0?'<div class="badge bg-a" style="margin-bottom:8px">&#9733; Bedste match</div>':'')
       +'<div style="font-size:17px;font-weight:500;color:'+(i===0?'var(--tod)':'var(--t)')+';margin-bottom:4px">'+esc(r.title)+'</div>'
@@ -1473,24 +1541,31 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'function renderContact(c){\n'
 +'  c.innerHTML="<div class=\\"card\\" style=\\"margin-bottom:0\\">"\n'
 +'    +"<h2 style=\\"font-size:18px;font-weight:500;margin-bottom:6px\\">Inden vi starter</h2>"\n'
-+'    +"<p style=\\"font-size:14px;color:var(--t2)\\">Udfyld venligst dit navn.</p></div>"\n'
++'    +"<p style=\\"font-size:14px;color:var(--t2)\\">Fort\\u00e6l os din alder. Navn er valgfrit.</p></div>"\n'
 +'    +"<div class=\\"card\\" style=\\"margin-top:1px\\">"\n'
-+'    +"<div style=\\"margin-bottom:16px\\"><label>Navn <span style=\\"color:var(--err)\\">*</span></label>"\n'
-+'    +"<input type=\\"text\\" id=\\"c-name\\" placeholder=\\"Dit fulde navn\\"></div>"\n'
-+'    +"<div id=\\"c-err\\" style=\\"font-size:13px;color:var(--err);margin-bottom:10px;display:none\\">Udfyld venligst dit navn.</div>"\n'
++'    +"<div style=\\"margin-bottom:16px\\"><label for=\\"c-age\\">Alder <span style=\\"color:var(--err)\\" aria-hidden=\\"true\\">*</span></label>"\n'
++'    +"<input type=\\"text\\" id=\\"c-age\\" inputmode=\\"numeric\\" pattern=\\"[0-9]*\\" maxlength=\\"3\\" autocomplete=\\"off\\" aria-required=\\"true\\" placeholder=\\"Din alder\\" style=\\"max-width:140px\\"></div>"\n'
++'    +"<div style=\\"margin-bottom:16px\\"><label for=\\"c-name\\">Navn (valgfrit)</label>"\n'
++'    +"<input type=\\"text\\" id=\\"c-name\\" autocomplete=\\"name\\" placeholder=\\"Dit navn\\"></div>"\n'
++'    +"<div id=\\"c-err\\" role=\\"alert\\" style=\\"font-size:13px;color:var(--err);margin-bottom:10px;display:none\\">Angiv din alder som et tal.</div>"\n'
 +'    +"<button id=\\"btn-start\\" class=\\"btn btnp\\">Start sp\\u00f8rgeskema \\u2192</button>"\n'
 +'    +"</div>";\n'
 +'  var btn=document.getElementById("btn-start");\n'
 +'  if(btn)btn.addEventListener("click",submitContact);\n'
-+'  var inp=document.getElementById("c-name");\n'
-+'  if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter")submitContact()});\n'
++'  ["c-age","c-name"].forEach(function(id){\n'
++'    var inp=document.getElementById(id);\n'
++'    if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter")submitContact()});\n'
++'  });\n'
 +'}\n'
 +'function submitContact(){\n'
++'  var age=document.getElementById("c-age").value.trim();\n'
 +'  var name=document.getElementById("c-name").value.trim();\n'
 +'  var err=document.getElementById("c-err");\n'
-+'  if(!name){err.style.display="block";return}\n'
++'  var n=/^\\d{1,3}$/.test(age)?parseInt(age,10):0;\n'
++'  if(n<1||n>120){err.style.display="block";document.getElementById("c-age").focus();return}\n'
 +'  err.style.display="none";\n'
-+'  qs.contact={name:name};\n'
++'  qs.contact={age:n};\n'
++'  if(name)qs.contact.name=name;\n'
 +'  qs.contactDone=true;\n'
 +'  render();\n'
 +'}\n'
@@ -1499,7 +1574,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  var html="<div style=\\"font-size:20px;font-weight:500;margin-bottom:4px\\">Dine resultater</div>"\n'
 +'    +"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.5rem\\">Baseret p\\u00e5 dine svar</div>";\n'
 +'  if(!results.length){html+="<p style=\\"color:var(--t2)\\">Ingen matchende udfald.</p>"}\n'
-+'  else{results.slice(0,4).forEach(function(r,i){\n'
++'  else{results.slice(0,2).forEach(function(r,i){\n'
 +'    html+="<div class=\\"rcard"+(i===0?" top":"")+"\\">";\n'
 +'    if(i===0)html+="<div class=\\"badge ba\\" style=\\"margin-bottom:8px\\">\\u2605 Bedste match</div>";\n'
 +'    html+="<div style=\\"font-size:17px;font-weight:500;color:"+(i===0?"var(--tod)":"var(--t)")+";margin-bottom:4px\\">"+esc(r.title)+"</div>";\n'
@@ -1527,7 +1602,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'}\n'
 +'function downloadJPG(){\n'
 +'  var results=calcR().filter(function(r){return r.pct>0});\n'
-+'  var W=640,pad=36,rows=results.slice(0,4);\n'
++'  var W=640,pad=36,rows=results.slice(0,2);\n'
 +'  var H=64+48+(rows.length*96)+pad+20;\n'
 +'  var canvas=document.createElement("canvas");canvas.width=W;canvas.height=H;\n'
 +'  var ctx=canvas.getContext("2d");\n'
@@ -1536,7 +1611,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid){
 +'  ctx.fillStyle="#EFECE4";ctx.font="500 16px system-ui,sans-serif";\n'
 +'  ctx.fillText(SC.title||"Sp\\u00f8rgeskema",pad,36);\n'
 +'  ctx.fillStyle="#ABB892";ctx.font="13px system-ui,sans-serif";\n'
-+'  ctx.fillText("Resultat for: "+(qs.contact&&qs.contact.name?qs.contact.name:""),pad,54);\n'
++'  ctx.fillText(qs.contact&&qs.contact.name?"Resultat for: "+qs.contact.name:"Dit resultat",pad,54);\n'
 +'  var y=64+36;\n'
 +'  ctx.fillStyle="#333127";ctx.font="500 20px system-ui,sans-serif";\n'
 +'  ctx.fillText("Dine resultater",pad,y);y+=28;\n'
