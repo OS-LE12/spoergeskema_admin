@@ -50,12 +50,12 @@
           },
           {
             "id": "_het213",
-            "label": "Jeg er godt til computer og tekniske løsninger",
+            "label": "Jeg er ret god til computer og tekniske løsninger",
             "nextQ": null
           },
           {
             "id": "_598d3a",
-            "label": "Jeg opdager små fejl/detaljer",
+            "label": "Jeg er skarp på at finde detaljer og finde løsninger",
             "nextQ": null
           },
           {
@@ -149,38 +149,38 @@
       },
       {
         "id": "_lx802h",
-        "text": "Hvilke dag vil du glæde dig mest til?",
+        "text": "Hvad synes du er mest sej at kunne?",
         "sub": "",
         "type": "multi",
         "options": [
           {
             "id": "_70xiwd",
-            "label": "At arbejde med fly og helikoptere i en hangar",
+            "label": "At være den som sikrer at helikopter og jagerflyene kan flyve",
             "nextQ": null
           },
           {
             "id": "_x3p4c3",
-            "label": "At arbejde med droner, radar og jordbaseret luftforsvar",
+            "label": "At være den, som har styr på at vores radar og droner virker",
             "nextQ": null
           },
           {
             "id": "_jvqc16",
-            "label": "At reparer på  - og fremstille forskellige typer instrumenter, måleudstyr - og våben",
+            "label": "At kunne fremstille de mindste reservedele og komponenter, så både skib, fly og kørende materiel virker",
             "nextQ": null
           },
           {
             "id": "_ju4odo",
-            "label": "At fixe tekniske systemer, feks. køleanlæg, pumper, hydraulik og vedligeholde disse systemer",
+            "label": "At fixe skibenes tekniske systemer ",
             "nextQ": null
           },
           {
             "id": "_51vjaz",
-            "label": "At makke i motorer, skille kørertøjer og store maskiner ad",
+            "label": "At  være den, som har helt styr på alle motorer ad",
             "nextQ": null
           },
           {
             "id": "_suthqu",
-            "label": "At få de rigtige data ind i systemerne, og støtte kollegaer med vigtig viden - f.eks. rekruttering, løn og ferie",
+            "label": "At sikre at alle systemerne virker - og har materiel på hylderne",
             "nextQ": null
           }
         ]
@@ -214,44 +214,6 @@
         ]
       },
       {
-        "id": "_c79gr5",
-        "text": "Hvad synes du er mest sej?",
-        "sub": "",
-        "type": "single",
-        "options": [
-          {
-            "id": "_q4y2ns",
-            "label": "At få en helikopter gjort klar til næste flyvning",
-            "nextQ": null
-          },
-          {
-            "id": "_ih113l",
-            "label": "At få alt papirarbejdet og systemerne til at spille max, så min soldater kollegaer kan lave det de er gode til",
-            "nextQ": null
-          },
-          {
-            "id": "_hrwqiv",
-            "label": "At fremstille en komponent/reservedel med en ekstrem nøjagtighed og detalje grad at det hele bare spiller",
-            "nextQ": null
-          },
-          {
-            "id": "_y0eu38",
-            "label": "At køre lastbil og sikre at kasernene har det materiel de skal bruge",
-            "nextQ": null
-          },
-          {
-            "id": "_unuw2b",
-            "label": "At vide alt om elektronik, teknik og fysik",
-            "nextQ": null
-          },
-          {
-            "id": "_8bmvx0",
-            "label": "At makke i motoren og få det til at spille",
-            "nextQ": null
-          }
-        ]
-      },
-      {
         "id": "_18eatv",
         "text": "Er du interesseret i en uddannelse ved Forsvaret?",
         "sub": "",
@@ -259,14 +221,14 @@
         "options": [
           {
             "id": "_ruph85",
-            "label": "Nej Jeg skal absolut ikke i Forsvaret",
+            "label": "Nej det tror jeg ikke....",
             "nextQ": null,
             "knockout": true,
             "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Vi ønsker dig god vind på din vej, og skulle du alligevel være nysgerrig, så kig forbi vores stand. Vi vil super gerne fortælle dig om mulighederne."
           },
           {
             "id": "_0yzccf",
-            "label": "Jo kan jeg måske godt.",
+            "label": "Jo det kunne jeg godt være ....",
             "nextQ": "__end__"
           }
         ]
