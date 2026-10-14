@@ -5,33 +5,33 @@
     "questions": [
       {
         "id": "q1",
-        "text": "Du har en hel dag til at prøve noget nyt - hvad vælger du?",
+        "text": "Hvilket værksted vil du helst besøge?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "a1",
-            "label": "Skruer på en motor så den lyder endnu bedre",
+            "label": "Værkstedet med lastbilerne, kampvognene og bjærgningskøretøjerne ",
             "nextQ": null
           },
           {
             "id": "a2",
-            "label": "Hacker mig frem til løsningen på en teknisk gåde",
+            "label": "Værkstedet hvor droner, radarne og jordbaseret luftsforsvar",
             "nextQ": null
           },
           {
             "id": "_av2eri",
-            "label": "Får alle de små mekaniske dele renset og til at virke endnu bedre.",
+            "label": "Værkstedet, hvor man fremstiller reservedele, natkikkerter, våben og og morter er",
             "nextQ": null
           },
           {
             "id": "_mz0kjo",
-            "label": "Springer i lastbilen for at levere materiel til kasernerne ",
+            "label": "Værkstedet med helikopterne, jagerfly og fragtflyene",
             "nextQ": null
           },
           {
             "id": "_zclmqw",
-            "label": "Går i \"skibsrummet\" og checker skibsmotor og dets grej",
+            "label": "Fregatterne, patruljefartøjerne og miljøskibene",
             "nextQ": null
           }
         ],
