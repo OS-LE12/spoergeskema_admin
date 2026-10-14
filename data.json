@@ -79,37 +79,37 @@
       {
         "id": "_410tkn",
         "text": "",
-        "sub": "",
+        "sub": "Hvilke fag kan du bedst lide i skolen?",
         "type": "multi",
         "options": [
           {
             "id": "_mtxnca",
-            "label": "",
+            "label": "Fysik",
             "nextQ": null
           },
           {
             "id": "_mzzkcm",
-            "label": "En computer og elektronisk måleinstrumenter",
+            "label": "Matematik",
             "nextQ": null
           },
           {
             "id": "_ipxcoy",
-            "label": "Mikrometre og værktøj til bittesmå dele",
+            "label": "Dansk",
             "nextQ": null
           },
           {
             "id": "_jxcyxo",
-            "label": "Svejseudstyr og værktøj til metal",
+            "label": "Samfundsfag",
             "nextQ": null
           },
           {
             "id": "_lhp2pc",
-            "label": "En tablet med ruter, opgaver og leverencer",
+            "label": "It og computer",
             "nextQ": null
           },
           {
             "id": "_0897bg",
-            "label": "Køleanlæg, tekniske systemer - og måske endda et skib at sejle på",
+            "label": "De fag, hvor man kan bruge hænderne, og ikke sidder stille",
             "nextQ": null
           }
         ],
