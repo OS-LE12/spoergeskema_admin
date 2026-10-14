@@ -535,6 +535,32 @@
       "id": "_xl95gv",
       "timestamp": 1791975712343,
       "topOutcome": "TAK for din ærlighed!"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_598d3a",
+          "_txby6r",
+          "_0vg0an"
+        ],
+        "_18eatv": "_0yzccf",
+        "_1rd36r": "_t4wj7j",
+        "_410tkn": "_ipxcoy",
+        "_c79gr5": "_hrwqiv",
+        "_lx802h": [
+          "_ju4odo"
+        ],
+        "_yv9oey": "_0b3su8",
+        "q1": "a2"
+      },
+      "completed": true,
+      "contact": {
+        "age": 15,
+        "name": "Rasmus"
+      },
+      "id": "_86a1u8",
+      "timestamp": 1791977206470,
+      "topOutcome": "Makeover Specialist"
     }
   ]
 }
