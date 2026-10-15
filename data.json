@@ -11,27 +11,27 @@
         "options": [
           {
             "id": "a1",
-            "label": "Værkstedet med lastbilerne, kampvognene og bjærgningskøretøjerne ",
+            "label": "Værkstedet med lastbiler, kampvogne og bjærgningskøretøjer ",
             "nextQ": null
           },
           {
             "id": "a2",
-            "label": "Værkstedet hvor droner, radarne og jordbaseret luftsforsvar",
+            "label": "Værkstedet med droner, rader og jordbaseret luftforsvar",
             "nextQ": null
           },
           {
             "id": "_av2eri",
-            "label": "Værkstedet, hvor man fremstiller reservedele, natkikkerter, våben og og morter er",
+            "label": "Værkstedet, hvor der fremstilles reservedele, reparerer natkikkerter og våben",
             "nextQ": null
           },
           {
             "id": "_mz0kjo",
-            "label": "Værkstedet med helikopterne, jagerfly og fragtflyene",
+            "label": "Værkstedet med helikopter, jagerfly og fragtfly",
             "nextQ": null
           },
           {
             "id": "_zclmqw",
-            "label": "Fregatterne, patruljefartøjerne og miljøskibene",
+            "label": "Fregatter, patruljefartøjer og miljøskibe",
             "nextQ": null
           }
         ],
