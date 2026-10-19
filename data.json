@@ -78,7 +78,7 @@
       },
       {
         "id": "_410tkn",
-        "text": "Hvilke fag kan du bedst lide i skolen?",
+        "text": "Hvilket fag kan du bedst lide?",
         "sub": "",
         "type": "multi",
         "options": [
@@ -117,23 +117,23 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Forsvarets materiel står stille - hvilken opgave tager du først?",
+        "text": "Hvilket materiel synes du er vigtigst at få tilbage i operationen?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "_8pzeq1",
-            "label": "Bjærgningskøretøjer, terrængående lastvogn og letpanseret højmobil rendegraver",
+            "label": "Bjærgningskøretøjer og kampvogne",
             "nextQ": null
           },
           {
             "id": "_ukhy9m",
-            "label": "Droner, radar og jordbaseret luftforsvar",
+            "label": "Droner, radar og missiler",
             "nextQ": null
           },
           {
             "id": "_qryajz",
-            "label": "Natkikkerter, instrumenter og gevær",
+            "label": "Natkikkerter og våben",
             "nextQ": null
           },
           {
@@ -143,7 +143,7 @@
           },
           {
             "id": "_yinmi5",
-            "label": "Helikopterne, Hercules og F35 flyene",
+            "label": "Helikopterne og F35 flyene",
             "nextQ": null
           }
         ],
@@ -227,7 +227,7 @@
             "id": "_ruph85",
             "label": "Nej det tror jeg ikke....",
             "nextQ": null,
-            "knockout": true,
+            "knockout": false,
             "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Vi ønsker dig god vind på din vej, og skulle du alligevel være nysgerrig, så kig forbi vores stand. Vi vil super gerne fortælle dig om mulighederne."
           },
           {
