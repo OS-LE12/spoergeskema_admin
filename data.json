@@ -228,7 +228,7 @@
             "label": "Nej det tror jeg ikke....",
             "nextQ": null,
             "knockout": true,
-            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Skulle du alligevel være lidt interesseret kan vi anbefale at du kigger nærmere på en af nedenstående:"
+            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret.   Skulle du alligevel være lidt interesseret kan vi anbefale at du kigger nærmere på en af nedenstående:"
           },
           {
             "id": "_0yzccf",
