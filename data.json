@@ -219,20 +219,13 @@
       },
       {
         "id": "_18eatv",
-        "text": "Er du interesseret i en uddannelse ved Forsvaret?",
+        "text": "Spørgeskemaet er nu slut. Er du klar til at se dit resultat?",
         "sub": "",
         "type": "single",
         "options": [
           {
-            "id": "_ruph85",
-            "label": "Nej det tror jeg ikke....",
-            "nextQ": null,
-            "knockout": true,
-            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret.   Skulle du alligevel være lidt interesseret kan vi anbefale at du kigger nærmere på en af nedenstående:"
-          },
-          {
             "id": "_0yzccf",
-            "label": "Jo det kunne jeg godt være ....",
+            "label": "Ja",
             "nextQ": "__end__"
           }
         ]
