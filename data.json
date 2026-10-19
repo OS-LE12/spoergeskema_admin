@@ -226,9 +226,9 @@
           {
             "id": "_ruph85",
             "label": "Nej det tror jeg ikke....",
-            "nextQ": "__end__",
-            "knockout": false,
-            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Vi ønsker dig god vind på din vej, og skulle du alligevel være nysgerrig, så kig forbi vores stand. Vi vil super gerne fortælle dig om mulighederne."
+            "nextQ": null,
+            "knockout": true,
+            "koMsg": "Tak for din ærlighed. Ikke alle er vilde med Forsvaret. Skulle du alligevel være lidt interesseret kan vi anbefale at du kigger nærmere på en af nedenstående:"
           },
           {
             "id": "_0yzccf",
