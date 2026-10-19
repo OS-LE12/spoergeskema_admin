@@ -78,8 +78,8 @@
       },
       {
         "id": "_410tkn",
-        "text": "",
-        "sub": "Hvilke fag kan du bedst lide i skolen?",
+        "text": "Hvilke fag kan du bedst lide i skolen?",
+        "sub": "",
         "type": "multi",
         "options": [
           {
