@@ -588,6 +588,36 @@
       "id": "_n28ygj",
       "timestamp": 1792411823655,
       "topOutcome": "Du har styr på detaljerne"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_598d3a"
+        ],
+        "_18eatv": "_ruph85",
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_mtxnca"
+        ],
+        "_lx802h": [
+          "_51vjaz"
+        ],
+        "_yv9oey": "_a7pk58",
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "age": 14,
+        "name": "Knud"
+      },
+      "id": "_2vw8q9",
+      "screenOut": {
+        "o": "_ruph85",
+        "q": "_18eatv"
+      },
+      "screenedOut": true,
+      "timestamp": 1792411926328,
+      "topOutcome": null
     }
   ]
 }
