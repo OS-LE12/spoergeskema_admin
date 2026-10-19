@@ -5,33 +5,33 @@
     "questions": [
       {
         "id": "q1",
-        "text": "Hvilket værksted vil du helst besøge?",
+        "text": "Hvad er mest cool?",
         "sub": "",
         "type": "single",
         "options": [
           {
             "id": "a1",
-            "label": "Værkstedet med lastbiler, kampvogne og bjærgningskøretøjer ",
+            "label": "Kampvogne og bjærgningskøretøjer ",
             "nextQ": null
           },
           {
             "id": "a2",
-            "label": "Værkstedet med droner, rader og jordbaseret luftforsvar",
+            "label": "Droner, rader og missiler ",
             "nextQ": null
           },
           {
             "id": "_av2eri",
-            "label": "Værkstedet, hvor der fremstilles reservedele, reparerer natkikkerter og våben",
+            "label": "Natkikkerter og våben",
             "nextQ": null
           },
           {
             "id": "_mz0kjo",
-            "label": "Værkstedet med helikopter, jagerfly og fragtfly",
+            "label": "Helikopter og jægerfly",
             "nextQ": null
           },
           {
             "id": "_zclmqw",
-            "label": "Fregatter, patruljefartøjer og miljøskibe",
+            "label": "Fregatter og patruljefartøjer",
             "nextQ": null
           }
         ],
