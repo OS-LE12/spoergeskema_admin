@@ -104,7 +104,7 @@
           },
           {
             "id": "_lhp2pc",
-            "label": "It og computer",
+            "label": "Gaming, devices og computer",
             "nextQ": null
           },
           {
@@ -117,7 +117,7 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Hvilket materiel synes du er vigtigst at få tilbage i operationen?",
+        "text": "Hvilket materiel synes du er vigtigst at få tilbage i operationen? ",
         "sub": "",
         "type": "single",
         "options": [
@@ -151,7 +151,7 @@
       },
       {
         "id": "_lx802h",
-        "text": "Hvad synes du er mest sej at kunne?",
+        "text": "Hvad synes du er mest sejt at kunne?",
         "sub": "",
         "type": "multi",
         "options": [
@@ -167,7 +167,7 @@
           },
           {
             "id": "_jvqc16",
-            "label": "At kunne fremstille de mindste reservedele og komponenter, så både skib, fly og kørende materiel virker",
+            "label": "At kunne fremstille de mindste reservedele og komponenter, så både skib, fly og kampvogne virker",
             "nextQ": null
           },
           {
@@ -177,7 +177,7 @@
           },
           {
             "id": "_51vjaz",
-            "label": "At  være den, som har helt styr hvordan forskellige motorer virker",
+            "label": "At  være den, som har helt styr på hvordan forskellige motorer virker",
             "nextQ": null
           },
           {
