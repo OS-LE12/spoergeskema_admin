@@ -1,7 +1,7 @@
 {
   "schema": {
     "title": "INTET FORSVAR UDEN FAGLÆRTE",
-    "description": "Er du nysgerrig på om en faglært uddannelsesvej i Forsvaret er noget for dig?\nBlive inspireret på nogle af mulighederne ved at svare på et par spørgsmål.",
+    "description": "Er du nysgerrig på om en faglært uddannelsesvej i Forsvaret er noget for dig?\nBliv inspireret på nogle af mulighederne ved at svare på et par spørgsmål.",
     "questions": [
       {
         "id": "q1",
