@@ -45,32 +45,32 @@
         "options": [
           {
             "id": "_nv4nxx",
-            "label": "Jeg kan altid finde ud af, hvorfor det ikke virker",
+            "label": "Jeg er god til at finde fejl",
             "nextQ": null
           },
           {
             "id": "_het213",
-            "label": "Jeg er ret god til computer og tekniske løsninger",
+            "label": "Jeg er mega god til computer",
             "nextQ": null
           },
           {
             "id": "_598d3a",
-            "label": "Jeg er skarp på detaljer og finde løsninger",
+            "label": "Jeg er god til detaljer",
             "nextQ": null
           },
           {
             "id": "_txby6r",
-            "label": "Jeg er den som fixer, fremstiller og reparerer",
+            "label": "Jeg er god til at fixe ting",
             "nextQ": null
           },
           {
             "id": "_0s02m3",
-            "label": "Jeg er god til at holde styr på tingene og tiden!",
+            "label": "Jeg har mega overblik",
             "nextQ": null
           },
           {
             "id": "_0qvsxc",
-            "label": "Jeg er kreativ, og god til at få tingene til at se godt ud.",
+            "label": "Jeg er mega kreativ",
             "nextQ": null
           }
         ],
@@ -117,7 +117,7 @@
       },
       {
         "id": "_1rd36r",
-        "text": "Hvilket materiel synes du er vigtigst at få tilbage i operationen? ",
+        "text": "",
         "sub": "",
         "type": "single",
         "options": [
@@ -157,17 +157,17 @@
         "options": [
           {
             "id": "_70xiwd",
-            "label": "At være den som sikrer at helikopter og jagerflyene kan flyve",
+            "label": "At få helikopter og jagerflyene til at flyve",
             "nextQ": null
           },
           {
             "id": "_x3p4c3",
-            "label": "At være den, som har styr på at vores radar og droner virker",
+            "label": "At få fixe radar og missiler",
             "nextQ": null
           },
           {
             "id": "_jvqc16",
-            "label": "At kunne fremstille de mindste reservedele og komponenter, så både skib, fly og kampvogne virker",
+            "label": "At fremstille de mindste dele, så både skib, fly og kampvogne virker",
             "nextQ": null
           },
           {
@@ -190,7 +190,7 @@
       },
       {
         "id": "_yv9oey",
-        "text": "Du er i gang med et svært spil. Hvordan kommer du videre?",
+        "text": "Når du gamer eller møder udfordringer - hvad gør du?",
         "sub": "",
         "type": "single",
         "options": [
