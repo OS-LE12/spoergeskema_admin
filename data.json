@@ -842,6 +842,30 @@
       "id": "_zo8mm4",
       "timestamp": 1793779222937,
       "topOutcome": "Motormekaniker"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_txby6r"
+        ],
+        "_1rd36r": "_qryajz",
+        "_410tkn": [
+          "_0897bg"
+        ],
+        "_lx802h": [
+          "_70xiwd"
+        ],
+        "_yv9oey": "_0b3su8",
+        "q1": "_av2eri"
+      },
+      "completed": true,
+      "contact": {
+        "age": 15,
+        "name": "Lykke Gotfredsen"
+      },
+      "id": "_e7tv8s",
+      "timestamp": 1793779232431,
+      "topOutcome": "Du har styr på detaljerne"
     }
   ]
 }
