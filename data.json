@@ -1139,6 +1139,34 @@
       "id": "_nfh0wx",
       "timestamp": 1793795606671,
       "topOutcome": "Du har overblikket - og vil samtidig gerne lave struktur"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_598d3a",
+          "_0s02m3",
+          "_txby6r",
+          "_het213",
+          "_0qvsxc",
+          "_nv4nxx"
+        ],
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_lhp2pc"
+        ],
+        "_lx802h": [
+          "_x3p4c3"
+        ],
+        "_yv9oey": "_a7pk58",
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "age": 16
+      },
+      "id": "_v6o7bi",
+      "timestamp": 1793795782572,
+      "topOutcome": "Motormekaniker"
     }
   ]
 }
