@@ -1040,6 +1040,29 @@
       "id": "_noy8ze",
       "timestamp": 1793785887097,
       "topOutcome": "Motormekaniker"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
+          "_0s02m3"
+        ],
+        "_1rd36r": "_yinmi5",
+        "_410tkn": [
+          "_mzzkcm"
+        ],
+        "_lx802h": [
+          "_70xiwd"
+        ],
+        "_yv9oey": "_1z5d44",
+        "q1": "_mz0kjo"
+      },
+      "completed": true,
+      "contact": {
+        "age": 15
+      },
+      "id": "_y2cemj",
+      "timestamp": 1793787939664,
+      "topOutcome": "Du har overblikket - og vil samtidig gerne lave struktur"
     }
   ]
 }
