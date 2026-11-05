@@ -7,7 +7,11 @@
       "purposeText": "",
       "slug": "",
       "created": 0,
-      "deploy": null,
+      "deploy": {
+        "at": 1793882701284,
+        "path": "index.html",
+        "bid": "bmw3jfw6vxgwy"
+      },
       "schema": {
         "title": "INTET FORSVAR UDEN FAGLÆRTE",
         "description": "Er du nysgerrig på om en faglært uddannelsesvej i Forsvaret er noget for dig?\nBliv inspireret på nogle af mulighederne ved at svare på et par spørgsmål.",
