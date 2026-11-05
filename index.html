@@ -925,19 +925,35 @@ async function ghErr(r){
   try{var j=await r.clone().json();m=j.message||'';if(j.errors&&j.errors.length)m+=' '+JSON.stringify(j.errors)}catch(e){}
   return new Error('HTTP '+r.status+(m?' \u2014 '+m:''));
 }
+// A dropped or hanging connection must neither hang the page nor lose a save.
+// ghFetch aborts after a time limit; isNetErr recognises "the request never got an answer"
+// (Firefox: NetworkError..., Chrome: Failed to fetch, Safari: Load failed), which is retried.
+var GH_GET_MS=60000,GH_PUT_MS=120000,ghLastBytes=0;
+function ghFetch(url,o,ms){
+  if(typeof AbortController==='undefined')return fetch(url,o);
+  var ac=new AbortController(),t=setTimeout(function(){ac.abort()},ms||GH_GET_MS);
+  o=Object.assign({},o,{signal:ac.signal});
+  return fetch(url,o).then(function(r){clearTimeout(t);return r},function(e){clearTimeout(t);throw e});
+}
+function isNetErr(e){
+  if(!e)return false;
+  var m=String(e.message||'');
+  if(/^HTTP \d/.test(m))return false;
+  return e.name==='AbortError'||/NetworkError|Failed to fetch|Load failed|network|abort/i.test(m);
+}
 async function ghGetRaw(){
   // cache:'no-store' - without it the browser can serve a stale cached 404 for this
   // URL (e.g. from before the workflow bot first created the file), which makes ghSave
   // think the file is missing forever and PUT without a sha, failing with 422 "sha
   // wasn't supplied" even though the file has long since existed on GitHub.
-  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
+  var r=await ghFetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.raw'}});
   if(r.status===404)return{missing:true};
   if(!r.ok)throw await ghErr(r);
   var txt=(await r.text()).trim();
   return{data:txt?JSON.parse(txt):{schema:null,responses:[]}};
 }
 async function ghGetSha(){
-  var r=await fetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
+  var r=await ghFetch(ghUrl(),{cache:'no-store',headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json'}});
   if(r.status===404)return null;
   if(!r.ok)throw await ghErr(r);
   var j=await r.json();
@@ -994,7 +1010,7 @@ async function ghPull(silent){
 }
 
 // Saves run one at a time: two overlapping PUTs would race on the file's sha.
-var ghBusy=false,ghAgain=false;
+var ghBusy=false,ghAgain=false,ghLastErr='';
 async function ghSave(auto){
   if(!ghConfig){saveLocal();savedSnap=snap();toast(auto===true?'Automatisk gemt lokalt':'Gemt lokalt');return true}
   if(ghBusy){ghAgain=true;return true}
@@ -1007,9 +1023,11 @@ async function ghSaveOnce(auto){
   setGhStatus('saving','Gemmer...');
   saveLocal();
   try{
-    var r=null,merged=null,mergedSv=null,del=null;
-    for(var attempt=0;attempt<3;attempt++){
-      if(attempt)await new Promise(function(ok){setTimeout(ok,400*attempt)});
+    var r=null,merged=null,mergedSv=null,del=null,netWait=false;
+    for(var attempt=0;attempt<5;attempt++){
+      if(attempt)await new Promise(function(ok){setTimeout(ok,(netWait?1500:600)*attempt)});
+      netWait=false;
+      try{
       // Read the sha FIRST, then the content. If the workflow commits a new answer in
       // between, our sha is stale and GitHub rejects the PUT (409/422) - we then loop and
       // re-merge - instead of silently overwriting that answer. If the remote cannot be
@@ -1022,11 +1040,21 @@ async function ghSaveOnce(auto){
       var payload=JSON.stringify({version:2,surveys:mergedSv,responses:merged},null,2);
       var body={message:'Opdateret '+new Date().toISOString(),content:b64encode(payload)};
       if(sha)body.sha=sha;
-      r=await fetch(ghUrl(),{
+      var bodyStr=JSON.stringify(body);ghLastBytes=bodyStr.length;
+      r=await ghFetch(ghUrl(),{
         method:'PUT',
         headers:{'Authorization':'token '+ghConfig.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-        body:JSON.stringify(body)
-      });
+        body:bodyStr
+      },GH_PUT_MS);
+      }catch(e){
+        // Nothing was written unless the PUT itself got through, and a repeat is harmless:
+        // the merge is by id, so the same answers never end up twice.
+        if(!isNetErr(e))throw e;
+        if(attempt<4){netWait=true;continue}
+        throw new Error('Forbindelsen til GitHub blev afbrudt ('+(e.message||e)+').'
+          +(ghLastBytes?' Hver gemning sender ca. '+(ghLastBytes/1048576).toFixed(1).replace('.',',')+' MB, s\u00e5 en svag forbindelse kan v\u00e6re for langsom.':'')
+          +' Pr\u00f8v igen.');
+      }
       if(r.ok||(r.status!==409&&r.status!==422))break;
     }
     if(!r.ok)throw await ghErr(r);
@@ -1041,7 +1069,7 @@ async function ghSaveOnce(auto){
     toast(auto?'Automatisk gemt':'Gemt til GitHub');
     savedSnap=snap();
     return true;
-  }catch(e){setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message);return false}
+  }catch(e){ghLastErr=e.message;setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message);return false}
 }
 
 // -- Autosave every 10 minutes ------------------------------------------------------
@@ -1876,7 +1904,7 @@ async function publishSurvey(){
     if(ghConfig){
       pubSetStatus('busy',spin+'Gemmer sp\u00f8rgeskemaet...');
       while(ghBusy)await sleep(200);
-      if(!(await ghSave())){pubSetStatus('err','Sp\u00f8rgeskemaet kunne ikke gemmes p\u00e5 GitHub, s\u00e5 udgivelsen er afbrudt. Pr\u00f8v igen.');return}
+      if(!(await ghSave())){pubSetStatus('err','Sp\u00f8rgeskemaet kunne ikke gemmes p\u00e5 GitHub, s\u00e5 udgivelsen er afbrudt. Pr\u00f8v igen.'+(ghLastErr?'<br><small>'+esc(ghLastErr)+'</small>':''));return}
     }
     var main=sv.id===DEFAULT_ID&&!sv.slug;
     if(!main&&!(sv.deploy&&sv.deploy.at&&sv.deploy.path===surveyPath(sv))){
