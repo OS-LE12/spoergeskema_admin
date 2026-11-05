@@ -342,22 +342,6 @@
         ],
         "showResults": true
       }
-    },
-    {
-      "id": "smw3bgqpppjb",
-      "purpose": "matching",
-      "purposeText": "",
-      "slug": "test-wn1e",
-      "created": 1793869300285,
-      "deploy": null,
-      "schema": {
-        "title": "test",
-        "description": "",
-        "questions": [],
-        "outcomes": [],
-        "showResults": true,
-        "showCount": 1
-      }
     }
   ],
   "responses": [
