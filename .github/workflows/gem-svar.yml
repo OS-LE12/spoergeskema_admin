@@ -52,18 +52,31 @@ jobs:
 
           print(f"Total svar: {len(data['responses'])}")
           PYEOF
-          python3 /tmp/gem_svar.py
-        env:
-          SVAR_DATA: ${{ toJson(github.event.client_payload) }}
-
-      - name: Commit svar
-        run: |
           git config user.name "Spørgeskema Bot"
           git config user.email "bot@github-actions"
-          git add data.json
-          if git diff --staged --quiet; then
-            echo "Ingen aendringer at gemme"
-          else
+          BRANCH="${GITHUB_REF_NAME:-main}"
+
+          # Flere svar kan komme ind samtidig, og admin kan gemme samtidig. Saa afvises et
+          # push, hvis nogen har naaet at gemme imellem. Saa hentes nyeste data.json, svaret
+          # lægges ind igen (dubletter ignoreres via id), og vi proever paa ny.
+          for forsoeg in $(seq 1 20); do
+            python3 /tmp/gem_svar.py
+            git add data.json
+            if git diff --staged --quiet; then
+              echo "Ingen aendringer at gemme"
+              exit 0
+            fi
             git commit -m "Nyt svar $(date '+%Y-%m-%d %H:%M')"
-            git push
-          fi
+            if git push origin "HEAD:$BRANCH"; then
+              echo "Svaret er gemt (forsoeg $forsoeg)"
+              exit 0
+            fi
+            echo "Push afvist, fordi nogen gemte samtidig. Henter nyeste og proever igen ($forsoeg af 20)..."
+            git fetch origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
+            sleep $(( (RANDOM % 6) + 1 ))
+          done
+          echo "Kunne ikke gemme svaret efter 20 forsoeg"
+          exit 1
+        env:
+          SVAR_DATA: ${{ toJson(github.event.client_payload) }}
