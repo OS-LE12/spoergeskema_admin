@@ -373,28 +373,6 @@
     {
       "answers": {
         "_0fucb8": [
-          "_598d3a",
-          "_0qvsxc"
-        ],
-        "_1rd36r": "_cccjdx",
-        "_410tkn": "_jxcyxo",
-        "_lx802h": "_51vjaz",
-        "_yv9oey": "_0b3su8",
-        "q1": [
-          "_mz0kjo"
-        ]
-      },
-      "completed": true,
-      "contact": {
-        "name": "Hanne"
-      },
-      "id": "_yth3xy",
-      "timestamp": 1789542819331,
-      "topOutcome": "Tak for din ærlighed. Vi vil gerne vise dig den samme respekt."
-    },
-    {
-      "answers": {
-        "_0fucb8": [
           "_0s02m3",
           "_het213"
         ],
@@ -1143,6 +1121,30 @@
     {
       "answers": {
         "_0fucb8": [
+          "_0s02m3"
+        ],
+        "_1rd36r": "_8pzeq1",
+        "_410tkn": [
+          "_mzzkcm"
+        ],
+        "_lx802h": [
+          "_70xiwd"
+        ],
+        "_yv9oey": "_0b3su8",
+        "q1": "a1"
+      },
+      "completed": true,
+      "contact": {
+        "age": 16,
+        "name": "Matti Korsgaard"
+      },
+      "id": "_57b2w1",
+      "timestamp": 1793795680526,
+      "topOutcome": "Du har overblikket - og vil samtidig gerne lave struktur"
+    },
+    {
+      "answers": {
+        "_0fucb8": [
           "_598d3a",
           "_0s02m3",
           "_txby6r",
@@ -1167,30 +1169,6 @@
       "id": "_v6o7bi",
       "timestamp": 1793795782572,
       "topOutcome": "Motormekaniker"
-    },
-    {
-      "answers": {
-        "_0fucb8": [
-          "_0s02m3"
-        ],
-        "_1rd36r": "_8pzeq1",
-        "_410tkn": [
-          "_mzzkcm"
-        ],
-        "_lx802h": [
-          "_70xiwd"
-        ],
-        "_yv9oey": "_0b3su8",
-        "q1": "a1"
-      },
-      "completed": true,
-      "contact": {
-        "age": 16,
-        "name": "Matti Korsgaard"
-      },
-      "id": "_57b2w1",
-      "timestamp": 1793795680526,
-      "topOutcome": "Du har overblikket - og vil samtidig gerne lave struktur"
     }
   ]
 }
