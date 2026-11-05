@@ -224,6 +224,10 @@ a.btn{text-decoration:none}
 .svopen:focus-visible::after{outline:2px solid var(--dg);outline-offset:2px}
 .svurl{font-size:12px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:-4px}
 .svurl i{margin-right:4px}
+.svurl.off{color:#7a5200}
+.urlbox.draft .urltxt{color:var(--t3)}
+.pubnote{display:none;gap:8px;align-items:flex-start;margin:-6px 0 14px;font-size:13px;line-height:1.5;color:#7a5200}
+.pubnote i{margin-top:3px}
 .svstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .svstats div{background:var(--bg2);border-radius:var(--r);padding:8px 10px}
 .svstats b{display:block;font-size:18px;font-weight:500}
@@ -436,11 +440,12 @@ a.btn{text-decoration:none}
       <div class="field"><label for="sv-slug">Adresse</label>
         <div class="slugrow"><span id="slug-base"></span><input type="text" id="sv-slug" onchange="setSlug(this.value)" placeholder="adresse" aria-label="Adresse"><span id="slug-end">/</span><button class="btn btnsm" id="slug-gen" onclick="newAddress()" title="Gener&#233;r en ny, unik adresse"><i class="fa-solid fa-arrows-rotate"></i> Gener&#233;r ny</button></div>
         <div id="slug-hint" class="fhint"></div></div>
-      <div class="urlbox">
+      <div class="urlbox" id="pub-urlbox">
         <span id="pub-url" class="urltxt"></span>
-        <button class="btn btnsm" onclick="pubCopy()"><i class="fa-solid fa-copy"></i> Kopi&#233;r URL</button>
+        <button class="btn btnsm" id="pub-copy" onclick="pubCopy()"><i class="fa-solid fa-copy"></i> Kopi&#233;r URL</button>
         <a class="btn btnsm" id="pub-open" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> &#197;bn</a>
       </div>
+      <div class="pubnote" id="pub-note" role="status"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Ikke udgivet endnu.</b> Adressen virker f&#248;rst, n&#229;r du har klikket Udgiv, og siden er opdateret (ca. 1 minut).</span></div>
       <div class="pubact">
         <button class="btn btna" id="dl-btn" onclick="publishSurvey()"><i class="fa-solid fa-cloud-arrow-up"></i> Udgiv</button>
         <button class="btn" id="act-btn" onclick="toggleActive(activeId)"></button>
@@ -641,7 +646,7 @@ function fixSlugs(){
 async function addressTaken(c,slug){
   var tok=c.token||(ghConfig&&ghConfig.token)||'';
   if(!tok)throw new Error('Intet token \u2013 log ind med et GitHub-token f\u00f8rst.');
-  var r=await fetch('https://api.github.com/repos/'+c.repo+'/contents/'+encodeURIComponent(slug),{headers:pubHeaders(tok),cache:'no-store'});
+  var r=await netRetry(function(){return ghFetch('https://api.github.com/repos/'+c.repo+'/contents/'+encodeURIComponent(slug),{headers:pubHeaders(tok),cache:'no-store'})});
   if(r.status===404)return false;
   if(r.ok)return true;
   throw await pubError(r,c);
@@ -665,6 +670,9 @@ function newAddress(){
 }
 function surveyPath(sv){return sv.slug?sv.slug+'/index.html':pubCfg().path}
 function surveyUrl(sv){return pubLiveUrl({repo:pubCfg().repo,path:surveyPath(sv)})}
+// The address only works once something has been published there. The main page counts as
+// live because it was in use before publishing was recorded per survey.
+function urlLive(sv){return !!(sv.deploy&&sv.deploy.at)||(sv.id===DEFAULT_ID&&!sv.slug)}
 function pubCurrent(){return Object.assign({},pubCfg(),{path:surveyPath(activeSurvey())})}
 
 function fmtDate(ts){return new Date(ts).toLocaleDateString('da-DK')}
@@ -696,7 +704,7 @@ function renderDashboard(){
       +'<div class="svtop">'+purposeChip(sv)
       +'<button class="kebab" data-id="'+esc(sv.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="Flere valgmuligheder for '+esc(title)+'" onclick="openMenu(this,this.dataset.id)"><i class="fa-solid fa-ellipsis-vertical"></i></button></div>'
       +'<h3 class="svt"><button class="svopen" data-id="'+esc(sv.id)+'" onclick="openSurvey(this.dataset.id)">'+esc(title)+'</button></h3>'
-      +'<div class="svurl" title="'+esc(surveyUrl(sv))+'"><i class="fa-solid fa-link"></i> '+(sv.slug?'/'+esc(sv.slug)+'/':'Hovedsiden')+'</div>'
+      +'<div class="svurl'+(urlLive(sv)?'':' off')+'" title="'+esc(surveyUrl(sv))+'"><i class="fa-solid '+(urlLive(sv)?'fa-link':'fa-link-slash')+'"></i> '+(sv.slug?'/'+esc(sv.slug)+'/':'Hovedsiden')+(urlLive(sv)?'':' \u00b7 ikke udgivet endnu')+'</div>'
       +'<div class="svstats'+(hasOut?'':' two')+'"><div><b>'+(sv.schema.questions||[]).length+'</b><span>Sp\u00f8rgsm\u00e5l</span></div>'
       +(hasOut?'<div><b>'+(sv.schema.outcomes||[]).length+'</b><span>Udfald</span></div>':'')+'<div><b>'+n+'</b><span>Svar</span></div></div>'
       +'<div class="svfoot">'+statusChip(sv)+'<span>'+(sv.created?'Oprettet '+fmtDate(sv.created):'')+'</span></div></div>';
@@ -940,6 +948,17 @@ function isNetErr(e){
   var m=String(e.message||'');
   if(/^HTTP \d/.test(m))return false;
   return e.name==='AbortError'||/NetworkError|Failed to fetch|Load failed|network|abort/i.test(m);
+}
+// Repeat a request whose connection dropped (not one GitHub answered with an error).
+async function netRetry(fn){
+  for(var i=0;;i++){
+    try{return await fn()}
+    catch(e){
+      if(!isNetErr(e))throw e;
+      if(i>=4)throw new Error('Forbindelsen til GitHub blev afbrudt ('+(e.message||e)+'). Pr\u00f8v igen.');
+      await new Promise(function(ok){setTimeout(ok,(i+1)*1500)});
+    }
+  }
 }
 async function ghGetRaw(){
   // cache:'no-store' - without it the browser can serve a stale cached 404 for this
@@ -1778,7 +1797,11 @@ function renderPublishTab(){
     :'Adressen oprettes, f\u00f8rste gang du udgiver. \u00c6ndrer du den senere, bliver den gamle adresse liggende.';
   document.getElementById('pub-state').innerHTML=statusChip(sv);
   document.getElementById('pub-url').textContent=url;
-  var open=document.getElementById('pub-open');open.href=url;open.style.display=pub?'':'none';
+  var live=urlLive(sv);
+  var open=document.getElementById('pub-open');open.href=url;open.style.display=live?'':'none';
+  document.getElementById('pub-urlbox').classList.toggle('draft',!live);
+  var cb=document.getElementById('pub-copy');cb.disabled=!live;cb.title=live?'':'Udgiv f\u00f8rst, s\u00e5 virker adressen';
+  document.getElementById('pub-note').style.display=live?'none':'flex';
   var b=document.getElementById('dl-btn');
   b.disabled=off;
   b.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> '+(pub?'Opdat\u00e9r udgivelsen':'Udgiv');
@@ -1797,7 +1820,7 @@ function pubLiveHtml(c){
   var u=pubLiveUrl(c);
   return '<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(u)+'</a><button class="btn btnsm" onclick="pubCopy()"><i class="fa-solid fa-copy"></i> Kopi&#233;r link</button>';
 }
-function pubCopy(){copyText(pubLiveUrl(pubCurrent()),'URL kopieret')}
+function pubCopy(){if(!urlLive(activeSurvey()))return;copyText(pubLiveUrl(pubCurrent()),'URL kopieret')}
 function pubApiUrl(c){return 'https://api.github.com/repos/'+c.repo+'/contents/'+c.path.split('/').map(encodeURIComponent).join('/')}
 function pubHeaders(tok){return{'Authorization':'token '+tok,'Accept':'application/vnd.github.v3+json'}}
 async function pubError(r,c){
@@ -1807,7 +1830,7 @@ async function pubError(r,c){
   return new Error('HTTP '+r.status+(msg?' \u2013 '+msg:''));
 }
 async function pubSha(c,tok){
-  var r=await fetch(pubApiUrl(c),{headers:pubHeaders(tok),cache:'no-store'});
+  var r=await netRetry(function(){return ghFetch(pubApiUrl(c),{headers:pubHeaders(tok),cache:'no-store'})});
   if(r.status===404)return null;
   if(!r.ok)throw await pubError(r,c);
   return (await r.json()).sha||null;
@@ -1821,7 +1844,8 @@ async function publishUserFile(html,c){
   for(var attempt=0;attempt<2;attempt++){
     var body={message:'Opdateret brugerfil '+new Date().toISOString(),content:content};
     if(sha)body.sha=sha;
-    var r=await fetch(pubApiUrl(c),{method:'PUT',headers:pubHeaders(tok),body:JSON.stringify(body)});
+    var bodyStr=JSON.stringify(body);
+    var r=await netRetry(function(){return ghFetch(pubApiUrl(c),{method:'PUT',headers:pubHeaders(tok),body:bodyStr},GH_PUT_MS)});
     if(r.ok)return;
     if((r.status===409||r.status===422)&&attempt===0){sha=await pubSha(c,tok);continue}
     throw await pubError(r,c);
@@ -1887,7 +1911,8 @@ function copyText(t,okMsg){
 }
 function copyUrl(id){
   var sv=surveys.find(function(x){return x.id===id});if(!sv)return;
-  copyText(surveyUrl(sv),'URL kopieret'+(sv.deploy&&sv.deploy.at?'':' (sp\u00f8rgeskemaet er ikke udgivet endnu)'));
+  if(!urlLive(sv)){openSurvey(id,'publish');toast('Ikke udgivet endnu: udgiv f\u00f8rst, s\u00e5 virker adressen');return}
+  copyText(surveyUrl(sv),'URL kopieret');
 }
 // Publish the survey straight to GitHub Pages. Unsaved edits are saved first, so what
 // goes live is exactly what the admin sees; if that save fails nothing is published.
