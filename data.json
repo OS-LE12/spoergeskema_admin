@@ -349,7 +349,11 @@
       "purposeText": "",
       "slug": "test",
       "created": 1793873438778,
-      "deploy": null,
+      "deploy": {
+        "at": 1793882242097,
+        "path": "test/index.html",
+        "bid": "bmw3j63b6uwrt"
+      },
       "schema": {
         "title": "TEST",
         "description": "",
