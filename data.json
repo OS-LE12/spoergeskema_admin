@@ -543,9 +543,39 @@
           {
             "id": "_k20lyc",
             "title": "Skibsmontør",
-            "desc": "",
+            "desc": "Måske er det en vej for dig?\nHer arbejder du med både de tekniske, mekaniske og hydrauliske anlæg på skibe. Du fejlfinder og reparerer - både på el- og dieselmotorer, køleanlæg og IT er en vigtig del af din hverdag.\nDu skal have interesse for både at planlægge og udføre komplekse opgaver.",
             "tags": [],
-            "keywords": []
+            "keywords": [
+              "_kpe7kg",
+              "_5b5c88",
+              "_lvdjc5",
+              "_wvlikc",
+              "_l0wgxi"
+            ]
+          },
+          {
+            "id": "_12o6go",
+            "title": "Elektronikfagteknikeren",
+            "desc": "Som elektronikfagtekniker kan du arbejder både på kampfly, helikopter, skibene, kampvognene, droner, missiler - ja faktisk alt det elektroniske udstyr i Forsvaret!\nDu både fejlfinder, reparer, installere og fremstiller -  for alle opgaverne gælder at der skal findes løsninger, og så forventer vi du er teknisk interesseret.",
+            "tags": [],
+            "keywords": [
+              "_kpe7kg",
+              "_jpjibc",
+              "_kxz57m",
+              "_azazpf",
+              "_p37mwo"
+            ]
+          },
+          {
+            "id": "_ks2vj3",
+            "title": "Motormekaniker",
+            "desc": "Det er både lastvognsmekanikeren, entreprenørmaskinmekaniker, personvognsmekaniker....\nDu arbejder med alt får de helt små snescootere til vores store 75 tons tunge landbaserede køretøjer. Du sikrer at de kører og vores soldater kan eksekvere på deres opgaver.",
+            "tags": [],
+            "keywords": [
+              "_kpe7kg",
+              "_m51y95",
+              "_tjnogz"
+            ]
           }
         ],
         "showResults": true,
