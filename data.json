@@ -366,6 +366,22 @@
         "showResults": true,
         "showCount": 1
       }
+    },
+    {
+      "id": "smw8xgb1ib27",
+      "purpose": "matching",
+      "purposeText": "",
+      "slug": "frederikshavn-gymnasie-stx-hf-maritim",
+      "created": 1794208562406,
+      "deploy": null,
+      "schema": {
+        "title": "Frederikshavn Gymnasie - STX, HF, Maritim",
+        "description": "",
+        "questions": [],
+        "outcomes": [],
+        "showResults": true,
+        "showCount": 1
+      }
     }
   ],
   "responses": [
