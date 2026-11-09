@@ -376,8 +376,134 @@
       "deploy": null,
       "schema": {
         "title": "Frederikshavn Gymnasie - STX, HF, Maritim",
-        "description": "",
-        "questions": [],
+        "description": "Har du hvad der skal til?\nMuligheder i Forsvaret",
+        "questions": [
+          {
+            "id": "_syu6o6",
+            "text": "Hvad vil du helst bruge din arbejdsdag på?",
+            "sub": "",
+            "type": "multi",
+            "options": [
+              {
+                "id": "_kpe7kg",
+                "label": "Løse problemer og finde fejl",
+                "nextQ": null
+              },
+              {
+                "id": "_5b5c88",
+                "label": "Arbejde med teknologi / IT",
+                "nextQ": null
+              },
+              {
+                "id": "_m51y95",
+                "label": "Arbejde praktisk og skabe noget",
+                "nextQ": null
+              },
+              {
+                "id": "_lvdjc5",
+                "label": "Planlægge, organisere og samarbejde",
+                "nextQ": null
+              }
+            ]
+          },
+          {
+            "id": "_vlrdt9",
+            "text": "Hvilken arbejdsplads (materiel) vil du helst prøve i en uge?",
+            "sub": "",
+            "type": "single",
+            "options": [
+              {
+                "id": "_7oa3b6",
+                "label": "En hangar med F-35 kampfly",
+                "nextQ": null
+              },
+              {
+                "id": "_tjnogz",
+                "label": "Et værksted med kampvogne - Piranha",
+                "nextQ": null
+              },
+              {
+                "id": "_wvlikc",
+                "label": "Fregatterne i Søværnet",
+                "nextQ": null
+              },
+              {
+                "id": "_jpjibc",
+                "label": "Et teknisk Værksted med radar, missiler  / elektronik",
+                "nextQ": null
+              }
+            ]
+          },
+          {
+            "id": "_a6oh54",
+            "text": "En fregat får problemer med et mekanisk system. Hvem tror du hjælper med at finde og reparere fejlen?",
+            "sub": "",
+            "type": "single",
+            "options": [
+              {
+                "id": "_l0wgxi",
+                "label": "Skibsmontøren",
+                "nextQ": null
+              },
+              {
+                "id": "_kxz57m",
+                "label": "Elektronikfagteknikeren",
+                "nextQ": null
+              },
+              {
+                "id": "_89ni77",
+                "label": "Flymekanikeren",
+                "nextQ": null
+              }
+            ]
+          },
+          {
+            "id": "_66xsll",
+            "text": "Hvad er vigtigt for dig når du skal vælge job?",
+            "sub": "",
+            "type": "multi",
+            "options": [
+              {
+                "id": "_i6m1hk",
+                "label": "Tjene mange penge - og gerne hurtigt..",
+                "nextQ": null
+              },
+              {
+                "id": "_p37mwo",
+                "label": "Arbejde med noget, som ikke mange kan og gør",
+                "nextQ": null
+              },
+              {
+                "id": "_azazpf",
+                "label": "Blive en del af et stærkt fællesskab",
+                "nextQ": null
+              },
+              {
+                "id": "_y722c7",
+                "label": "Arbejde med noget meningsfuldt",
+                "nextQ": null
+              }
+            ]
+          },
+          {
+            "id": "_zxepjg",
+            "text": "Vidste du at man kan blive faglært i Forsvaret? - både med og uden uniform.",
+            "sub": "",
+            "type": "single",
+            "options": [
+              {
+                "id": "_pjh8tk",
+                "label": "Ja",
+                "nextQ": null
+              },
+              {
+                "id": "_n8gbsk",
+                "label": "Nej",
+                "nextQ": null
+              }
+            ]
+          }
+        ],
         "outcomes": [],
         "showResults": true,
         "showCount": 1
