@@ -213,7 +213,6 @@ a.btn{text-decoration:none}
 .stalebar{align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 .5rem;padding:8px 12px;background:#fbefcf;border:.5px solid #e2c777;border-radius:var(--r);font-size:13px;color:#6b4800;line-height:1.5}
 .stalebar i{flex-shrink:0}
 .stalebar span{flex:1;min-width:200px}
-.tab.flag::after{content:'';width:8px;height:8px;border-radius:50%;background:#c77a00;flex-shrink:0}
 .ni-info i,.ni-warn i{margin-top:3px;flex-shrink:0}
 /* Dashboard */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
@@ -329,11 +328,10 @@ a.btn{text-decoration:none}
     <div class="llogo">
       <div class="badge bg-a" style="margin-bottom:10px">Admin</div>
       <h1>Sp&#248;rgeskema-system</h1>
-      <p>Log ind for at forts&#230;tte</p>
     </div>
     <div class="lf">
       <label>Adgangskode</label>
-      <input type="password" id="login-pw" placeholder="Din adgangskode" autocomplete="current-password">
+      <input type="password" id="login-pw" autocomplete="current-password">
     </div>
     <div class="lerr" id="lerr"></div>
     <button class="lbtn" id="login-btn">Log ind <i class="fa-solid fa-arrow-right"></i></button>
@@ -344,21 +342,24 @@ a.btn{text-decoration:none}
         <div class="lf">
           <label>Personal Access Token</label>
           <input type="password" id="login-token" placeholder="github_pat_xxxx" autocomplete="off">
-          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">GitHub <i class="fa-solid fa-angle-right"></i> Settings <i class="fa-solid fa-angle-right"></i> Developer settings <i class="fa-solid fa-angle-right"></i> Fine-grained tokens. Giv Contents: Read &amp; Write.</div>
+          <div class="hint"><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener" style="color:inherit">Opret token p&#229; GitHub</a>. Giv Contents: Read &amp; Write.</div>
         </div>
         <div class="lf">
           <label>Repository (bruger/repo)</label>
           <input type="text" id="login-repo" placeholder="OS-LE12/spoergeskema_admin">
         </div>
-        <div class="lf">
-          <label>Filnavn</label>
-          <input type="text" id="login-filename" value="data.json">
-        </div>
-        <div class="lf">
-          <label>Token til udgivelse (valgfrit)</label>
-          <input type="password" id="login-ptoken" placeholder="github_pat_xxxx" autocomplete="off">
-          <div class="hint" style="font-size:11px;color:var(--t3);margin-top:3px">Bruges til at udgive brugerfilen til bruger-repositoriet. Contents: Read &amp; Write.</div>
-        </div>
+        <details>
+          <summary style="cursor:pointer;font-size:12px;color:var(--t3);margin-bottom:10px">Avanceret</summary>
+          <div class="lf">
+            <label>Filnavn</label>
+            <input type="text" id="login-filename" value="data.json">
+          </div>
+          <div class="lf">
+            <label>Token til udgivelse (valgfrit)</label>
+            <input type="password" id="login-ptoken" placeholder="github_pat_xxxx" autocomplete="off">
+            <div class="hint">Kun hvis udgivelsen skal bruge et andet token end ovenfor.</div>
+          </div>
+        </details>
       </div>
     </details>
   </div>
@@ -376,7 +377,7 @@ a.btn{text-decoration:none}
 
 <div class="shell">
 <nav class="sidebar" aria-label="Hovedmenu">
-  <div class="slogo"><h1>Sp&#248;rgeskema</h1><p>Beslutningssystem</p></div>
+  <div class="slogo"><h1>Sp&#248;rgeskema</h1></div>
   <div class="nsec">Menu</div>
   <button class="nitem active" data-nav="dashboard" onclick="nav('dashboard')"><i class="fa-solid fa-table-cells-large ni"></i><span>Oversigt</span></button>
   <button class="nitem" data-nav="answers" onclick="nav('answers')"><i class="fa-solid fa-inbox ni"></i><span>Indsamlede svar</span></button>
@@ -392,7 +393,6 @@ a.btn{text-decoration:none}
   <div class="phead">
     <div>
       <h1 class="ptitle">Dine sp&#248;rgeskemaer</h1>
-      <p class="psub">V&#230;lg et sp&#248;rgeskema for at redigere det, eller opret et nyt.</p>
     </div>
   </div>
   <div id="kpis" class="kpis"></div>
@@ -414,7 +414,7 @@ a.btn{text-decoration:none}
         <button class="btn btnp" onclick="if(guardQs())saveAll()"><i class="fa-solid fa-floppy-disk"></i> Gem</button>
       </div>
     </div>
-    <div class="stalebar" id="stale-bar" role="status" style="display:none"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Seneste &#230;ndringer er ikke udgivet.</b> Brugerne ser stadig den gamle udgave af sp&#248;rgeskemaet.</span><button class="btn btnsm" onclick="showTab('publish')"><i class="fa-solid fa-cloud-arrow-up"></i> G&#229; til udgivelse</button></div>
+    <div class="stalebar" id="stale-bar" role="status" style="display:none"><i class="fa-solid fa-triangle-exclamation"></i><span><b>&#198;ndringer er ikke udgivet.</b></span><button class="btn btnsm" onclick="barPublish(this)"><i class="fa-solid fa-cloud-arrow-up"></i> Udgiv nu</button></div>
     <div class="tabs" role="tablist" aria-label="Sp&#248;rgeskemaets afsnit">
       <button class="tab" role="tab" data-tab="general" onclick="showTab('general')"><i class="fa-solid fa-sliders"></i><span>Generelt</span></button>
       <button class="tab" role="tab" data-tab="questions" onclick="showTab('questions')"><i class="fa-solid fa-list-check"></i><span>Sp&#248;rgsm&#229;l</span></button>
@@ -450,7 +450,7 @@ a.btn{text-decoration:none}
   </div>
 
   <div class="tabpane" id="tab-outcomes" role="tabpanel">
-    <div class="ni-info"><i class="fa-solid fa-circle-info"></i><span>Klik p&#229; svar-badges for at knytte dem til et udfald. Matchprocent = (matchende svar &#247; antal n&#248;gleord) &#215; 100. Udfaldene g&#230;lder kun for dette sp&#248;rgeskema.</span></div>
+    <div class="ni-info"><i class="fa-solid fa-circle-info"></i><span>Klik p&#229; svar for at knytte dem til udfaldet.</span></div>
     <div id="odiag"></div>
     <div id="olist"></div>
     <button class="btn btnda btnbl" onclick="addOutcome()"><i class="fa-solid fa-plus"></i> Tilf&#248;j udfald</button>
@@ -459,32 +459,27 @@ a.btn{text-decoration:none}
   <div class="tabpane" id="tab-publish" role="tabpanel">
     <div class="card hl">
       <div class="ch"><div class="ct"><i class="fa-solid fa-globe"></i> Udgiv til brugerne</div><span id="pub-state"></span></div>
-      <p class="lead">Sp&#248;rgeskemaet udgives direkte til GitHub Pages p&#229; sin egen adresse. Der downloades ingen filer.</p>
       <div class="urlbox" id="pub-urlbox">
         <span id="pub-url" class="urltxt"></span>
         <button class="btn btnsm" id="pub-copy" onclick="pubCopy()"><i class="fa-solid fa-copy"></i> Kopi&#233;r URL</button>
         <a class="btn btnsm" id="pub-open" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> &#197;bn</a>
       </div>
-      <div id="slug-hint" class="fhint" style="margin:-8px 0 14px"></div>
-      <div class="pubnote" id="pub-note" role="status"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Ikke udgivet endnu.</b> Adressen virker f&#248;rst, n&#229;r du har klikket Udgiv, og siden er opdateret (ca. 1 minut).</span></div>
+      <div class="pubnote" id="pub-note" role="status"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Ikke udgivet endnu.</b></span></div>
       <div class="pubact">
         <button class="btn btna" id="dl-btn" onclick="publishSurvey()"><i class="fa-solid fa-cloud-arrow-up"></i> Udgiv</button>
         <button class="btn" id="act-btn" onclick="toggleActive(activeId)"></button>
       </div>
       <div id="pub-status" class="pubst" style="display:none"></div>
-      <p class="fhint" style="margin-top:12px">Token og repository til udgivelsen findes under <button class="linkbtn inl" onclick="nav('settings')">Indstillinger</button>.</p>
     </div>
     <div class="card" id="card-box">
       <div class="ch"><div class="ct"><i class="fa-solid fa-qrcode"></i> Bordkort</div></div>
-      <p class="lead">Hent et printklart A4-bordkort med en QR-kode, der leder til sp&#248;rgeskemaet.</p>
       <div class="cardgrid">
         <div class="cardform">
           <div class="field"><label>Skabelon</label><div id="card-tpls" class="cardtpls"></div></div>
           <div class="field"><label for="card-text">Overskrift</label>
             <textarea id="card-text" rows="3" maxlength="140" oninput="cardSetText(this.value)" placeholder="Skriv overskriften"></textarea>
-            <div class="fhint">Enter giver ny linje. Teksten vises med store bogstaver i Space Grotesk SemiBold, centreret over QR-koden.</div>
             <div class="fhint" id="card-bad" style="color:#8b1f1f"></div></div>
-          <div class="pubnote" id="card-note" role="status" style="margin:0 0 12px"><i class="fa-solid fa-triangle-exclamation"></i><span>Udgiv sp&#248;rgeskemaet f&#248;rst. QR-koden skal pege p&#229; en adresse, der virker.</span></div>
+          <div class="pubnote" id="card-note" role="status" style="margin:0 0 12px"><i class="fa-solid fa-triangle-exclamation"></i><span>Udgiv f&#248;rst, s&#229; QR-koden virker.</span></div>
           <button class="btn btnp" id="card-dl" onclick="cardDownload()"><i class="fa-solid fa-file-pdf"></i> Download bordkort (PDF)</button>
         </div>
         <div class="cardprev"><canvas id="card-cv" role="img" aria-label="Forh&#229;ndsvisning af bordkortet"></canvas></div>
@@ -526,7 +521,6 @@ a.btn{text-decoration:none}
   <div class="phead">
     <div>
       <h1 class="ptitle">Indsamlede svar</h1>
-      <p class="psub">Overblik pr. sp&#248;rgeskema. Tryk p&#229; Udvid for at se alle oplysninger.</p>
     </div>
   </div>
   <div id="ansgrid" class="ansgrid"></div>
@@ -553,7 +547,6 @@ a.btn{text-decoration:none}
   <div class="phead">
     <div>
       <h1 class="ptitle">Indstillinger</h1>
-      <p class="psub">F&#230;lles for alle sp&#248;rgeskemaer.</p>
     </div>
   </div>
   <div class="card">
@@ -561,15 +554,14 @@ a.btn{text-decoration:none}
     <div class="field"><label for="pub-repo">Bruger-repository</label><input type="text" id="pub-repo" onchange="savePubCfg()" placeholder="OS-LE12/spoergeskema"></div>
     <div class="field"><label for="pub-path">Filnavn for hovedsiden (standardsp&#248;rgeskemaet)</label><input type="text" id="pub-path" onchange="savePubCfg()" placeholder="index.html"></div>
     <div class="field"><label for="pub-token">Eget token til udgivelse (valgfrit)</label><input type="password" id="pub-token" onchange="savePubCfg()" placeholder="Tomt = brug admin-tokenet" autocomplete="off">
-      <div class="fhint">Tokenet skal have <em>Contents: Read and write</em> p&#229; bruger-repositoriet. Det l&#230;gges aldrig i brugerfilen. Det f&#248;lger med i &#8222;Del admin-adgang&#8220;-linket nedenfor, s&#229; du kan logge ind p&#229; andre enheder.</div></div>
+      <div class="fhint">Kr&#230;ver <em>Contents: Read and write</em>. F&#248;lger med i admin-adgangslinket.</div></div>
   </div>
   <div class="card" id="tpl-box">
     <div class="ch"><div class="ct"><i class="fa-solid fa-id-card"></i> Bordkort-skabeloner</div></div>
-    <p class="lead">Baggrundene, du kan v&#230;lge mellem, n&#229;r du henter et bordkort. De g&#230;lder for alle sp&#248;rgeskemaer og ligger p&#229; GitHub, s&#229; de kan bruges fra alle enheder.</p>
     <div id="tpl-list" class="tpllist"></div>
     <input type="file" id="tpl-file" accept="image/jpeg,image/png" style="display:none" onchange="tplPick(this)">
     <button class="btn" id="tpl-up" onclick="document.getElementById('tpl-file').click()"><i class="fa-solid fa-upload"></i> Upload skabelon</button>
-    <div class="fhint" style="margin-top:8px">JPG eller PNG, st&#229;ende A4 (210 x 297 mm), helst 2480 x 3508 px (300 dpi). Billedet skal v&#230;re helt uden overskrift og QR-kode: overskriften placeres i den &#248;verste halvdel og QR-koden i midten, som i de eksisterende skabeloner, s&#229; hold de felter fri for tekst og motiver, der forstyrrer.</div>
+    <div class="fhint" style="margin-top:8px">JPG eller PNG, st&#229;ende A4, helst 2480 x 3508 px (300 dpi).</div>
     <div id="tpl-msg" class="fhint" role="status" style="margin-top:8px"></div>
     <div id="tpl-new" class="tplnew" style="display:none">
       <div class="cardgrid">
@@ -583,12 +575,7 @@ a.btn{text-decoration:none}
     </div>
   </div>
   <div class="card">
-    <div class="ch"><div class="ct"><i class="fa-solid fa-floppy-disk"></i> Automatisk gemning</div></div>
-    <p class="lead" style="margin:0">Systemet gemmer automatisk hvert 10. minut, hvis der er &#230;ndringer. Du kan altid gemme med det samme med Gem-knappen.</p>
-  </div>
-  <div class="card">
     <div class="ch"><div class="ct"><i class="fa-solid fa-key"></i> Del admin-adgang</div></div>
-    <p class="lead">Kollegaen &#229;bner filen i browseren og viderestilles automatisk til admin med alle indstillinger klar.</p>
     <div class="field"><label for="share-pw">Kollegaens adgangskode</label><input type="text" id="share-pw" value="OSK2026"></div>
     <button class="btn btnp" onclick="downloadAdminAccess()"><i class="fa-solid fa-download"></i> Download admin-adgang.html</button>
   </div>
@@ -649,10 +636,10 @@ function saveLocal(){
 var DEFAULT_ID='default';
 var PURPOSES=[
   {id:'matching',icon:'bullseye',label:'Vejledning / matching',desc:'Finder det bedste udfald ud fra svarene.',defaults:{showResults:true,showCount:1}},
-  {id:'screening',icon:'filter',label:'Screening / egnethed',desc:'Sorterer fra med diskvalifikation og viser et udfald til dem der er egnede.',defaults:{showResults:true,showCount:1}},
-  {id:'feedback',icon:'comment-dots',label:'Feedback / evaluering',desc:'Indsamler svar. Brugeren f\u00e5r blot en tak.',defaults:{showResults:false}},
-  {id:'interest',icon:'user-plus',label:'Interesse / tilmelding',desc:'Indsamler alder, evt. navn og svar. Brugeren f\u00e5r blot en tak.',defaults:{showResults:false}},
-  {id:'other',icon:'shapes',label:'Andet form\u00e5l',desc:'Beskriv selv, hvad sp\u00f8rgeskemaet skal bruges til.',defaults:{showResults:true,showCount:1}}
+  {id:'screening',icon:'filter',label:'Screening / egnethed',desc:'Sorterer fra og viser udfald til de egnede.',defaults:{showResults:true,showCount:1}},
+  {id:'feedback',icon:'comment-dots',label:'Feedback / evaluering',desc:'Indsamler svar. Brugeren f\u00e5r en tak.',defaults:{showResults:false}},
+  {id:'interest',icon:'user-plus',label:'Interesse / tilmelding',desc:'Indsamler alder, evt. navn og svar. Brugeren f\u00e5r en tak.',defaults:{showResults:false}},
+  {id:'other',icon:'shapes',label:'Andet form\u00e5l',desc:'',defaults:{showResults:true,showCount:1}}
 ];
 function mkSurvey(sch,id,purpose){return{id:id,purpose:purpose||'matching',purposeText:'',slug:'',created:id===DEFAULT_ID?0:Date.now(),deploy:null,schema:sch}}
 function purposeLabel(sv){
@@ -739,7 +726,6 @@ function tplSig(){
 }
 function contentSig(sv){return strHash(tplSig()+'|'+JSON.stringify(sv.schema))}
 function pubStale(sv){return !!(sv&&sv.deploy&&sv.deploy.at)&&sv.active!==false&&sv.deploy.sig!==contentSig(sv)}
-function pubReminder(){var sv=activeSurvey();return (sv&&!pubBusy&&pubStale(sv))?' \u2013 husk at opdatere udgivelsen':''}
 function pubCurrent(){return Object.assign({},pubCfg(),{path:surveyPath(activeSurvey())})}
 
 function fmtDate(ts){return new Date(ts).toLocaleDateString('da-DK')}
@@ -772,7 +758,7 @@ function renderDashboard(){
       +'<div class="svtop">'+purposeChip(sv)
       +'<button class="kebab" data-id="'+esc(sv.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="Flere valgmuligheder for '+esc(title)+'" onclick="openMenu(this,this.dataset.id)"><i class="fa-solid fa-ellipsis-vertical"></i></button></div>'
       +'<h3 class="svt"><button class="svopen" data-id="'+esc(sv.id)+'" onclick="openSurvey(this.dataset.id)">'+esc(title)+'</button></h3>'
-      +'<div class="svurl'+(urlLive(sv)?'':' off')+'" title="'+esc(surveyUrl(sv))+'"><i class="fa-solid '+(urlLive(sv)?'fa-link':'fa-link-slash')+'"></i> '+(sv.slug?'/'+esc(sv.slug)+'/':'Hovedsiden')+(urlLive(sv)?'':' \u00b7 ikke udgivet endnu')+'</div>'
+      +'<div class="svurl'+(urlLive(sv)?'':' off')+'" title="'+esc(surveyUrl(sv))+'"><i class="fa-solid '+(urlLive(sv)?'fa-link':'fa-link-slash')+'"></i> '+(sv.slug?'/'+esc(sv.slug)+'/':'Hovedsiden')+'</div>'
       +'<div class="svstats'+(hasOut?'':' two')+'"><div><b>'+(sv.schema.questions||[]).length+'</b><span>Sp\u00f8rgsm\u00e5l</span></div>'
       +(hasOut?'<div><b>'+(sv.schema.outcomes||[]).length+'</b><span>Udfald</span></div>':'')+'<div><b>'+n+'</b><span>Svar</span></div></div>'
       +'<div class="svfoot">'+statusChip(sv)+'<span>'+(sv.created?'Oprettet '+fmtDate(sv.created):'')+'</span></div></div>';
@@ -859,7 +845,7 @@ function createSurvey(){
   closeNewSurvey();
   openSurvey(sv.id,'general');
   saveAll();
-  toast('Sp\u00f8rgeskemaet er oprettet. Udfyld titel og sp\u00f8rgsm\u00e5l.');
+  toast('Sp\u00f8rgeskemaet er oprettet');
 }
 function dupSurvey(id){
   var src=surveys.find(function(x){return x.id===id});if(!src)return;
@@ -1146,7 +1132,7 @@ async function ghSaveOnce(auto){
     Object.keys(cur.before).forEach(function(k){if(cur.before[k]===del.before[k])delete cur.before[k]});
     setDel(cur);
     setGhStatus('ok',(auto?'Automatisk gemt':'Gemt')+' \u2014 '+new Date().toLocaleTimeString('da-DK'));
-    toast((auto?'Automatisk gemt':'Gemt til GitHub')+pubReminder());
+    toast(auto?'Automatisk gemt':'Gemt til GitHub');
     savedSnap=snap();
     return true;
   }catch(e){ghLastErr=e.message;setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message);return false}
@@ -1189,7 +1175,7 @@ function setGhStatus(state,msg){
 }
 
 // \u2500\u2500 Save \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-function saveAll(){saveLocal();if(ghConfig)ghSave();else{savedSnap=snap();toast('Gemt lokalt'+pubReminder())}updateBadge()}
+function saveAll(){saveLocal();if(ghConfig)ghSave();else{savedSnap=snap();toast('Gemt lokalt')}updateBadge()}
 function updateBadge(){
   var el=document.getElementById('qcnt');
   if(el)el.textContent=surveys.length+' sp\u00f8rgeskema'+(surveys.length===1?'':'r')+' \u00b7 '+responses.length+' svar';
@@ -1224,11 +1210,20 @@ function renderEditorHeader(){
   var stale=pubStale(sv);
   var bar=document.getElementById('stale-bar');
   if(bar){bar.style.display=stale?'flex':'none';var bb=bar.querySelector('button');if(bb)bb.style.display=curTab==='publish'?'none':''}
-  var pt=document.querySelector('.tab[data-tab=publish]');if(pt)pt.classList.toggle('flag',stale);
   var ob=document.querySelector('.tab[data-tab=outcomes]');if(ob)ob.style.display=schema.showResults===false?'none':'';
   document.getElementById('ed-title').textContent=schema.title||'(uden titel)';
   document.getElementById('ed-meta').innerHTML=purposeChip(sv)+statusChip(sv,stale)
     +'<span>'+schema.questions.length+' sp\u00f8rgsm\u00e5l \u00b7 '+myResponses().length+' svar</span>';
+}
+// "Udgiv nu" in the yellow bar: publishes from wherever you are. If it fails, the publish tab opens and shows why.
+async function barPublish(btn){
+  var sv=activeSurvey(),before=sv.deploy&&sv.deploy.at,label=btn?btn.innerHTML:'';
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Udgiver...'}
+  try{await publishSurvey();while(ghBusy)await sleep(200)}     // publishSurvey saves in the background once more
+  finally{if(btn){btn.disabled=false;btn.innerHTML=label}}
+  var st=document.getElementById('pub-status');
+  if(sv.deploy&&sv.deploy.at!==before)toast('Udgivet. Siden opdateres om ca. 1 minut');
+  else if(st&&st.classList.contains('err'))showTab('publish');
 }
 function renderEditor(){
   if(schema.showResults===false&&curTab==='outcomes')curTab='questions';
@@ -1255,7 +1250,7 @@ function renderBuild(){
   document.getElementById('qlist').innerHTML=schema.questions.map(function(q,i){return renderQCard(q,i)}).join('');
   var ow=oversizedImages();
   document.getElementById('imgwarn').innerHTML=ow.length
-    ?'<div class="ni-info"><i class="fa-solid fa-circle-info"></i><span>'+ow.length+' billede'+(ow.length>1?'r':'')+' fylder over 800 KB og g&#248;r filen tung at hente. <button class="btn btnsm" onclick="compressExistingImages()">Komprim&#233;r nu</button></span></div>'
+    ?'<div class="ni-info"><i class="fa-solid fa-circle-info"></i><span>'+ow.length+' billede'+(ow.length>1?'r':'')+' er over 800 KB. <button class="btn btnsm" onclick="compressExistingImages()">Komprim&#233;r</button></span></div>'
     :'';
 }
 
@@ -1263,7 +1258,7 @@ function renderQCard(q,qi){
   var open=openCards[q.id]!==false;
   var bad=!!qBad[q.id]&&qEmpty(q);
   var tl={single:'Enkeltvalg',multi:'Flervalg',text:'Fritekst'}[q.type]||q.type;
-  if(q.screening)tl+=' \u00b7 Screening';
+  if(q.screening)tl+=' \u00b7 T\u00e6ller ikke med';
   if((q.options||[]).some(function(o){return o.knockout}))tl+=' \u00b7 Diskvalifikation';
   var opts=(q.options||[]).map(function(o){
     var nx=schema.questions.filter(function(qq){return qq.id!==q.id}).map(function(qq){
@@ -1276,10 +1271,10 @@ function renderQCard(q,qi){
         +'<option value="">N\u00e6ste i r\u00e6kkef\u00f8lge</option>'+nx
         +'<option value="__end__" '+(o.nextQ==='__end__'?'selected':'')+'>Afslut</option>'
         +'</select>')
-      +'<button class="btn btnsm kob'+(ko?' on':'')+'" aria-pressed="'+(ko?'true':'false')+'" title="Diskvalifikation (screen-out): dette svar udelukker brugeren fra udfaldet" onclick="toggleKO(\''+q.id+'\',\''+o.id+'\')"><i class="fa-solid fa-ban"></i> Diskvalificer</button>'
+      +'<button class="btn btnsm kob'+(ko?' on':'')+'" aria-pressed="'+(ko?'true':'false')+'" onclick="toggleKO(\''+q.id+'\',\''+o.id+'\')"><i class="fa-solid fa-ban"></i> Diskvalificer</button>'
       +'<button class="btn btnsm btnd" onclick="delOpt(\''+q.id+'\',\''+o.id+'\')"><i class="fa-solid fa-xmark"></i></button>'
       +'</div>'
-      +(ko?'<div class="korow"><b>Diskvalifikation:</b> v\u00e6lger brugeren dette svar, afsluttes sp\u00f8rgeskemaet med det samme. Alle tidligere svar overstyres, og der vises intet udfald.<input type="text" value="'+esc(o.koMsg||'')+'" placeholder="Besked til brugeren (valgfri)" oninput="setKOMsg(\''+q.id+'\',\''+o.id+'\',this.value)"></div>':'');
+      +(ko?'<div class="korow">Afslutter sp\u00f8rgeskemaet med det samme, uden udfald.<input type="text" value="'+esc(o.koMsg||'')+'" placeholder="Besked til brugeren (valgfri)" oninput="setKOMsg(\''+q.id+'\',\''+o.id+'\',this.value)"></div>':'');
   }).join('');
   return '<div class="qcard '+(open?'':'collapsed')+'" id="qc-'+q.id+'">'
     +'<div class="qch" onclick="toggleCard(\''+q.id+'\')">'
@@ -1305,7 +1300,7 @@ function renderQCard(q,qi){
     +'<option value="multi" '+(q.type==='multi'?'selected':'')+'>Flervalg</option>'
     +'<option value="text" '+(q.type==='text'?'selected':'')+'>Fritekst</option>'
     +'</select></div>'
-    +(q.type!=='text'?'<label class="qscr"><input type="checkbox" '+(q.screening?'checked ':'')+'onchange="setQScreen(\''+q.id+'\',this.checked)"><span><b>Screeningssp\u00f8rgsm\u00e5l</b> \u2014 svaret t\u00e6ller ikke med i udfaldet.</span></label>':'')
+    +(q.type!=='text'?'<label class="qscr"><input type="checkbox" '+(q.screening?'checked ':'')+'onchange="setQScreen(\''+q.id+'\',this.checked)"><span>T\u00e6l ikke med i udfaldet</span></label>':'')
     +(q.type!=='text'
       ?'<div class="slbl">Svarmuligheder &amp; forgrening</div>'+opts
        +'<button class="btn btnsm" onclick="addOpt(\''+q.id+'\')" style="margin-top:4px">+ Tilf\u00f8j svar</button>'
@@ -1642,9 +1637,8 @@ function distributionHtml(st){
     var why=Object.keys(st.koWhy).map(function(w){return esc(w)+' ('+st.koWhy[w]+')'}).join(', ');
     h+=distRow('Diskvalificeret',st.ko,st.n,'#8b1f1f','\u00c5rsag: '+why);
   }
-  h+='<div class="fs" style="border-top:.5px solid var(--bd);padding-top:8px;margin-top:2px"><b>I alt '+st.n+' besvarelse'+(st.n===1?'':'r')+'.</b> '
-    +'Tallet ud for hvert udfald er antal besvarelser, hvor det var bedste match. Score er matchprocenten som p\u00e5 brugerens resultatside; gns. score er gennemsnittet for alle ikke-diskvalificerede besvarelser. '
-    +'Alt er beregnet ud fra svarene og det nuv\u00e6rende skema.</div>';
+  h+='<div class="fs" title="Tallet ud for hvert udfald er antal besvarelser, hvor det var bedste match. Score er matchprocenten som p\u00e5 brugerens resultatside; gns. score er gennemsnittet for alle ikke-diskvalificerede besvarelser." style="border-top:.5px solid var(--bd);padding-top:8px;margin-top:2px"><b>I alt '+st.n+' besvarelse'+(st.n===1?'':'r')+'.</b> '
+    +'Beregnet ud fra det nuv\u00e6rende skema.</div>';
   return h+'</div>';
 }
 
@@ -1853,23 +1847,20 @@ function renderSettings(){fillPubFields();tplRender()}
 function renderPublishTab(){
   fillPubFields();
   cardRender();
-  var c=pubCfg(),sv=activeSurvey(),main=sv.id===DEFAULT_ID&&!sv.slug;
+  var c=pubCfg(),sv=activeSurvey();
   var pub=!!(sv.deploy&&sv.deploy.at),off=sv.active===false,url=surveyUrl(sv);
-  document.getElementById('slug-hint').textContent=main
-    ?'Dette er hovedsiden, som allerede er i brug.'
-    :'Adressen er genereret til dette sp\u00f8rgeskema og kan ikke \u00e6ndres.';
   document.getElementById('pub-state').innerHTML=statusChip(sv);
   document.getElementById('pub-url').textContent=url;
   var live=urlLive(sv);
   var open=document.getElementById('pub-open');open.href=url;open.style.display=live?'':'none';
   document.getElementById('pub-urlbox').classList.toggle('draft',!live);
-  var cb=document.getElementById('pub-copy');cb.disabled=!live;cb.title=live?'':'Udgiv f\u00f8rst, s\u00e5 virker adressen';
+  var cb=document.getElementById('pub-copy');cb.disabled=!live;
   document.getElementById('pub-note').style.display=live?'none':'flex';
   var b=document.getElementById('dl-btn');
   b.disabled=off;
   b.innerHTML='<i class="fa-solid fa-cloud-arrow-up"></i> '+(pub?'Opdat\u00e9r udgivelsen':'Udgiv');
   document.getElementById('act-btn').innerHTML=off?'<i class="fa-solid fa-toggle-on"></i> Aktiv\u00e9r':'<i class="fa-solid fa-toggle-off"></i> Deaktiver';
-  if(off&&!document.getElementById('pub-status').textContent)pubSetStatus('err','Sp\u00f8rgeskemaet er deaktiveret'+(pub?', og siden viser en besked om, at det er lukket':'')+'. Aktiv\u00e9r det for at udgive igen.');
+  if(off&&!document.getElementById('pub-status').textContent)pubSetStatus('',pub?'Deaktiveret. Siden viser en besked om, at sp\u00f8rgeskemaet er lukket.':'Deaktiveret.');
 }
 function pubBase(c){var p=c.repo.split('/');return 'https://'+p[0].toLowerCase()+'.github.io/'+p[1]+'/'}
 function pubLiveUrl(c){return pubBase(c)+c.path.replace(/\/index\.html$/,'/')}
@@ -2011,7 +2002,8 @@ async function publishSurvey(){
     pubSetStatus('busy',spin+'Udgivet. Venter p\u00e5 at GitHub Pages opdaterer siden (ca. 1 minut)...');
     pubWatch(c,bid);
   }catch(e){
-    pubSetStatus('err','Udgivelsen til <b>'+esc(repo)+'</b> mislykkedes: '+esc(e.message));
+    pubSetStatus('err','Udgivelsen til <b>'+esc(repo)+'</b> mislykkedes: '+esc(e.message)
+      +(/token|skriveadgang/i.test(e.message)?' <button class="btn btnsm" onclick="nav(\'settings\')"><i class="fa-solid fa-gear"></i> \u00c5bn indstillinger</button>':''));
   }finally{pubBusy=false;if(btn)btn.disabled=sv.active===false}
 }
 // Deactivate: the survey's address shows a "closed" page. Activate: the survey goes back up.
@@ -2622,11 +2614,6 @@ function downloadAdminAccess(){
   row.appendChild(cpbtn);
   box.appendChild(row);
 
-  var hint=document.createElement('div');
-  hint.style.cssText='font-size:12px;color:var(--t3);margin-top:8px';
-  hint.textContent='Kollegaen klikker p\u00e5 linket, logger ind med adgangskoden og er klar.';
-  box.appendChild(hint);
-
   var btn=document.querySelector('[onclick="downloadAdminAccess()"]');
   if(btn&&btn.parentNode)btn.parentNode.insertBefore(box,btn.nextSibling);
 
@@ -2994,7 +2981,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'    +(q.sub?"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.25rem;line-height:1.5\\">"+esc(q.sub)+"</div>":"<div style=\\"margin-bottom:1.25rem\\"></div>")\n'
 +'    +opts'
 +'      +"<div class=\\\"nav\\\">"+(qs.qIdx>0?"<button id=\\"btn-bk\\" class=\\"btn\\">"+fa("arrow-left")+" Tilbage</button>":"")\n'
-+'    +"<button id=\\"btn-nx\\" class=\\"btn btnp\\" "+(hasAns?"":"disabled")+">"+(qs.qIdx===SC.questions.length-1?"Se resultat ":"N\\u00e6ste ")+fa("arrow-right")+"</button>"\n'
++'    +"<button id=\\"btn-nx\\" class=\\"btn btnp\\" "+(hasAns?"":"disabled")+">"+(qs.qIdx===SC.questions.length-1?(SC.showResults===false?"Send svar ":"Se resultat "):"N\\u00e6ste ")+fa("arrow-right")+"</button>"\n'
 +'    +"</div>";\n'
 +'  c.querySelectorAll("[data-single]").forEach(function(b){b.addEventListener("click",function(){qs.answers[b.dataset.qid]=b.dataset.oid;render()})});\n'
 +'  c.querySelectorAll("[data-multi]").forEach(function(b){b.addEventListener("click",function(){var cur=Array.isArray(qs.answers[b.dataset.qid])?qs.answers[b.dataset.qid]:[];var i=cur.indexOf(b.dataset.oid);if(i>=0)cur.splice(i,1);else cur.push(b.dataset.oid);qs.answers[b.dataset.qid]=cur.slice();render()})});\n'
@@ -3014,13 +3001,12 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'}\n'
 +'function renderContact(c){\n'
 +'  c.innerHTML="<div class=\\"card\\" style=\\"margin-bottom:0\\">"\n'
-+'    +"<h2 style=\\"font-size:18px;font-weight:500;margin-bottom:6px\\">Inden vi starter</h2>"\n'
-+'    +"<p style=\\"font-size:14px;color:var(--t2)\\">Fort\\u00e6l os din alder. Navn er valgfrit.</p></div>"\n'
++'    +"<h2 style=\\"font-size:18px;font-weight:500\\">Inden vi starter</h2></div>"\n'
 +'    +"<div class=\\"card\\" style=\\"margin-top:1px\\">"\n'
-+'    +"<div style=\\"margin-bottom:16px\\"><label for=\\"c-age\\">Alder <span style=\\"color:var(--err)\\" aria-hidden=\\"true\\">*</span></label>"\n'
-+'    +"<input type=\\"text\\" id=\\"c-age\\" inputmode=\\"numeric\\" pattern=\\"[0-9]*\\" maxlength=\\"3\\" autocomplete=\\"off\\" aria-required=\\"true\\" placeholder=\\"Din alder\\" style=\\"max-width:140px\\"></div>"\n'
++'    +"<div style=\\"margin-bottom:16px\\"><label for=\\"c-age\\">Alder</label>"\n'
++'    +"<input type=\\"text\\" id=\\"c-age\\" inputmode=\\"numeric\\" pattern=\\"[0-9]*\\" maxlength=\\"3\\" autocomplete=\\"off\\" aria-required=\\"true\\" style=\\"max-width:140px\\"></div>"\n'
 +'    +"<div style=\\"margin-bottom:16px\\"><label for=\\"c-name\\">Navn (valgfrit)</label>"\n'
-+'    +"<input type=\\"text\\" id=\\"c-name\\" autocomplete=\\"name\\" placeholder=\\"Dit navn\\"></div>"\n'
++'    +"<input type=\\"text\\" id=\\"c-name\\" autocomplete=\\"name\\"></div>"\n'
 +'    +"<div id=\\"c-err\\" role=\\"alert\\" style=\\"font-size:13px;color:var(--err);margin-bottom:10px;display:none\\">Angiv din alder som et tal.</div>"\n'
 +'    +"<button id=\\"btn-start\\" class=\\"btn btnp\\">Start sp\\u00f8rgeskema "+fa("arrow-right")+"</button>"\n'
 +'    +"</div>";\n'
@@ -3070,7 +3056,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'  if(cb)cb.addEventListener("click",closeWin);\n'
 +'}\n'
 +'function renderScreenOut(c){\n'
-+'  renderEnd(c,"Vi kan desv\\u00e6rre ikke vise dig et resultat",qs.screened.msg||"Ud fra dit svar opfylder du desv\\u00e6rre ikke kravene lige nu.");\n'
++'  renderEnd(c,"Vi kan desv\\u00e6rre ikke vise dig et resultat",qs.screened.msg||"Ud fra dit svar opfylder du ikke kravene lige nu.");\n'
 +'}\n'
 +'function renderThanks(c){\n'
 +'  renderEnd(c,"",SC.thanksText||"Tak, fordi du har besvaret sp\\u00f8rgeskemaet.");\n'
@@ -3080,12 +3066,11 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'  if(qs.screened){renderScreenOut(c);return}\n'
 +'  if(SC.showResults===false){renderThanks(c);return}\n'
 +'  var results=calcR().filter(function(r){return r.pct>0});\n'
-+'  var html="<div style=\\"font-size:20px;font-weight:500;margin-bottom:4px\\">"+(showN()===1?"Dit resultat":"Dine resultater")+"</div>"\n'
-+'    +"<div style=\\"font-size:14px;color:var(--t2);margin-bottom:1.5rem\\">Baseret p\\u00e5 dine svar</div>";\n'
++'  var html="<div style=\\"font-size:20px;font-weight:500;margin-bottom:1.5rem\\">"+(showN()===1?"Dit resultat":"Dine resultater")+"</div>";\n'
 +'  if(!results.length){html+="<p style=\\"color:var(--t2)\\">Ingen matchende udfald.</p>"}\n'
 +'  else{results.slice(0,showN()).forEach(function(r,i){\n'
 +'    html+="<div class=\\"rcard"+(i===0?" top":"")+"\\">";\n'
-+'    if(i===0)html+="<div class=\\"badge ba\\" style=\\"margin-bottom:8px\\">"+fa("star")+" Bedste match</div>";\n'
++'    if(i===0&&showN()>1)html+="<div class=\\"badge ba\\" style=\\"margin-bottom:8px\\">"+fa("star")+" Bedste match</div>";\n'
 +'    html+="<div style=\\"font-size:17px;font-weight:500;color:"+(i===0?"var(--tod)":"var(--t)")+";margin-bottom:4px\\">"+esc(r.title)+"</div>";\n'
 +'    html+="<div style=\\"font-size:14px;color:"+(i===0?"var(--tod2)":"var(--t2)")+";line-height:1.6;margin-bottom:10px\\">"+esc(r.desc)+"</div>";\n'
 +'    if(r.tags&&r.tags.length)html+="<div class=\\"tags\\">"+r.tags.map(function(t){return"<span class=\\"tag\\">"+esc(t)+"</span>"}).join("")+"</div>";\n'
