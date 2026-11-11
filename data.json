@@ -385,6 +385,10 @@
         "outcomes": [],
         "showResults": true,
         "showCount": 1
+      },
+      "card": {
+        "tpl": "1",
+        "text": "Dette er en test\nHar du \nhvad der skal til?"
       }
     },
     {
@@ -615,6 +619,10 @@
         ],
         "showResults": true,
         "showCount": 1
+      },
+      "card": {
+        "tpl": "1",
+        "text": "Frederikshavn Gymnasie - STX, HF, Maritim"
       }
     }
   ],
