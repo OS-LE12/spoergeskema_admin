@@ -354,9 +354,10 @@
       "slug": "test",
       "created": 1793873438778,
       "deploy": {
-        "at": 1793882242097,
+        "at": 1794387185486,
         "path": "test/index.html",
-        "bid": "bmw3j63b6uwrt"
+        "bid": "bmwbvsrtrn01t",
+        "sig": "zz15js-7t"
       },
       "schema": {
         "title": "TEST",
