@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "1",
+      "name": "Sne",
+      "file": "skabeloner/skabelon-1.jpg",
+      "thumb": "skabeloner/skabelon-1-lille.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Værksted",
+      "file": "skabeloner/skabelon-2.jpg",
+      "thumb": "skabeloner/skabelon-2-lille.jpg"
+    }
+  ]
+}

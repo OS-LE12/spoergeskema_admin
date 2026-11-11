@@ -207,6 +207,11 @@ a.btn{text-decoration:none}
 .chip.pub{background:#e1f0dc;color:#245f16}
 .chip.draft{background:var(--bg2);color:var(--t2)}
 .chip.ko{background:rgba(139,31,31,.1);color:#8b1f1f}
+.chip.stale{background:#fbefcf;color:#7a5200}
+.stalebar{align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 .5rem;padding:8px 12px;background:#fbefcf;border:.5px solid #e2c777;border-radius:var(--r);font-size:13px;color:#6b4800;line-height:1.5}
+.stalebar i{flex-shrink:0}
+.stalebar span{flex:1;min-width:200px}
+.tab.flag::after{content:'';width:8px;height:8px;border-radius:50%;background:#c77a00;flex-shrink:0}
 .ni-info i,.ni-warn i{margin-top:3px;flex-shrink:0}
 /* Dashboard */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
@@ -255,8 +260,23 @@ a.btn{text-decoration:none}
 .tab.active{color:var(--t);font-weight:500;border-bottom-color:var(--dg)}
 .tabpane{display:none}
 .tabpane.active{display:block}
-.slugrow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:13px;color:var(--t2);overflow-wrap:anywhere}
-.slugrow input{flex:1;min-width:120px;width:auto}
+/* Bordkort */
+.cardgrid{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:20px;align-items:start}
+.cardprev canvas{display:block;width:100%;height:auto;border:.5px solid var(--bd2);border-radius:var(--r);background:var(--bg2)}
+.cardtpls{display:flex;gap:10px;flex-wrap:wrap}
+.ctpl{width:84px;padding:4px;border:2px solid transparent;border-radius:var(--r);background:none;cursor:pointer;font:inherit;text-align:center}
+.ctpl img{display:block;width:100%;aspect-ratio:210/297;object-fit:cover;border-radius:2px;border:.5px solid var(--bd)}
+.ctpl span{display:block;margin-top:4px;font-size:12px;color:var(--t2)}
+.ctpl:hover{background:var(--bg2)}
+.ctpl[aria-pressed=true]{border-color:var(--dg)}
+.ctpl[aria-pressed=true] span{color:var(--t);font-weight:500}
+.cardfont #card-text{font-family:'SGSemiBold',var(--font);text-transform:uppercase;font-size:16px;letter-spacing:-.01em}
+@media(max-width:760px){.cardgrid{grid-template-columns:1fr}.cardprev{max-width:260px}}
+.tpllist{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.tplrow{display:flex;align-items:center;gap:12px}
+.tplrow img{width:42px;aspect-ratio:210/297;object-fit:cover;border-radius:2px;border:.5px solid var(--bd);background:var(--bg2);flex-shrink:0}
+.tplname{flex:1;min-width:0}
+.tplnew{margin-top:16px;padding-top:16px;border-top:.5px solid var(--bd)}
 /* Answers overview */
 .ansgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .anc{background:var(--cb);border:.5px solid var(--bd);border-radius:var(--rl);padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -392,6 +412,7 @@ a.btn{text-decoration:none}
         <button class="btn btnp" onclick="if(guardQs())saveAll()"><i class="fa-solid fa-floppy-disk"></i> Gem</button>
       </div>
     </div>
+    <div class="stalebar" id="stale-bar" role="status" style="display:none"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Seneste &#230;ndringer er ikke udgivet.</b> Brugerne ser stadig den gamle udgave af sp&#248;rgeskemaet.</span><button class="btn btnsm" onclick="showTab('publish')"><i class="fa-solid fa-cloud-arrow-up"></i> G&#229; til udgivelse</button></div>
     <div class="tabs" role="tablist" aria-label="Sp&#248;rgeskemaets afsnit">
       <button class="tab" role="tab" data-tab="general" onclick="showTab('general')"><i class="fa-solid fa-sliders"></i><span>Generelt</span></button>
       <button class="tab" role="tab" data-tab="questions" onclick="showTab('questions')"><i class="fa-solid fa-list-check"></i><span>Sp&#248;rgsm&#229;l</span></button>
@@ -437,14 +458,12 @@ a.btn{text-decoration:none}
     <div class="card hl">
       <div class="ch"><div class="ct"><i class="fa-solid fa-globe"></i> Udgiv til brugerne</div><span id="pub-state"></span></div>
       <p class="lead">Sp&#248;rgeskemaet udgives direkte til GitHub Pages p&#229; sin egen adresse. Der downloades ingen filer.</p>
-      <div class="field"><label for="sv-slug">Adresse</label>
-        <div class="slugrow"><span id="slug-base"></span><input type="text" id="sv-slug" onchange="setSlug(this.value)" placeholder="adresse" aria-label="Adresse"><span id="slug-end">/</span><button class="btn btnsm" id="slug-gen" onclick="newAddress()" title="Gener&#233;r en ny, unik adresse"><i class="fa-solid fa-arrows-rotate"></i> Gener&#233;r ny</button></div>
-        <div id="slug-hint" class="fhint"></div></div>
       <div class="urlbox" id="pub-urlbox">
         <span id="pub-url" class="urltxt"></span>
         <button class="btn btnsm" id="pub-copy" onclick="pubCopy()"><i class="fa-solid fa-copy"></i> Kopi&#233;r URL</button>
         <a class="btn btnsm" id="pub-open" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> &#197;bn</a>
       </div>
+      <div id="slug-hint" class="fhint" style="margin:-8px 0 14px"></div>
       <div class="pubnote" id="pub-note" role="status"><i class="fa-solid fa-triangle-exclamation"></i><span><b>Ikke udgivet endnu.</b> Adressen virker f&#248;rst, n&#229;r du har klikket Udgiv, og siden er opdateret (ca. 1 minut).</span></div>
       <div class="pubact">
         <button class="btn btna" id="dl-btn" onclick="publishSurvey()"><i class="fa-solid fa-cloud-arrow-up"></i> Udgiv</button>
@@ -452,6 +471,22 @@ a.btn{text-decoration:none}
       </div>
       <div id="pub-status" class="pubst" style="display:none"></div>
       <p class="fhint" style="margin-top:12px">Token og repository til udgivelsen findes under <button class="linkbtn inl" onclick="nav('settings')">Indstillinger</button>.</p>
+    </div>
+    <div class="card" id="card-box">
+      <div class="ch"><div class="ct"><i class="fa-solid fa-qrcode"></i> Bordkort</div></div>
+      <p class="lead">Hent et printklart A4-bordkort med en QR-kode, der leder til sp&#248;rgeskemaet.</p>
+      <div class="cardgrid">
+        <div class="cardform">
+          <div class="field"><label>Skabelon</label><div id="card-tpls" class="cardtpls"></div></div>
+          <div class="field"><label for="card-text">Overskrift</label>
+            <textarea id="card-text" rows="3" maxlength="140" oninput="cardSetText(this.value)" placeholder="Skriv overskriften"></textarea>
+            <div class="fhint">Enter giver ny linje. Teksten vises med store bogstaver i Space Grotesk SemiBold, centreret over QR-koden.</div>
+            <div class="fhint" id="card-bad" style="color:#8b1f1f"></div></div>
+          <div class="pubnote" id="card-note" role="status" style="margin:0 0 12px"><i class="fa-solid fa-triangle-exclamation"></i><span>Udgiv sp&#248;rgeskemaet f&#248;rst. QR-koden skal pege p&#229; en adresse, der virker.</span></div>
+          <button class="btn btnp" id="card-dl" onclick="cardDownload()"><i class="fa-solid fa-file-pdf"></i> Download bordkort (PDF)</button>
+        </div>
+        <div class="cardprev"><canvas id="card-cv" role="img" aria-label="Forh&#229;ndsvisning af bordkortet"></canvas></div>
+      </div>
     </div>
   </div>
 
@@ -526,6 +561,25 @@ a.btn{text-decoration:none}
     <div class="field"><label for="pub-token">Eget token til udgivelse (valgfrit)</label><input type="password" id="pub-token" onchange="savePubCfg()" placeholder="Tomt = brug admin-tokenet" autocomplete="off">
       <div class="fhint">Tokenet skal have <em>Contents: Read and write</em> p&#229; bruger-repositoriet. Det l&#230;gges aldrig i brugerfilen. Det f&#248;lger med i &#8222;Del admin-adgang&#8220;-linket nedenfor, s&#229; du kan logge ind p&#229; andre enheder.</div></div>
   </div>
+  <div class="card" id="tpl-box">
+    <div class="ch"><div class="ct"><i class="fa-solid fa-id-card"></i> Bordkort-skabeloner</div></div>
+    <p class="lead">Baggrundene, du kan v&#230;lge mellem, n&#229;r du henter et bordkort. De g&#230;lder for alle sp&#248;rgeskemaer og ligger p&#229; GitHub, s&#229; de kan bruges fra alle enheder.</p>
+    <div id="tpl-list" class="tpllist"></div>
+    <input type="file" id="tpl-file" accept="image/jpeg,image/png" style="display:none" onchange="tplPick(this)">
+    <button class="btn" id="tpl-up" onclick="document.getElementById('tpl-file').click()"><i class="fa-solid fa-upload"></i> Upload skabelon</button>
+    <div class="fhint" style="margin-top:8px">JPG eller PNG, st&#229;ende A4 (210 x 297 mm), helst 2480 x 3508 px (300 dpi). Billedet skal v&#230;re helt uden overskrift og QR-kode: overskriften placeres i den &#248;verste halvdel og QR-koden i midten, som i de eksisterende skabeloner, s&#229; hold de felter fri for tekst og motiver, der forstyrrer.</div>
+    <div id="tpl-msg" class="fhint" role="status" style="margin-top:8px"></div>
+    <div id="tpl-new" class="tplnew" style="display:none">
+      <div class="cardgrid">
+        <div>
+          <div class="field"><label for="tpl-name">Navn</label><input type="text" id="tpl-name" maxlength="60"></div>
+          <div class="fhint" id="tpl-info"></div>
+          <div class="pact" style="margin-top:12px"><button class="btn btnp" id="tpl-save" onclick="tplSavePending()"><i class="fa-solid fa-floppy-disk"></i> Gem skabelon</button><button class="btn" id="tpl-cancel" onclick="tplCancel()">Annull&#233;r</button></div>
+        </div>
+        <div class="cardprev"><canvas id="tpl-cv" role="img" aria-label="Forh&#229;ndsvisning med eksempeloverskrift og QR-kode"></canvas></div>
+      </div>
+    </div>
+  </div>
   <div class="card">
     <div class="ch"><div class="ct"><i class="fa-solid fa-floppy-disk"></i> Automatisk gemning</div></div>
     <p class="lead" style="margin:0">Systemet gemmer automatisk hvert 10. minut, hvis der er &#230;ndringer. Du kan altid gemme med det samme med Gem-knappen.</p>
@@ -542,6 +596,10 @@ a.btn{text-decoration:none}
 </div>
 <div id="toast"></div>
 
+<script>
+/* qrcode-generator 1.4.4, Kazuhiko Arase, MIT License (https://github.com/kazuhikoarase/qrcode-generator) */
+var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(l=4*u+17),e(0,0),e(l-7,0),e(0,l-7),i(),o(),v(t,r),7<=u&&h(t),null==n&&(n=w(u,f,c)),d(n,r)}var u=t,f=y[r],g=null,l=0,n=null,c=[],s={},e=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||l<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||l<=r+n||(g[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},o=function(){for(var t=8;t<l-8;t+=1)null==g[t][6]&&(g[t][6]=t%2==0);for(var r=8;r<l-8;r+=1)null==g[6][r]&&(g[6][r]=r%2==0)},i=function(){for(var t=B.getPatternPosition(u),r=0;r<t.length;r+=1)for(var e=0;e<t.length;e+=1){var n=t[r],o=t[e];if(null==g[n][o])for(var i=-2;i<=2;i+=1)for(var a=-2;a<=2;a+=1)g[n+i][o+a]=-2==i||2==i||-2==a||2==a||0==i&&0==a}},h=function(t){for(var r=B.getBCHTypeNumber(u),e=0;e<18;e+=1){var n=!t&&1==(r>>e&1);g[Math.floor(e/3)][e%3+l-8-3]=n}for(e=0;e<18;e+=1){n=!t&&1==(r>>e&1);g[e%3+l-8-3][Math.floor(e/3)]=n}},v=function(t,r){for(var e=f<<3|r,n=B.getBCHTypeInfo(e),o=0;o<15;o+=1){var i=!t&&1==(n>>o&1);o<6?g[o][8]=i:o<8?g[o+1][8]=i:g[l-15+o][8]=i}for(o=0;o<15;o+=1){i=!t&&1==(n>>o&1);o<8?g[8][l-o-1]=i:o<9?g[8][15-o-1+1]=i:g[8][15-o-1]=i}g[l-8][8]=!t},d=function(t,r){for(var e=-1,n=l-1,o=7,i=0,a=B.getMaskFunction(r),u=l-1;0<u;u-=2)for(6==u&&(u-=1);;){for(var f=0;f<2;f+=1)if(null==g[n][u-f]){var c=!1;i<t.length&&(c=1==(t[i]>>>o&1)),a(n,u-f)&&(c=!c),g[n][u-f]=c,-1==(o-=1)&&(i+=1,o=7)}if((n+=e)<0||l<=n){n-=e,e=-e;break}}},w=function(t,r,e){for(var n=b.getRSBlocks(t,r),o=M(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=C(i[u],l.getLength()-1).mod(l);a[u]=new Array(l.getLength()-1);for(g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=0<=s?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};s.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=x(t);break;case"Alphanumeric":e=m(t);break;case"Byte":e=L(t);break;case"Kanji":e=D(t);break;default:throw"mode:"+r}c.push(e),n=null},s.isDark=function(t,r){if(t<0||l<=t||r<0||l<=r)throw t+","+r;return g[t][r]},s.getModuleCount=function(){return l},s.make=function(){if(u<1){for(var t=1;t<40;t++){for(var r=b.getRSBlocks(t,f),e=M(),n=0;n<c.length;n++){var o=c[n];e.put(o.getMode(),4),e.put(o.getLength(),B.getLengthInBits(o.getMode(),t)),o.write(e)}var i=0;for(n=0;n<r.length;n++)i+=r[n].dataCount;if(e.getLengthInBits()<=8*i)break}u=t}a(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){a(!0,e);var n=B.getLostPoint(s);(0==e||n<t)&&(t=n,r=e)}return r}())},s.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<s.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<s.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=s.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},s.createSvgTag=function(t,r,e,n){var o={};"object"==typeof t&&(t=(o=t).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,f,c=s.getModuleCount()*t+2*r,g="";for(f="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",g+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',g+=o.scalable?"":' width="'+c+'px" height="'+c+'px"',g+=' viewBox="0 0 '+c+" "+c+'" ',g+=' preserveAspectRatio="xMinYMin meet"',g+=n.text||e.text?' role="img" aria-labelledby="'+p([n.id,e.id].join(" ").trim())+'"':"",g+=">",g+=n.text?'<title id="'+p(n.id)+'">'+p(n.text)+"</title>":"",g+=e.text?'<description id="'+p(e.id)+'">'+p(e.text)+"</description>":"",g+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',g+='<path d="',a=0;a<s.getModuleCount();a+=1)for(u=a*t+r,i=0;i<s.getModuleCount();i+=1)s.isDark(a,i)&&(g+="M"+(i*t+r)+","+u+f);return g+='" stroke="transparent" fill="black"/>',g+="</svg>"},s.createDataURL=function(o,t){o=o||2,t=void 0===t?4*o:t;var r=s.getModuleCount()*o+2*t,i=t,a=r-t;return I(r,r,function(t,r){if(i<=t&&t<a&&i<=r&&r<a){var e=Math.floor((t-i)/o),n=Math.floor((r-i)/o);return s.isDark(n,e)?0:1}return 1})},s.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=s.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=s.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=p(e),o+='"'),o+="/>"};var p=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return s.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*s.getModuleCount()+2*t,u=t,f=a-t,c={"\u2588\u2588":"\u2588","\u2588 ":"\u2580"," \u2588":"\u2584","  ":" "},g={"\u2588\u2588":"\u2580","\u2588 ":"\u2580"," \u2588":" ","  ":" "},l="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="\u2588",u<=e&&e<f&&u<=r&&r<f&&s.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<f&&u<=r+1&&r+1<f&&s.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="\u2588",l+=t<1&&f<=r+1?g[i]:c[i];l+="\n"}return a%2&&0<t?l.substring(0,l.length-a-1)+Array(1+a).join("\u2580"):l.substring(0,l.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=s.getModuleCount()*t+2*r,u=r,f=a-r,c=Array(t+1).join("\u2588\u2588"),g=Array(t+1).join("  "),l="",h="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),h="",n=0;n<a;n+=1)i=1,u<=n&&n<f&&u<=e&&e<f&&s.isDark(o,Math.floor((n-u)/t))&&(i=0),h+=i?c:g;for(o=0;o<t;o+=1)l+=h+"\n"}return l.substring(0,l.length-1)},s.renderTo2dContext=function(t,r){r=r||2;for(var e=s.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=s.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},s}i.stringToBytes=(i.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,i.createStringToBytes=function(u,f){var i=function(){function t(){var t=r.read();if(-1==t)throw"eof";return t}for(var r=S(u),e=0,n={};;){var o=r.read();if(-1==o)break;var i=t(),a=t()<<8|t();n[String.fromCharCode(o<<8|i)]=a,e+=1}if(e!=f)throw e+" != "+f;return n}(),a="?".charCodeAt(0);return function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);if(n<128)r.push(n);else{var o=i[t.charAt(e)];"number"==typeof o?(255&o)==o?r.push(o):(r.push(o>>>8),r.push(255&o)):r.push(a)}}return r}};var r,t,a=1,u=2,o=4,f=8,y={L:1,M:0,Q:3,H:2},e=0,n=1,c=2,g=3,l=4,h=5,s=6,v=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],(t={}).getBCHTypeInfo=function(t){for(var r=t<<10;0<=d(r)-d(1335);)r^=1335<<d(r)-d(1335);return 21522^(t<<10|r)},t.getBCHTypeNumber=function(t){for(var r=t<<12;0<=d(r)-d(7973);)r^=7973<<d(r)-d(7973);return t<<12|r},t.getPatternPosition=function(t){return r[t-1]},t.getMaskFunction=function(t){switch(t){case e:return function(t,r){return(t+r)%2==0};case n:return function(t,r){return t%2==0};case c:return function(t,r){return r%3==0};case g:return function(t,r){return(t+r)%3==0};case l:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case h:return function(t,r){return t*r%2+t*r%3==0};case s:return function(t,r){return(t*r%2+t*r%3)%2==0};case v:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},t.getErrorCorrectPolynomial=function(t){for(var r=C([1],0),e=0;e<t;e+=1)r=r.multiply(C([1,w.gexp(e)],0));return r},t.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case o:case f:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case o:return 16;case f:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case o:return 16;case f:return 12;default:throw"mode:"+t}}},t.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);5<i&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},t);function d(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r}var w=function(){for(var r=new Array(256),e=new Array(256),t=0;t<8;t+=1)r[t]=1<<t;for(t=8;t<256;t+=1)r[t]=r[t-4]^r[t-5]^r[t-6]^r[t-8];for(t=0;t<255;t+=1)e[r[t]]=t;var n={glog:function(t){if(t<1)throw"glog("+t+")";return e[t]},gexp:function(t){for(;t<0;)t+=255;for(;256<=t;)t-=255;return r[t]}};return n}();function C(n,o){if(void 0===n.length)throw n.length+"/"+o;var r=function(){for(var t=0;t<n.length&&0==n[t];)t+=1;for(var r=new Array(n.length-t+o),e=0;e<n.length-t;e+=1)r[e]=n[e+t];return r}(),i={getAt:function(t){return r[t]},getLength:function(){return r.length},multiply:function(t){for(var r=new Array(i.getLength()+t.getLength()-1),e=0;e<i.getLength();e+=1)for(var n=0;n<t.getLength();n+=1)r[e+n]^=w.gexp(w.glog(i.getAt(e))+w.glog(t.getAt(n)));return C(r,0)},mod:function(t){if(i.getLength()-t.getLength()<0)return i;for(var r=w.glog(i.getAt(0))-w.glog(t.getAt(0)),e=new Array(i.getLength()),n=0;n<i.getLength();n+=1)e[n]=i.getAt(n);for(n=0;n<t.getLength();n+=1)e[n]^=w.gexp(w.glog(t.getAt(n))+r);return C(e,0).mod(t)}};return i}function p(){var e=[],o={writeByte:function(t){e.push(255&t)},writeShort:function(t){o.writeByte(t),o.writeByte(t>>>8)},writeBytes:function(t,r,e){r=r||0,e=e||t.length;for(var n=0;n<e;n+=1)o.writeByte(t[n+r])},writeString:function(t){for(var r=0;r<t.length;r+=1)o.writeByte(t.charCodeAt(r))},toByteArray:function(){return e},toString:function(){var t="";t+="[";for(var r=0;r<e.length;r+=1)0<r&&(t+=","),t+=e[r];return t+="]"}};return o}var k,A,b=(k=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],(A={}).getRSBlocks=function(t,r){var e=function(t,r){switch(r){case y.L:return k[4*(t-1)+0];case y.M:return k[4*(t-1)+1];case y.Q:return k[4*(t-1)+2];case y.H:return k[4*(t-1)+3];default:return}}(t,r);if(void 0===e)throw"bad rs block @ typeNumber:"+t+"/errorCorrectionLevel:"+r;for(var n,o,i=e.length/3,a=[],u=0;u<i;u+=1)for(var f=e[3*u+0],c=e[3*u+1],g=e[3*u+2],l=0;l<f;l+=1)a.push((n=g,o=void 0,(o={}).totalCount=c,o.dataCount=n,o));return a},A),M=function(){var e=[],n=0,o={getBuffer:function(){return e},getAt:function(t){var r=Math.floor(t/8);return 1==(e[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e+=1)o.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return n},putBit:function(t){var r=Math.floor(n/8);e.length<=r&&e.push(0),t&&(e[r]|=128>>>n%8),n+=1}};return o},x=function(t){var r=a,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+2<r.length;)t.put(o(r.substring(e,e+3)),10),e+=3;e<r.length&&(r.length-e==1?t.put(o(r.substring(e,e+1)),4):r.length-e==2&&t.put(o(r.substring(e,e+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return e},m=function(t){var r=u,n=t,e={getMode:function(){return r},getLength:function(t){return n.length},write:function(t){for(var r=n,e=0;e+1<r.length;)t.put(45*o(r.charAt(e))+o(r.charAt(e+1)),11),e+=2;e<r.length&&t.put(o(r.charAt(e)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return e},L=function(t){var r=o,e=i.stringToBytes(t),n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=0;r<e.length;r+=1)t.put(e[r],8)}};return n},D=function(t){var r=f,e=i.stringToBytesFuncs.SJIS;if(!e)throw"sjis not supported.";!function(){var t=e("\u53cb");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=e(t),n={getMode:function(){return r},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return n},S=function(t){var e=t,n=0,o=0,i=0,r={read:function(){for(;i<8;){if(n>=e.length){if(0==i)return-1;throw"unexpected end of file./"+i}var t=e.charAt(n);if(n+=1,"="==t)return i=0,-1;t.match(/^\s$/)||(o=o<<6|a(t.charCodeAt(0)),i+=6)}var r=o>>>i-8&255;return i-=8,r}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return r},I=function(t,r,e){for(var n=function(t,r){var n=t,o=r,l=new Array(t*r),e={setPixel:function(t,r,e){l[r*n+t]=e},write:function(t){t.writeString("GIF87a"),t.writeShort(n),t.writeShort(o),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(n),t.writeShort(o),t.writeByte(0);var r=i(2);t.writeByte(2);for(var e=0;255<r.length-e;)t.writeByte(255),t.writeBytes(r,e,255),e+=255;t.writeByte(r.length-e),t.writeBytes(r,e,r.length-e),t.writeByte(0),t.writeString(";")}},i=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,o=h(),i=0;i<r;i+=1)o.add(String.fromCharCode(i));o.add(String.fromCharCode(r)),o.add(String.fromCharCode(e));var a=p(),u=function(t){var e=t,n=0,o=0,r={write:function(t,r){if(t>>>r!=0)throw"length over";for(;8<=n+r;)e.writeByte(255&(t<<n|o)),r-=8-n,t>>>=8-n,n=o=0;o|=t<<n,n+=r},flush:function(){0<n&&e.writeByte(o)}};return r}(a);u.write(r,n);var f=0,c=String.fromCharCode(l[f]);for(f+=1;f<l.length;){var g=String.fromCharCode(l[f]);f+=1,o.contains(c+g)?c+=g:(u.write(o.indexOf(c),n),o.size()<4095&&(o.size()==1<<n&&(n+=1),o.add(c+g)),c=g)}return u.write(o.indexOf(c),n),u.write(e,n),u.flush(),a.toByteArray()},h=function(){var r={},e=0,n={add:function(t){if(n.contains(t))throw"dup key:"+t;r[t]=e,e+=1},size:function(){return e},indexOf:function(t){return r[t]},contains:function(t){return void 0!==r[t]}};return n};return e}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=p();n.write(a);for(var u=function(){function e(t){a+=String.fromCharCode(r(63&t))}var n=0,o=0,i=0,a="",t={},r=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return t.writeByte=function(t){for(n=n<<8|255&t,o+=8,i+=1;6<=o;)e(n>>>o-6),o-=6},t.flush=function(){if(0<o&&(e(n<<6-o),o=n=0),i%3!=0)for(var t=3-i%3,r=0;r<t;r+=1)a+="="},t.toString=function(){return a},t}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return i}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||57344<=n?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}(function(){return qrcode});
+</script>
 <script>
 // \u2500\u2500 Encoding helpers \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 // All GitHub API data goes through these functions.
@@ -660,28 +718,32 @@ async function ensureFreeAddress(sv){
   }
   throw new Error('Kunne ikke finde en ledig adresse. Pr\u00f8v igen.');
 }
-function newAddress(){
-  var sv=activeSurvey();
-  if(sv.id===DEFAULT_ID&&!sv.slug)return;
-  if(sv.deploy&&sv.deploy.at&&!confirm('Sp\u00f8rgeskemaet er allerede udgivet. Den nye adresse oprettes f\u00f8rst, n\u00e5r du udgiver igen, og den gamle side bliver liggende. Forts\u00e6t?'))return;
-  sv.slug=uniqueSlug((slugify(schema.title)||'spoergeskema')+'-'+randSuffix(),sv.id);
-  renderPublishTab();renderSvCtx();saveAll();
-  toast('Ny adresse: '+sv.slug);
-}
 function surveyPath(sv){return sv.slug?sv.slug+'/index.html':pubCfg().path}
 function surveyUrl(sv){return pubLiveUrl({repo:pubCfg().repo,path:surveyPath(sv)})}
 // The address only works once something has been published there. The main page counts as
 // live because it was in use before publishing was recorded per survey.
 function urlLive(sv){return !!(sv.deploy&&sv.deploy.at)||(sv.id===DEFAULT_ID&&!sv.slug)}
+// Has the survey changed since it was published? The signature covers the survey's content and
+// the page template, so a page built from an older template also counts as out of date.
+function strHash(t){var h=2166136261;for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)+'-'+t.length.toString(36)}
+var tplSigV=null,pubBusy=false;
+function tplSig(){
+  if(tplSigV===null){try{tplSigV=strHash(buildUserHTML('{}','','','','','data.json','x','x'))}catch(e){tplSigV='x'}}
+  return tplSigV;
+}
+function contentSig(sv){return strHash(tplSig()+'|'+JSON.stringify(sv.schema))}
+function pubStale(sv){return !!(sv&&sv.deploy&&sv.deploy.at)&&sv.active!==false&&sv.deploy.sig!==contentSig(sv)}
+function pubReminder(){var sv=activeSurvey();return (sv&&!pubBusy&&pubStale(sv))?' \u2013 husk at opdatere udgivelsen':''}
 function pubCurrent(){return Object.assign({},pubCfg(),{path:surveyPath(activeSurvey())})}
 
 function fmtDate(ts){return new Date(ts).toLocaleDateString('da-DK')}
 function fmtDateTime(ts){var d=new Date(ts);return d.toLocaleDateString('da-DK')+' '+d.toLocaleTimeString('da-DK',{hour:'2-digit',minute:'2-digit'})}
 function purposeIcon(sv){var p=PURPOSES.find(function(x){return x.id===sv.purpose});return p?p.icon:'shapes'}
 function purposeChip(sv){return '<span class="chip"><i class="fa-solid fa-'+purposeIcon(sv)+'"></i> '+esc(purposeLabel(sv))+'</span>'}
-function statusChip(sv){
+function statusChip(sv,stale){
   if(sv.active===false)return '<span class="chip ko"><i class="fa-solid fa-ban"></i> Deaktiveret</span>';
   var pub=sv.deploy&&sv.deploy.at;
+  if(pub&&(stale===undefined?pubStale(sv):stale))return '<span class="chip stale"><i class="fa-solid fa-triangle-exclamation"></i> \u00c6ndringer ikke udgivet</span>';
   return '<span class="chip '+(pub?'pub':'draft')+'"><i class="fa-solid fa-'+(pub?'circle-check':'pen')+'"></i> '+(pub?'Udgivet':'Kladde')+'</span>';
 }
 // refresh whatever shows survey titles / counts after the data changed
@@ -849,13 +911,6 @@ function syncGeneral(){
   document.getElementById('f-thanks').style.display=showRes?'none':'block';
   document.getElementById('f-showcount').style.display=showRes?'block':'none';
 }
-function setSlug(v){
-  var sv=activeSurvey();
-  if(sv.id===DEFAULT_ID&&!sv.slug)return;       // the main address cannot move
-  sv.slug=uniqueSlug(slugify(v)||slugify(schema.title),sv.id);
-  renderPublishTab();renderSvCtx();saveAll();
-}
-
 // -- Zoom lock --------------------------------------------------------------
 // Belt and braces: viewport meta + touch-action cover most browsers, but iOS
 // Safari ignores user-scalable=no, so we also cancel its gesture events and any
@@ -1085,7 +1140,7 @@ async function ghSaveOnce(auto){
     Object.keys(cur.before).forEach(function(k){if(cur.before[k]===del.before[k])delete cur.before[k]});
     setDel(cur);
     setGhStatus('ok',(auto?'Automatisk gemt':'Gemt')+' \u2014 '+new Date().toLocaleTimeString('da-DK'));
-    toast(auto?'Automatisk gemt':'Gemt til GitHub');
+    toast((auto?'Automatisk gemt':'Gemt til GitHub')+pubReminder());
     savedSnap=snap();
     return true;
   }catch(e){ghLastErr=e.message;setGhStatus('error','Fejl: '+e.message);toast('Fejl: '+e.message);return false}
@@ -1128,7 +1183,7 @@ function setGhStatus(state,msg){
 }
 
 // \u2500\u2500 Save \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
-function saveAll(){saveLocal();if(ghConfig)ghSave();else{savedSnap=snap();toast('Gemt lokalt')}updateBadge()}
+function saveAll(){saveLocal();if(ghConfig)ghSave();else{savedSnap=snap();toast('Gemt lokalt'+pubReminder())}updateBadge()}
 function updateBadge(){
   var el=document.getElementById('qcnt');
   if(el)el.textContent=surveys.length+' sp\u00f8rgeskema'+(surveys.length===1?'':'r')+' \u00b7 '+responses.length+' svar';
@@ -1160,9 +1215,13 @@ function renderPage(id){
 function refreshAll(){updateBadge();renderPage(curPage)}
 function renderEditorHeader(){
   var sv=activeSurvey();
+  var stale=pubStale(sv);
+  var bar=document.getElementById('stale-bar');
+  if(bar){bar.style.display=stale?'flex':'none';var bb=bar.querySelector('button');if(bb)bb.style.display=curTab==='publish'?'none':''}
+  var pt=document.querySelector('.tab[data-tab=publish]');if(pt)pt.classList.toggle('flag',stale);
   var ob=document.querySelector('.tab[data-tab=outcomes]');if(ob)ob.style.display=schema.showResults===false?'none':'';
   document.getElementById('ed-title').textContent=schema.title||'(uden titel)';
-  document.getElementById('ed-meta').innerHTML=purposeChip(sv)+statusChip(sv)
+  document.getElementById('ed-meta').innerHTML=purposeChip(sv)+statusChip(sv,stale)
     +'<span>'+schema.questions.length+' sp\u00f8rgsm\u00e5l \u00b7 '+myResponses().length+' svar</span>';
 }
 function renderEditor(){
@@ -1784,17 +1843,15 @@ function fillPubFields(){
   document.getElementById('pub-path').value=c.path;
   document.getElementById('pub-token').value=c.token;
 }
-function renderSettings(){fillPubFields()}
+function renderSettings(){fillPubFields();tplRender()}
 function renderPublishTab(){
   fillPubFields();
-  var c=pubCfg(),sv=activeSurvey(),main=sv.id===DEFAULT_ID&&!sv.slug,inp=document.getElementById('sv-slug');
+  cardRender();
+  var c=pubCfg(),sv=activeSurvey(),main=sv.id===DEFAULT_ID&&!sv.slug;
   var pub=!!(sv.deploy&&sv.deploy.at),off=sv.active===false,url=surveyUrl(sv);
-  inp.value=main?'':sv.slug;
-  document.querySelector('.slugrow').style.display=main?'none':'';
-  document.getElementById('slug-base').textContent=pubBase(c);
   document.getElementById('slug-hint').textContent=main
     ?'Dette er hovedsiden, som allerede er i brug.'
-    :'Adressen oprettes, f\u00f8rste gang du udgiver. \u00c6ndrer du den senere, bliver den gamle adresse liggende.';
+    :'Adressen er genereret til dette sp\u00f8rgeskema og kan ikke \u00e6ndres.';
   document.getElementById('pub-state').innerHTML=statusChip(sv);
   document.getElementById('pub-url').textContent=url;
   var live=urlLive(sv);
@@ -1923,6 +1980,7 @@ async function publishSurvey(){
   if(sv.active===false){pubSetStatus('err','Sp\u00f8rgeskemaet er deaktiveret. Aktiv\u00e9r det, f\u00f8r du udgiver.');return}
   if(!guardQs(sv.id,'udgivet'))return;
   if(btn)btn.disabled=true;
+  pubBusy=true;
   pubRun++;
   var spin='<i class="fa-solid fa-spinner fa-spin"></i> ',repo=pubCfg().repo;
   try{
@@ -1938,15 +1996,16 @@ async function publishSurvey(){
     }
     var bid=newBid();
     pubSetStatus('busy',spin+'Udgiver til <b>'+esc(repo)+'</b>...');
-    var c=await pushPage(sv,userHtmlFor(sv,bid));
-    sv.deploy={at:Date.now(),path:c.path,bid:bid};
+    var sig=contentSig(sv),html=userHtmlFor(sv,bid);
+    var c=await pushPage(sv,html);
+    sv.deploy={at:Date.now(),path:c.path,bid:bid,sig:sig};
     saveLocal();if(ghConfig)ghSave();
     renderSvCtx();renderPublishTab();
     pubSetStatus('busy',spin+'Udgivet. Venter p\u00e5 at GitHub Pages opdaterer siden (ca. 1 minut)...');
     pubWatch(c,bid);
   }catch(e){
     pubSetStatus('err','Udgivelsen til <b>'+esc(repo)+'</b> mislykkedes: '+esc(e.message));
-  }finally{if(btn)btn.disabled=sv.active===false}
+  }finally{pubBusy=false;if(btn)btn.disabled=sv.active===false}
 }
 // Deactivate: the survey's address shows a "closed" page. Activate: the survey goes back up.
 async function toggleActive(id){
@@ -1958,8 +2017,9 @@ async function toggleActive(id){
     try{
       toast(closing?'Lukker siden...':'Gen\u00e5bner siden...');
       var bid=newBid();
-      var c=await pushPage(sv,closing?buildClosedHTML(sv,bid):userHtmlFor(sv,bid));
-      sv.deploy={at:Date.now(),path:c.path,bid:bid};
+      var sig=closing?'':contentSig(sv),html=closing?buildClosedHTML(sv,bid):userHtmlFor(sv,bid);
+      var c=await pushPage(sv,html);
+      sv.deploy={at:Date.now(),path:c.path,bid:bid,sig:sig};
     }catch(e){toast('Fejl: '+e.message);return}
   }
   sv.active=!closing;
@@ -1967,6 +2027,541 @@ async function toggleActive(id){
   pubSetStatus('','');
   refreshAll();
   toast(closing?'Sp\u00f8rgeskemaet er deaktiveret':'Sp\u00f8rgeskemaet er aktiveret');
+}
+
+// -- Bordkort: print-ready A4 PDF with the survey's QR code -------------------------------------
+// Layout measured from the A3 poster examples and scaled to A4 (595.276 x 841.89 pt, origin bottom left).
+// A template is only a background picture (photo + logo) at skabeloner/; headline and QR are drawn on top.
+var CARD_W=595.276,CARD_H=841.89,CARD_K=595.276/841.89;
+var CARD_FONT_URL='skabeloner/SpaceGrotesk-SemiBold.ttf';
+var CARD_L={fs:60.3901*CARD_K,lh:1.2,track:-0.01,baseY:816.0984*CARD_K,maxW:CARD_W*0.86,maxLines:3};
+var CARD_CP1252=[0x20AC,0,0x201A,0x0192,0x201E,0x2026,0x2020,0x2021,0x02C6,0x2030,0x0160,0x2039,0x0152,0,0x017D,0,0,0x2018,0x2019,0x201C,0x201D,0x2022,0x2013,0x2014,0x02DC,0x2122,0x0161,0x203A,0x0153,0,0x017E,0x0178];
+var cardFontP=null,cardImgP={},cardTok=0,cardSaveT=null,cardDrawT=null;
+
+function cardN(v){return (Math.round(v*1000)/1000).toString()}
+
+// --- font: just enough TrueType parsing for widths, characters and GPOS pair kerning
+function cardParseFont(buf){
+  var dv=new DataView(buf),T={},n=dv.getUint16(4),i;
+  for(i=0;i<n;i++){
+    var o=12+16*i,tag=String.fromCharCode(dv.getUint8(o),dv.getUint8(o+1),dv.getUint8(o+2),dv.getUint8(o+3));
+    T[tag]={o:dv.getUint32(o+8),l:dv.getUint32(o+12)};
+  }
+  var F={buf:buf,upm:dv.getUint16(T.head.o+18)};
+  F.bbox=[dv.getInt16(T.head.o+36),dv.getInt16(T.head.o+38),dv.getInt16(T.head.o+40),dv.getInt16(T.head.o+42)];
+  F.asc=dv.getInt16(T.hhea.o+4);F.desc=dv.getInt16(T.hhea.o+6);
+  F.cap=(T['OS/2']&&dv.getUint16(T['OS/2'].o)>=2)?dv.getInt16(T['OS/2'].o+88):700;
+  var nhm=dv.getUint16(T.hhea.o+34),hm=T.hmtx.o;
+  F.adv=function(g){if(g>=nhm)g=nhm-1;return dv.getUint16(hm+4*g)};
+  // cmap, format 4, platform 3 / encoding 1
+  var cm=T.cmap.o,nt=dv.getUint16(cm+2),sub=0;
+  for(i=0;i<nt;i++){if(dv.getUint16(cm+4+8*i)===3&&dv.getUint16(cm+6+8*i)===1)sub=cm+dv.getUint32(cm+8+8*i)}
+  if(!sub||dv.getUint16(sub)!==4)throw new Error('Skriften har ingen brugbar tegntabel');
+  var sx2=dv.getUint16(sub+6),seg=sx2/2,eO=sub+14,sO=eO+sx2+2,dO=sO+sx2,rO=dO+sx2;
+  F.gid=function(cp){
+    if(cp>65535)return 0;
+    for(var s=0;s<seg;s++){
+      if(cp<=dv.getUint16(eO+2*s)){
+        var st=dv.getUint16(sO+2*s);if(cp<st)return 0;
+        var ro=dv.getUint16(rO+2*s);
+        if(ro===0)return (cp+dv.getInt16(dO+2*s))&0xFFFF;
+        var g=dv.getUint16(rO+2*s+ro+2*(cp-st));
+        return g?((g+dv.getInt16(dO+2*s))&0xFFFF):0;
+      }
+    }
+    return 0;
+  };
+  F.kern=cardKern(dv,T.GPOS);
+  return F;
+}
+function cardKern(dv,gp){
+  if(!gp)return function(){return 0};
+  var base=gp.o,fl=base+dv.getUint16(base+6),ll=base+dv.getUint16(base+8),want={},i,j,k;
+  var fc=dv.getUint16(fl);
+  for(i=0;i<fc;i++){
+    var tag=String.fromCharCode(dv.getUint8(fl+2+6*i),dv.getUint8(fl+3+6*i),dv.getUint8(fl+4+6*i),dv.getUint8(fl+5+6*i));
+    if(tag!=='kern')continue;
+    var ft=fl+dv.getUint16(fl+6+6*i),n=dv.getUint16(ft+2);
+    for(j=0;j<n;j++)want[dv.getUint16(ft+4+2*j)]=1;
+  }
+  var subs=[];
+  Object.keys(want).map(Number).sort(function(a,b){return a-b}).forEach(function(li){
+    var lo=ll+dv.getUint16(ll+2+2*li),type=dv.getUint16(lo),sc=dv.getUint16(lo+4);
+    for(k=0;k<sc;k++){
+      var so=lo+dv.getUint16(lo+6+2*k),t=type;
+      if(type===9){t=dv.getUint16(so+2);so=so+dv.getUint32(so+4)}
+      if(t===2)subs.push(so);
+    }
+  });
+  function cov(o,g){
+    var f=dv.getUint16(o),n=dv.getUint16(o+2),lo=0,hi=n-1,m;
+    if(f===1){while(lo<=hi){m=(lo+hi)>>1;var v=dv.getUint16(o+4+2*m);if(v===g)return m;if(v<g)lo=m+1;else hi=m-1}return -1}
+    while(lo<=hi){m=(lo+hi)>>1;var r=o+4+6*m,s=dv.getUint16(r),e=dv.getUint16(r+2);if(g<s)hi=m-1;else if(g>e)lo=m+1;else return dv.getUint16(r+4)+(g-s)}
+    return -1;
+  }
+  function cls(o,g){
+    var f=dv.getUint16(o);
+    if(f===1){var s=dv.getUint16(o+2),n=dv.getUint16(o+4);return (g>=s&&g<s+n)?dv.getUint16(o+6+2*(g-s)):0}
+    var n2=dv.getUint16(o+2),lo=0,hi=n2-1;
+    while(lo<=hi){var m=(lo+hi)>>1,r=o+4+6*m,s2=dv.getUint16(r),e=dv.getUint16(r+2);if(g<s2)hi=m-1;else if(g>e)lo=m+1;else return dv.getUint16(r+4)}
+    return 0;
+  }
+  function vsz(vf){var n=0;for(var b=0;b<16;b++)if(vf&(1<<b))n+=2;return n}
+  function xadv(o,vf){return (vf&4)?dv.getInt16(o+((vf&1)?2:0)+((vf&2)?2:0)):0}
+  function pair(so,a,b){
+    var f=dv.getUint16(so),ci=cov(so+dv.getUint16(so+2),a);
+    if(ci<0)return null;
+    var v1=dv.getUint16(so+4),v2=dv.getUint16(so+6),s1=vsz(v1),s2=vsz(v2);
+    if(f===1){
+      var ps=so+dv.getUint16(so+10+2*ci),pc=dv.getUint16(ps),rs=2+s1+s2;
+      for(var q=0;q<pc;q++){var r=ps+2+rs*q;if(dv.getUint16(r)===b)return xadv(r+2,v1)}
+      return null;
+    }
+    if(f===2){
+      var c1=cls(so+dv.getUint16(so+8),a),c2=cls(so+dv.getUint16(so+10),b),n2=dv.getUint16(so+14);
+      return xadv(so+16+(c1*n2+c2)*(s1+s2),v1);
+    }
+    return null;
+  }
+  var cache={};
+  return function(a,b){
+    var key=a*65536+b;
+    if(cache[key]!==undefined)return cache[key];
+    var res=0;
+    for(var s=0;s<subs.length;s++){var r=pair(subs[s],a,b);if(r!==null){res=r;break}}
+    return (cache[key]=res);
+  };
+}
+function cardFont(){
+  if(!cardFontP){
+    cardFontP=fetch(CARD_FONT_URL).then(function(r){
+      if(!r.ok)throw new Error('Skriften kunne ikke hentes ('+r.status+')');
+      return r.arrayBuffer();
+    }).then(function(buf){
+      var F=cardParseFont(buf);
+      try{
+        var ff=new FontFace('SGSemiBold',buf.slice(0));
+        return ff.load().then(function(){document.fonts.add(ff);document.documentElement.classList.add('cardfont');return F},function(){return F});
+      }catch(e){return F}
+    }).catch(function(e){cardFontP=null;throw e});
+  }
+  return cardFontP;
+}
+function cardImg(url){
+  if(!cardImgP[url])cardImgP[url]=new Promise(function(ok,no){var im=new Image();im.onload=function(){ok(im)};im.onerror=function(){delete cardImgP[url];no(new Error('Billedet kunne ikke hentes'))};im.src=url});
+  return cardImgP[url];
+}
+
+// --- text: upper case, only characters the font and WinAnsi can show, wrapped and centred
+function cardCode(F,cp){
+  var c=-1;
+  if(cp>=32&&cp<127)c=cp;
+  else if(cp>=160&&cp<=255)c=cp;
+  else{var k=CARD_CP1252.indexOf(cp);if(cp&&k>=0)c=128+k}
+  return (c>=0&&F.gid(cp)>0)?c:-1;
+}
+function cardGl(F,str){
+  return Array.from(str).map(function(ch){var cp=ch.codePointAt(0);return{ch:ch,cp:cp,g:F.gid(cp),code:cardCode(F,cp)}});
+}
+function cardW(F,str,fs){
+  var gl=cardGl(F,str),w=0;
+  gl.forEach(function(x,i){w+=F.adv(x.g);if(i<gl.length-1)w+=F.kern(x.g,gl[i+1].g)});
+  return w/F.upm*fs+Math.max(0,gl.length-1)*CARD_L.track*fs;
+}
+function cardClean(F,text){
+  var bad=[];
+  var lines=String(text||'').toUpperCase().replace(/\r/g,'').split('\n').map(function(l){
+    var out='';
+    Array.from(l.replace(/\t/g,' ')).forEach(function(ch){
+      var cp=ch.codePointAt(0);
+      if(cardCode(F,cp)>=0)out+=ch;
+      else if(cp>=32&&bad.indexOf(ch)<0)bad.push(ch);
+    });
+    return out.replace(/\s+/g,' ').trim();
+  }).filter(function(l){return l});
+  return{lines:lines,bad:bad};
+}
+function cardWrap(F,line,fs,maxW){
+  var out=[],cur='';
+  line.split(' ').forEach(function(w){
+    var t=cur?cur+' '+w:w;
+    if(cur&&cardW(F,t,fs)>maxW){out.push(cur);cur=w}else cur=t;
+  });
+  if(cur)out.push(cur);
+  return out;
+}
+function cardLayout(F,text){
+  var c=cardClean(F,text),L=CARD_L,fs=L.fs,lines=[];
+  for(var it=0;it<60;it++){
+    lines=[];
+    c.lines.forEach(function(l){lines=lines.concat(cardWrap(F,l,fs,L.maxW))});
+    var wide=lines.some(function(l){return cardW(F,l,fs)>L.maxW+0.01});
+    if(lines.length<=L.maxLines&&!wide)break;
+    fs*=0.95;
+    if(fs<10)break;
+  }
+  var n=lines.length;
+  return{fs:fs,bad:c.bad,lines:lines.map(function(l,i){var w=cardW(F,l,fs);return{text:l,w:w,x:(CARD_W-w)/2,y:L.baseY+(n-1-i)*fs*L.lh}})};
+}
+
+// --- QR code: the white panel and the black modules, in PDF coordinates
+function cardQr(url){var q=qrcode(0,'M');q.addData(url);q.make();return q}
+function cardUrl(sv){return surveyUrl(sv).replace(/index\.html$/,'')}
+function cardQrRects(qr){
+  var qx=235.287*CARD_K,qy=395.328*CARD_K,qs=371.548*CARD_K,inner=299.046*CARD_K,n=qr.getModuleCount(),m=inner/n;
+  var x0=qx+(qs-inner)/2,yt=qy+qs-(qs-inner)/2,rects=[];
+  for(var r=0;r<n;r++){
+    var c=0;
+    while(c<n){
+      if(!qr.isDark(r,c)){c++;continue}
+      var s=c;while(c<n&&qr.isDark(r,c))c++;
+      rects.push([x0+s*m,yt-(r+1)*m,(c-s)*m,m]);
+    }
+  }
+  return{panel:[qx,qy,qs,qs],rects:rects};
+}
+
+// --- PDF writer (one page: background JPEG, QR as vector, headline as embedded text)
+function cardJpegInfo(u){
+  var i=2;
+  while(i<u.length){
+    if(u[i]!==0xFF){i++;continue}
+    var m=u[i+1];
+    if(m>=0xC0&&m<=0xCF&&m!==0xC4&&m!==0xC8&&m!==0xCC)return{h:(u[i+5]<<8)|u[i+6],w:(u[i+7]<<8)|u[i+8],n:u[i+9]};
+    i+=2+((u[i+2]<<8)|u[i+3]);
+  }
+  throw new Error('Skabelonbilledet er ikke et gyldigt JPEG');
+}
+function cardEsc(c){return c===40?'\\(':c===41?'\\)':c===92?'\\\\':(c<32||c>126)?'\\'+('00'+c.toString(8)).slice(-3):String.fromCharCode(c)}
+function cardTJ(F,str){
+  var gl=cardGl(F,str),parts=[],buf='';
+  function flush(){if(buf){parts.push('('+buf+')');buf=''}}
+  gl.forEach(function(x,i){
+    buf+=cardEsc(x.code);
+    if(i<gl.length-1){var k=F.kern(x.g,gl[i+1].g);if(k){flush();parts.push(cardN(-k*1000/F.upm))}}
+  });
+  flush();
+  return '['+parts.join(' ')+'] TJ';
+}
+function cardBuildPdf(F,jpg,lay,qr,title){
+  var ji=cardJpegInfo(jpg);
+  if(ji.n!==3)throw new Error('Skabelonbilledet skal v\u00e6re i RGB');
+  var q=cardQrRects(qr),c=[];
+  c.push('q '+cardN(CARD_W)+' 0 0 '+cardN(CARD_H)+' 0 0 cm /Im0 Do Q');
+  c.push('q 1 1 1 rg '+q.panel.map(cardN).join(' ')+' re f Q');
+  c.push('q 0 0 0 rg '+q.rects.map(function(r){return r.map(cardN).join(' ')+' re'}).join(' ')+' f Q');
+  lay.lines.forEach(function(l){
+    c.push('BT /F1 '+cardN(lay.fs)+' Tf '+cardN(CARD_L.track*lay.fs)+' Tc 1 1 1 rg 1 0 0 1 '+cardN(l.x)+' '+cardN(l.y)+' Tm '+cardTJ(F,l.text)+' ET');
+  });
+  var content=c.join('\n');
+  var wd=[];
+  for(var k=32;k<=255;k++){var u=(k>=128&&k<160)?CARD_CP1252[k-128]:k,g=u?F.gid(u):0;wd.push(g?Math.round(F.adv(g)*1000/F.upm):0)}
+  var hex='FEFF';
+  Array.from(String(title||'Bordkort')).forEach(function(ch){var cp=ch.charCodeAt(0);hex+=('0000'+cp.toString(16)).slice(-4)});
+  var chunks=[],len=0,offs=[];
+  function enc(s){var u8=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u8[i]=s.charCodeAt(i)&255;return u8}
+  function put(x){if(typeof x==='string')x=enc(x);chunks.push(x);len+=x.length}
+  function obj(n,head,data){offs[n]=len;put(n+' 0 obj\n'+head);if(data){put('\nstream\n');put(data);put('\nendstream')}put('\nendobj\n')}
+  var box='[0 0 '+cardN(CARD_W)+' '+cardN(CARD_H)+']';
+  put('%PDF-1.4\n%'+String.fromCharCode(226,227,207,211)+'\n');
+  obj(1,'<</Type/Catalog/Pages 2 0 R>>');
+  obj(2,'<</Type/Pages/Kids[3 0 R]/Count 1>>');
+  obj(3,'<</Type/Page/Parent 2 0 R/MediaBox '+box+'/CropBox '+box+'/TrimBox '+box+'/BleedBox '+box+'/Resources<</XObject<</Im0 4 0 R>>/Font<</F1 5 0 R>>>>/Contents 8 0 R>>');
+  obj(4,'<</Type/XObject/Subtype/Image/Width '+ji.w+'/Height '+ji.h+'/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length '+jpg.length+'>>',jpg);
+  obj(5,'<</Type/Font/Subtype/TrueType/BaseFont/SpaceGrotesk-SemiBold/FirstChar 32/LastChar 255/Widths['+wd.join(' ')+']/Encoding/WinAnsiEncoding/FontDescriptor 6 0 R>>');
+  obj(6,'<</Type/FontDescriptor/FontName/SpaceGrotesk-SemiBold/Flags 32/FontBBox['+F.bbox.map(function(v){return Math.round(v*1000/F.upm)}).join(' ')+']/ItalicAngle 0/Ascent '+Math.round(F.asc*1000/F.upm)+'/Descent '+Math.round(F.desc*1000/F.upm)+'/CapHeight '+Math.round(F.cap*1000/F.upm)+'/StemV 90/FontFile2 7 0 R>>');
+  var ttf=new Uint8Array(F.buf);
+  obj(7,'<</Length '+ttf.length+'/Length1 '+ttf.length+'>>',ttf);
+  obj(8,'<</Length '+content.length+'>>',enc(content));
+  obj(9,'<</Title<'+hex+'>/Producer(Spoergeskema admin)>>');
+  var xr=len;
+  put('xref\n0 10\n0000000000 65535 f \n');
+  for(var n=1;n<=9;n++)put(('0000000000'+offs[n]).slice(-10)+' 00000 n \n');
+  put('trailer\n<</Size 10/Root 1 0 R/Info 9 0 R>>\nstartxref\n'+xr+'\n%%EOF\n');
+  var out=new Uint8Array(len),p=0;
+  chunks.forEach(function(ch){out.set(ch,p);p+=ch.length});
+  return out;
+}
+
+// --- screen: template picker, headline, preview and download
+function cardState(sv){
+  var c=sv.card||{};
+  return{tpl:cardTpls.some(function(t){return t.id===c.tpl})?c.tpl:cardTpls[0].id,text:typeof c.text==='string'?c.text:(sv.schema.title||'')};
+}
+function cardTpl(id){return cardTpls.filter(function(t){return t.id===id})[0]||cardTpls[0]}
+function cardKeep(sv,patch){
+  var st=cardState(sv);
+  sv.card={tpl:patch.tpl!==undefined?patch.tpl:st.tpl,text:patch.text!==undefined?patch.text:st.text};
+  clearTimeout(cardSaveT);cardSaveT=setTimeout(saveLocal,600);
+}
+function cardSetTpl(id){cardKeep(activeSurvey(),{tpl:id});cardRender()}
+function cardSetText(v){cardKeep(activeSurvey(),{text:v});clearTimeout(cardDrawT);cardDrawT=setTimeout(cardDraw,120)}
+function cardRender(){
+  var box=document.getElementById('card-box'),sv=activeSurvey();
+  if(!box||!sv)return;
+  var st=cardState(sv),live=urlLive(sv),pick=document.getElementById('card-tpls');
+  pick.innerHTML=cardTpls.map(function(t){
+    return '<button type="button" class="ctpl" data-id="'+esc(t.id)+'" aria-pressed="'+(t.id===st.tpl?'true':'false')+'" onclick="cardSetTpl(this.dataset.id)"><img data-p="'+esc(t.thumb)+'" alt=""><span>'+esc(t.name)+'</span></button>';
+  }).join('');
+  tplFillImgs(pick);
+  var ta=document.getElementById('card-text');
+  if(document.activeElement!==ta)ta.value=st.text;
+  document.getElementById('card-dl').disabled=!live;
+  document.getElementById('card-note').style.display=live?'none':'flex';
+  cardDraw();
+  if(!tplLoadedP)tplLoad().then(cardRender);
+}
+// paints the card (background, white QR panel, headline) on a canvas and returns the headline layout
+function cardPaint(cv,img,F,text,url){
+  cv.width=700;cv.height=Math.round(700*CARD_H/CARD_W);   // fixed drawing size, scaled by css
+  var k=cv.width/CARD_W,ctx=cv.getContext('2d');
+  ctx.drawImage(img,0,0,cv.width,cv.height);
+  var lay=cardLayout(F,text),q=cardQrRects(cardQr(url));
+  ctx.fillStyle='#fff';
+  ctx.fillRect(q.panel[0]*k,(CARD_H-q.panel[1]-q.panel[3])*k,q.panel[2]*k,q.panel[3]*k);
+  ctx.fillStyle='#000';
+  q.rects.forEach(function(r){
+    var x0=Math.round(r[0]*k),x1=Math.round((r[0]+r[2])*k),y0=Math.round((CARD_H-r[1]-r[3])*k),y1=Math.round((CARD_H-r[1])*k);
+    ctx.fillRect(x0,y0,x1-x0,y1-y0);
+  });
+  ctx.fillStyle='#fff';ctx.textBaseline='alphabetic';ctx.font=(lay.fs*k)+'px SGSemiBold';
+  lay.lines.forEach(function(l){
+    var gl=cardGl(F,l.text),x=l.x;
+    gl.forEach(function(g,i){
+      ctx.fillText(g.ch,x*k,(CARD_H-l.y)*k);
+      x+=F.adv(g.g)/F.upm*lay.fs+CARD_L.track*lay.fs;
+      if(i<gl.length-1)x+=F.kern(g.g,gl[i+1].g)/F.upm*lay.fs;
+    });
+  });
+  return lay;
+}
+async function cardDraw(){
+  var cv=document.getElementById('card-cv'),sv=activeSurvey();
+  if(!cv||!sv)return;
+  var my=++cardTok,st=cardState(sv),tpl=cardTpl(st.tpl);
+  try{
+    var F=await cardFont(),img=await cardImg(await tplBlobUrl(tpl.thumb));
+    if(my!==cardTok)return;
+    var lay=cardPaint(cv,img,F,st.text,cardUrl(sv));
+    document.getElementById('card-bad').textContent=lay.bad.length?'Disse tegn findes ikke i skriften og er udeladt: '+lay.bad.join(' '):'';
+  }catch(e){
+    var b=document.getElementById('card-bad');if(b)b.textContent='Forh\u00e5ndsvisningen kunne ikke vises: '+e.message;
+  }
+}
+async function cardDownload(){
+  var sv=activeSurvey(),btn=document.getElementById('card-dl');
+  if(!sv||!urlLive(sv))return;
+  btn.disabled=true;
+  try{
+    var st=cardState(sv),tpl=cardTpl(st.tpl),F=await cardFont();
+    var jpg=await tplBytes(tpl.file);
+    var bytes=cardBuildPdf(F,jpg,cardLayout(F,st.text),cardQr(cardUrl(sv)),sv.schema.title||'Bordkort');
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+    a.download='bordkort-'+(sv.slug||'hovedside')+'.pdf';
+    document.body.appendChild(a);a.click();a.remove();
+    var href=a.href;setTimeout(function(){URL.revokeObjectURL(href)},60000);
+    toast('Bordkort hentet');
+  }catch(e){toast('Fejl: '+e.message)}
+  finally{btn.disabled=!urlLive(sv)}
+}
+
+// -- Bordkort-skabeloner (Indstillinger): the list is skabeloner/skabeloner.json, the pictures are files next to it.
+// Everything lives in the admin repository, so a template uploaded here is available on every device.
+var TPL_DIR='skabeloner/',TPL_MANIFEST='skabeloner/skabeloner.json';
+var TPL_DEFAULTS=[
+  {id:'1',name:'Sne',file:'skabeloner/skabelon-1.jpg',thumb:'skabeloner/skabelon-1-lille.jpg'},
+  {id:'2',name:'V\u00e6rksted',file:'skabeloner/skabelon-2.jpg',thumb:'skabeloner/skabelon-2-lille.jpg'}
+];
+var cardTpls=TPL_DEFAULTS.slice(),tplLoadedP=null,tplBlobP={},tplPending=null,tplBusy=false;
+function tplPathOk(p){return typeof p==='string'&&/^skabeloner\/[A-Za-z0-9._-]+$/.test(p)}
+function tplClean(list){
+  var out=[],seen={};
+  (Array.isArray(list)?list:[]).forEach(function(t){
+    if(!t||typeof t.id!=='string'||!/^[A-Za-z0-9_-]{1,20}$/.test(t.id)||seen[t.id]||!tplPathOk(t.file)||!tplPathOk(t.thumb))return;
+    seen[t.id]=1;
+    out.push({id:t.id,name:String(t.name||'Skabelon').slice(0,60),file:t.file,thumb:t.thumb});
+  });
+  return out;
+}
+function tplApi(path){return GH_API+ghConfig.repo+'/contents/'+path.split('/').map(encodeURIComponent).join('/')}
+function tplHdr(raw,json){
+  var h={'Authorization':'token '+ghConfig.token,'Accept':raw?'application/vnd.github.raw':'application/vnd.github.v3+json'};
+  if(json)h['Content-Type']='application/json';
+  return h;
+}
+function tplB64(u8){var t='',n=0x8000;for(var i=0;i<u8.length;i+=n)t+=String.fromCharCode.apply(null,u8.subarray(i,i+n));return btoa(t)}
+// a file of the admin repository as bytes (without a login: the copy published on the site)
+async function tplBytes(path){
+  if(ghConfig){
+    var r=await netRetry(function(){return ghFetch(tplApi(path),{headers:tplHdr(true),cache:'no-store'},GH_PUT_MS)});
+    if(r.status===404)throw new Error('Filen '+path+' findes ikke');
+    if(!r.ok)throw await ghErr(r);
+    return new Uint8Array(await r.arrayBuffer());
+  }
+  var r2=await fetch(path);
+  if(!r2.ok)throw new Error('Filen '+path+' kunne ikke hentes ('+r2.status+')');
+  return new Uint8Array(await r2.arrayBuffer());
+}
+function tplBlobUrl(path){
+  if(!tplBlobP[path])tplBlobP[path]=tplBytes(path).then(function(u){return URL.createObjectURL(new Blob([u],{type:'image/jpeg'}))}).catch(function(e){delete tplBlobP[path];throw e});
+  return tplBlobP[path];
+}
+function tplFillImgs(root){
+  root.querySelectorAll('img[data-p]').forEach(function(im){
+    tplBlobUrl(im.dataset.p).then(function(u){im.src=u},function(){im.alt='Billedet kunne ikke hentes'});
+  });
+}
+async function tplReadManifest(){
+  if(ghConfig){
+    var r=await netRetry(function(){return ghFetch(tplApi(TPL_MANIFEST),{headers:tplHdr(false),cache:'no-store'})});
+    if(r.status===404)return{list:null,sha:null};
+    if(!r.ok)throw await ghErr(r);
+    var j=await r.json(),list=null;
+    try{list=tplClean(JSON.parse(b64decode(j.content||'')).templates)}catch(e){}
+    return{list:list&&list.length?list:null,sha:j.sha||null};
+  }
+  try{
+    var r2=await fetch(TPL_MANIFEST,{cache:'no-store'});
+    if(r2.ok){var l2=tplClean((await r2.json()).templates);return{list:l2.length?l2:null,sha:null}}
+  }catch(e){}
+  return{list:null,sha:null};
+}
+function tplLoad(force){
+  if(!tplLoadedP||force)tplLoadedP=tplReadManifest().then(function(m){cardTpls=m.list||TPL_DEFAULTS.slice();return cardTpls},function(){return cardTpls});
+  return tplLoadedP;
+}
+// change the list: read it, let `mutate` edit a copy, write it back. A stale sha (409/422) means someone else
+// changed it meanwhile, so read again.
+async function tplWriteManifest(mutate){
+  if(!ghConfig)throw new Error('Log ind med GitHub-token f\u00f8rst.');
+  for(var i=0;i<5;i++){
+    var cur=await tplReadManifest();
+    var next=tplClean(mutate((cur.list||TPL_DEFAULTS).map(function(t){return Object.assign({},t)})));
+    var body={message:'Bordkort-skabeloner opdateret',content:b64encode(JSON.stringify({version:1,templates:next},null,2))};
+    if(cur.sha)body.sha=cur.sha;
+    var r=await netRetry(function(){return ghFetch(tplApi(TPL_MANIFEST),{method:'PUT',headers:tplHdr(false,true),body:JSON.stringify(body)},GH_PUT_MS)});
+    if(r.ok){cardTpls=next;tplLoadedP=Promise.resolve(next);return next}
+    if(r.status===409||r.status===422){await sleep(600*(i+1));continue}
+    throw await ghErr(r);
+  }
+  throw new Error('Skabelonlisten blev \u00e6ndret af en anden samtidig. Pr\u00f8v igen.');
+}
+async function tplPut(path,u8,msg){
+  var body=JSON.stringify({message:msg,content:tplB64(u8)});
+  var r=await netRetry(function(){return ghFetch(tplApi(path),{method:'PUT',headers:tplHdr(false,true),body:body},GH_PUT_MS)});
+  if(!r.ok)throw await ghErr(r);
+}
+async function tplRemoveFile(path){
+  var r=await netRetry(function(){return ghFetch(tplApi(path),{headers:tplHdr(false),cache:'no-store'})});
+  if(r.status===404)return;
+  if(!r.ok)throw await ghErr(r);
+  var sha=(await r.json()).sha;
+  var d=await netRetry(function(){return ghFetch(tplApi(path),{method:'DELETE',headers:tplHdr(false,true),body:JSON.stringify({message:'Bordkort-skabelon slettet',sha:sha})},GH_PUT_MS)});
+  if(!d.ok&&d.status!==404)throw await ghErr(d);
+}
+function tplMsg(text,bad){
+  var el=document.getElementById('tpl-msg');
+  if(!el)return;
+  el.textContent=text||'';el.style.color=bad?'#8b1f1f':'';
+}
+function tplBtns(){
+  [['tpl-save'],['tpl-cancel'],['tpl-up']].forEach(function(x){var b=document.getElementById(x[0]);if(b)b.disabled=tplBusy});
+}
+function tplRender(){
+  var list=document.getElementById('tpl-list');
+  if(!list)return;
+  list.innerHTML=cardTpls.map(function(t){
+    var id=esc(t.id);
+    return '<div class="tplrow"><img data-p="'+esc(t.thumb)+'" alt=""><div class="tplname"><input type="text" value="'+esc(t.name)+'" maxlength="60" aria-label="Navn p\u00e5 skabelonen" data-id="'+id+'" onchange="tplRename(this.dataset.id,this.value)"></div>'
+      +'<button class="btn btnsm" data-id="'+id+'" onclick="tplDelete(this.dataset.id)"'+(cardTpls.length<2||tplBusy?' disabled':'')+'><i class="fa-solid fa-trash"></i> Slet</button></div>';
+  }).join('');
+  tplFillImgs(list);
+  tplBtns();
+  if(!tplLoadedP)tplLoad().then(tplRender);
+}
+function tplLoadImg(file){
+  return new Promise(function(ok,no){
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){URL.revokeObjectURL(u);ok(im)};
+    im.onerror=function(){URL.revokeObjectURL(u);no(new Error('Filen kan ikke l\u00e6ses som billede. Brug JPG eller PNG.'))};
+    im.src=u;
+  });
+}
+function tplToBlob(cv,q){return new Promise(function(ok,no){cv.toBlob(function(b){b?ok(b):no(new Error('Billedet kunne ikke behandles'))},'image/jpeg',q)})}
+async function tplPick(inp){
+  var f=inp.files&&inp.files[0];
+  inp.value='';
+  if(!f)return;
+  tplMsg('');
+  try{
+    if(!/^image\/(jpeg|png)$/.test(f.type))throw new Error('Brug en JPG- eller PNG-fil.');
+    if(f.size>25*1048576)throw new Error('Filen er for stor (h\u00f8jst 25 MB).');
+    var im=await tplLoadImg(f),w=im.naturalWidth,h=im.naturalHeight;
+    if(Math.abs((h/w)/(297/210)-1)>0.015)throw new Error('Billedet skal v\u00e6re st\u00e5ende A4 (210 x 297 mm), fx 2480 x 3508 px. Dit billede er '+w+' x '+h+' px.');
+    var tw=Math.min(w,2481),th=Math.round(tw*297/210);
+    var cv=document.createElement('canvas');cv.width=tw;cv.height=th;
+    var cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,tw,th);cx.drawImage(im,0,0,tw,th);
+    var full=await tplToBlob(cv,0.9);
+    var c2=document.createElement('canvas');c2.width=900;c2.height=Math.round(900*297/210);
+    c2.getContext('2d').drawImage(cv,0,0,c2.width,c2.height);
+    var thumb=await tplToBlob(c2,0.75);
+    if(tplPending)URL.revokeObjectURL(tplPending.thumbUrl);
+    tplPending={name:f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').trim().slice(0,60)||'Ny skabelon',full:full,thumb:thumb,tw:tw,thumbUrl:URL.createObjectURL(thumb)};
+    await tplShowPending();
+  }catch(e){tplMsg(e.message,true)}
+}
+async function tplShowPending(){
+  var box=document.getElementById('tpl-new'),p=tplPending;
+  if(!box)return;
+  if(!p){box.style.display='none';return}
+  box.style.display='block';
+  document.getElementById('tpl-name').value=p.name;
+  document.getElementById('tpl-info').textContent=p.tw+' px bred, '+(p.full.size/1048576).toFixed(1).replace('.',',')+' MB.'+(p.tw<1240?' Lav opl\u00f8sning: til print b\u00f8r billedet v\u00e6re mindst 2480 px bredt.':'');
+  var F=await cardFont(),img=await cardImg(p.thumbUrl);
+  cardPaint(document.getElementById('tpl-cv'),img,F,'Din overskrift\nkommer her','https://example.org/');
+}
+function tplCancel(){
+  if(tplPending)URL.revokeObjectURL(tplPending.thumbUrl);
+  tplPending=null;tplMsg('');tplShowPending();
+}
+async function tplSavePending(){
+  var p=tplPending;
+  if(!p||tplBusy)return;
+  if(!ghConfig){tplMsg('Log ind med GitHub-token f\u00f8rst.',true);return}
+  var name=document.getElementById('tpl-name').value.trim().slice(0,60)||p.name;
+  tplBusy=true;tplBtns();
+  try{
+    tplMsg('Gemmer skabelonen p\u00e5 GitHub ('+(p.full.size/1048576).toFixed(1).replace('.',',')+' MB)...');
+    var id='u'+Date.now().toString(36),fFull=TPL_DIR+'skabelon-'+id+'.jpg',fThumb=TPL_DIR+'skabelon-'+id+'-lille.jpg';
+    await tplPut(fFull,new Uint8Array(await p.full.arrayBuffer()),'Ny bordkort-skabelon: '+name);
+    await tplPut(fThumb,new Uint8Array(await p.thumb.arrayBuffer()),'Miniature til bordkort-skabelon: '+name);
+    await tplWriteManifest(function(l){l.push({id:id,name:name,file:fFull,thumb:fThumb});return l});
+    URL.revokeObjectURL(p.thumbUrl);tplPending=null;
+    tplMsg('');toast('Skabelonen er gemt');
+  }catch(e){tplMsg('Skabelonen kunne ikke gemmes: '+e.message,true)}
+  finally{tplBusy=false;tplRender();tplShowPending();cardRender()}
+}
+async function tplRename(id,v){
+  v=String(v||'').trim().slice(0,60);
+  if(!v){tplRender();return}
+  try{
+    await tplWriteManifest(function(l){l.forEach(function(t){if(t.id===id)t.name=v});return l});
+    toast('Navnet er gemt');
+  }catch(e){toast('Fejl: '+e.message)}
+  tplRender();cardRender();
+}
+async function tplDelete(id){
+  var t=cardTpls.filter(function(x){return x.id===id})[0];
+  if(!t||cardTpls.length<2||tplBusy)return;
+  if(!confirm('Slet skabelonen \u201c'+t.name+'\u201d? Sp\u00f8rgeskemaer, der bruger den, skifter til den f\u00f8rste skabelon. Det kan ikke fortrydes.'))return;
+  tplBusy=true;tplRender();
+  try{
+    await tplWriteManifest(function(l){return l.filter(function(x){return x.id!==id})});
+    try{await tplRemoveFile(t.file);await tplRemoveFile(t.thumb)}catch(e){}
+    toast('Skabelonen er slettet');
+  }catch(e){toast('Fejl: '+e.message)}
+  finally{tplBusy=false;tplRender();cardRender()}
 }
 
 function downloadAdminAccess(){
@@ -2103,7 +2698,6 @@ var A11Y_CSS=[
 "html[data-prof=gray]{filter:grayscale(1)}",
 ".a11y-btn{position:fixed;right:14px;bottom:14px;width:3.25rem;height:3.25rem;border-radius:50%;border:2px solid var(--tod);background:var(--dg);color:var(--tod);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,.3);padding:0}",
 ".a11y-btn svg{width:1.9rem;height:1.9rem}",
-".a11y-b svg{width:1em;height:1em;fill:currentColor;vertical-align:-.125em}",
 ".a11y-panel{position:fixed;right:14px;bottom:5.2rem;width:min(22.5rem,calc(100vw - 28px));max-height:calc(100vh - 7rem);max-height:calc(100dvh - 7rem);overflow-y:auto;background:var(--cb);color:var(--t);border:1px solid var(--bd2);border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);padding:14px;z-index:9999;font-family:var(--font);font-size:1rem;line-height:1.4}",
 ".a11y-panel[hidden]{display:none}",
 ".a11y-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}",
@@ -2120,7 +2714,7 @@ var A11Y_CSS=[
 ".a11y-b:hover{background:var(--bg2)}",
 ".a11y-b[aria-disabled=true]{opacity:.35;cursor:default}",
 ".a11y-b[aria-pressed=true]{background:var(--ac);color:var(--at);border-color:var(--at);font-weight:600}",
-".a11y-b[aria-pressed=true]::before{content:'';display:inline-block;width:.9em;height:.9em;margin-right:.4em;vertical-align:-.1em;background:currentColor;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E\") center/contain no-repeat;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z'/%3E%3C/svg%3E\") center/contain no-repeat}",
+".a11y-b[aria-pressed=true]::before{content:'\\2713';margin-right:.4em}",
 ".a11y-wide{width:100%;margin-top:6px}"
 ].join("\n")+"\n";
 
@@ -2128,9 +2722,6 @@ var A11Y_CSS=[
 // Embedded as-is in the user file (toString), so it must stay self-contained.
 function a11yInit(){
   var KEY='qs_a11y',root=document.documentElement;
-  // Font Awesome Free 6.5.2 icons (CC BY 4.0), inlined so the page makes no external requests
-  var IC={"xmark":["0 0 384 512","M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"],"minus":["0 0 448 512","M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"],"plus":["0 0 448 512","M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"],"universal-access":["0 0 512 512","M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm161.5-86.1c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3v50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6V235.5c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"]};
-  function ico(n){var i=IC[n];return '<svg viewBox="'+i[0]+'" aria-hidden="true" focusable="false"><path d="'+i[1]+'"/></svg>'}
   var FS=['100 %','115 %','130 %','150 %','175 %','200 %'];
   var LH=['Standard','1,5','1,8','2,1'];
   var LS=['Standard','Lidt','Mere','Meget'];
@@ -2154,9 +2745,9 @@ function a11yInit(){
   var steppers=[],profBtns=[];
   function stepper(label,key,labels,down,up){
     var row=el('div','a11y-row'),grp=el('div','a11y-step');
-    var minus=el('button','a11y-b','',{type:'button','aria-label':down});minus.innerHTML=ico('minus');
+    var minus=el('button','a11y-b','\u2212',{type:'button','aria-label':down});
     var val=el('span','a11y-val','',{'aria-live':'polite'});
-    var plus=el('button','a11y-b','',{type:'button','aria-label':up});plus.innerHTML=ico('plus');
+    var plus=el('button','a11y-b','+',{type:'button','aria-label':up});
     minus.onclick=function(){if(S[key]>0){S[key]--;apply()}};
     plus.onclick=function(){if(S[key]<labels.length-1){S[key]++;apply()}};
     grp.appendChild(minus);grp.appendChild(val);grp.appendChild(plus);
@@ -2165,12 +2756,12 @@ function a11yInit(){
     return row;
   }
   var btn=el('button','a11y-btn','',{type:'button','aria-label':'Tilg\u00e6ngelighed','aria-haspopup':'dialog','aria-expanded':'false','aria-controls':'a11y-panel'});
-  btn.innerHTML=ico('universal-access');
+  btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="6.6" r="1.7" fill="currentColor"/><path d="M6.4 9.4l5.6.9 5.6-.9M12 10.3v3.6M12 13.9l-2.6 4.6M12 13.9l2.6 4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var panel=el('div','a11y-panel','',{id:'a11y-panel',role:'dialog','aria-labelledby':'a11y-ttl'});
   panel.hidden=true;
   var head=el('div','a11y-h');
   head.appendChild(el('h2','','Tilg\u00e6ngelighed',{id:'a11y-ttl'}));
-  var closeBtn=el('button','a11y-b','',{type:'button','aria-label':'Luk'});closeBtn.innerHTML=ico('xmark');
+  var closeBtn=el('button','a11y-b','\u2715',{type:'button','aria-label':'Luk'});
   head.appendChild(closeBtn);panel.appendChild(head);
 
   var s1=el('div','a11y-sec');
@@ -2233,6 +2824,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
   // ALL Danish UI strings in this template are written as \uXXXX escapes
   // sd (schema JSON) is a plain JS string that is assigned to SC \u2014 no btoa involved
   // The file itself is served as UTF-8 with charset declaration
+  var schema=JSON.parse(sd);   // the survey being built, not the one selected in the admin
   var out='<!DOCTYPE html>\n'
 +'<html lang="da"><head><meta charset="UTF-8">\n'
 +'<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">\n'
@@ -2256,6 +2848,13 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'.obtn.sel .rc{border-color:var(--dg)}\n'
 +'.rd{width:10px;height:10px;border-radius:50%;background:var(--dg);display:none}\n'
 +'.obtn.sel .rd{display:block}\n'
++'.rc.sq{border-radius:3px}\n'
++'.rc.sq svg{width:12px;height:12px;color:var(--tod);display:none}\n'
++'.obtn.sel .rc.sq{background:var(--dg)}\n'
++'.obtn.sel .rc.sq svg{display:block}\n'
++'.mhint{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--dk);background:var(--sel);border-radius:var(--r);padding:8px 12px;margin-bottom:12px}\n'
++'.mbox{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:1.5px solid var(--dg);border-radius:3px;flex-shrink:0}\n'
++'.mbox svg{width:11px;height:11px}\n'
 +'.qimg{width:100%;max-height:240px;object-fit:cover;border-radius:var(--rl);margin-bottom:1.25rem;border:.5px solid var(--bd)}\n'
 +'.nav{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}\n'
 +'.btn{padding:8px 18px;border:.5px solid var(--bd2);border-radius:var(--r);background:transparent;color:var(--t);font-size:14px;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px;transition:background .12s}\n'
@@ -2297,7 +2896,7 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'function b64encode(str){var bytes=new TextEncoder().encode(str);var bin="";for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin)}\n'
 +'function b64decode(b64){var bin=atob(b64.replace(/\\n/g,""));var bytes=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new TextDecoder("utf-8").decode(bytes)}\n'
 +'// Font Awesome Free 6.5.2 icons (CC BY 4.0), inlined\n'
-+'var FA={"arrow-left":["0 0 448 512","M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"],"arrow-right":["0 0 448 512","M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"],"star":["0 0 576 512","M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"],"download":["0 0 512 512","M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"],"xmark":["0 0 384 512","M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"]};\n'
++'var FA={"check":["0 0 448 512","M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"],"arrow-left":["0 0 448 512","M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"],"arrow-right":["0 0 448 512","M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"],"star":["0 0 576 512","M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"],"download":["0 0 512 512","M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"],"xmark":["0 0 384 512","M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"]};\n'
 +'function fa(n){var i=FA[n];return "<svg class=\\"fa\\" viewBox=\\""+i[0]+"\\" aria-hidden=\\"true\\" focusable=\\"false\\"><path d=\\""+i[1]+"\\"/></svg>"}\n'
 +'var SC='+sd+';\n'
 +'var GH_REPO="'+repo+'";\n'
@@ -2370,10 +2969,10 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 +'  if(q.type==="text"){\n'
 +'    opts="<textarea class=\\"sa\\" id=\\"ti\\" placeholder=\\"Skriv dit svar...\\">"+esc(Array.isArray(sel)?sel.join(", "):sel||"")+"</textarea>";\n'
 +'  } else if(q.type==="multi"){\n'
-+'    opts="<div style=\\"font-size:12px;color:var(--t3);margin-bottom:8px\\">V\\u00e6lg en eller flere</div>";\n'
++'    opts="<div class=\\"mhint\\"><span class=\\"mbox\\">"+fa("check")+"</span>Du kan v\\u00e6lge flere svar</div>";\n'
 +'    (q.options||[]).forEach(function(o){\n'
 +'      var on=selArr.indexOf(o.id)>=0;\n'
-+'      opts+="<button class=\\"obtn"+(on?" sel":"")+"\\" data-qid=\\""+q.id+"\\" data-oid=\\""+o.id+"\\" data-multi=\\"1\\"><div class=\\"rc\\" style=\\"border-radius:3px\\"><div class=\\"rd\\"></div></div>"+esc(o.label)+"</button>";\n'
++'      opts+="<button class=\\"obtn"+(on?" sel":"")+"\\" data-qid=\\""+q.id+"\\" data-oid=\\""+o.id+"\\" data-multi=\\"1\\"><div class=\\"rc sq\\">"+fa("check")+"</div>"+esc(o.label)+"</button>";\n'
 +'    });\n'
 +'  } else {\n'
 +'    (q.options||[]).forEach(function(o){\n'
@@ -2552,6 +3151,10 @@ function buildUserHTML(sd,repo,t1,t2,t3,fname,bid,sid,demo){
 }
 
 // &#9472;&#9472; Bootstrap &#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
+// keep the 'changes not published' reminder current while the user edits
+var staleTimer=null;
+function queueStaleCheck(){clearTimeout(staleTimer);staleTimer=setTimeout(function(){if(curPage==='editor'&&surveys.length)renderEditorHeader()},700)}
+(function(){var pg=document.getElementById('page-editor');if(!pg)return;['input','change','click'].forEach(function(t){pg.addEventListener(t,queueStaleCheck)})})();
 (async function(){
   // Handle credential payload from admin-adgang.html via URL hash
   var hash=window.location.hash;
