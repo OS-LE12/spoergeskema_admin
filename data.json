@@ -382,7 +382,15 @@
             ]
           }
         ],
-        "outcomes": [],
+        "outcomes": [
+          {
+            "id": "_lm4gv1",
+            "title": "Nyt udfald",
+            "desc": "",
+            "tags": [],
+            "keywords": []
+          }
+        ],
         "showResults": true,
         "showCount": 1
       },
