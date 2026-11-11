@@ -361,7 +361,26 @@
       "schema": {
         "title": "TEST",
         "description": "",
-        "questions": [],
+        "questions": [
+          {
+            "id": "_9mobpg",
+            "text": "Virker dette spørgeskema?",
+            "sub": "",
+            "type": "single",
+            "options": [
+              {
+                "id": "_3q3lnw",
+                "label": "Ja",
+                "nextQ": null
+              },
+              {
+                "id": "_163hjx",
+                "label": "Nej",
+                "nextQ": null
+              }
+            ]
+          }
+        ],
         "outcomes": [],
         "showResults": true,
         "showCount": 1
