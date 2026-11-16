@@ -405,7 +405,12 @@
       "purposeText": "",
       "slug": "frederikshavn-gymnasie-stx-hf-maritim",
       "created": 1794208562406,
-      "deploy": null,
+      "deploy": {
+        "at": 1794830588074,
+        "path": "frederikshavn-gymnasie-stx-hf-maritim/index.html",
+        "bid": "bmwj7seake31k",
+        "sig": "1sc53pw-152b9"
+      },
       "schema": {
         "title": "Frederikshavn Gymnasie - STX, HF, Maritim",
         "description": "Fagligt i Forsvaret\n",
