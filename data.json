@@ -407,8 +407,8 @@
       "created": 1794208562406,
       "deploy": null,
       "schema": {
-        "title": "Har du hvad der skal til?",
-        "description": "Fagligt i Forsvaret\nFrederikshavn Gymnasium 17. NOV 2026",
+        "title": "Frederikshavn Gymnasie - STX, HF, Maritim",
+        "description": "Fagligt i Forsvaret\n",
         "questions": [
           {
             "id": "_syu6o6",
@@ -654,8 +654,8 @@
         "showCount": 1
       },
       "card": {
-        "tpl": "2",
-        "text": "Frederikshavn Gymnasie - STX, HF, Maritim"
+        "tpl": "1",
+        "text": "Har du HVAD \nDER SKAL TIL?"
       }
     }
   ],
