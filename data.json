@@ -408,7 +408,7 @@
       "deploy": null,
       "schema": {
         "title": "Frederikshavn Gymnasie - STX, HF, Maritim",
-        "description": "Har du hvad der skal til?\nMuligheder i Forsvaret",
+        "description": "Har du hvad der skal til?\nFagligt i Forsvaret ",
         "questions": [
           {
             "id": "_syu6o6",
@@ -433,14 +433,19 @@
               },
               {
                 "id": "_lvdjc5",
-                "label": "Planlægge, organisere og samarbejde",
+                "label": "Planlægge og organisere",
+                "nextQ": null
+              },
+              {
+                "id": "_kmtqz6",
+                "label": "Møde sent og går tidligt....",
                 "nextQ": null
               }
             ]
           },
           {
             "id": "_vlrdt9",
-            "text": "Hvilken arbejdsplads (materiel) vil du helst prøve i en uge?",
+            "text": "Hvor vil du helst i praktik en uge?",
             "sub": "",
             "type": "single",
             "options": [
@@ -496,9 +501,9 @@
           },
           {
             "id": "_66xsll",
-            "text": "Hvad er vigtigt for dig når du skal vælge job?",
+            "text": "Hvad er vigtigt for dig når du skal vælge fag/job?",
             "sub": "",
-            "type": "multi",
+            "type": "single",
             "options": [
               {
                 "id": "_i6m1hk",
