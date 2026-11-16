@@ -1560,6 +1560,25 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1794830663870,
       "topOutcome": "Elektronikfagteknikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_azazpf",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_5b5c88"
+        ],
+        "_vlrdt9": "_tjnogz",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 14
+      },
+      "id": "_bhor4j",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1794831743685,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
