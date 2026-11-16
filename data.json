@@ -468,6 +468,11 @@
                 "id": "_jpjibc",
                 "label": "Et teknisk Værksted med radar, missiler  / elektronik",
                 "nextQ": null
+              },
+              {
+                "id": "_04x1d0",
+                "label": "Det er slet ikke noget for mig....",
+                "nextQ": null
               }
             ]
           },
@@ -495,6 +500,11 @@
               {
                 "id": "_urb4w4",
                 "label": "Motormekanikeren",
+                "nextQ": null
+              },
+              {
+                "id": "_vpk58b",
+                "label": "Ingen af disse",
                 "nextQ": null
               }
             ]
