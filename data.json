@@ -1539,6 +1539,27 @@
       "survey": "smw3dxfzuw66",
       "timestamp": 1794387390371,
       "topOutcome": null
+    },
+    {
+      "answers": {
+        "_66xsll": "_azazpf",
+        "_a6oh54": "_kxz57m",
+        "_syu6o6": [
+          "_kpe7kg",
+          "_5b5c88"
+        ],
+        "_vlrdt9": "_jpjibc",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 20,
+        "name": "Tor"
+      },
+      "id": "_qvd0bu",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1794830663870,
+      "topOutcome": "Elektronikfagteknikeren"
     }
   ]
 }
