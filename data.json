@@ -1620,6 +1620,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795081929040,
       "topOutcome": "Skibsmontør"
+    },
+    {
+      "answers": {
+        "_66xsll": "_i6m1hk",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_kmtqz6"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18,
+        "name": "Ada"
+      },
+      "id": "_4vk5jx",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511208262,
+      "topOutcome": "Tak for din ærlighed!"
     }
   ]
 }
