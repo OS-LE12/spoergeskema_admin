@@ -1660,6 +1660,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511206435,
       "topOutcome": "Tak for din ærlighed!"
+    },
+    {
+      "answers": {
+        "_66xsll": "_p37mwo",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_m51y95"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 17,
+        "name": "Frida"
+      },
+      "id": "_a37ty4",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511222646,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
