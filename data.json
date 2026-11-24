@@ -1881,6 +1881,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511242080,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_i6m1hk",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_lvdjc5"
+        ],
+        "_vlrdt9": "_04x1d0",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18,
+        "name": "Harry styles"
+      },
+      "id": "_pkp7eg",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511253861,
+      "topOutcome": "Tak for din ærlighed!"
     }
   ]
 }
