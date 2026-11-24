@@ -2020,6 +2020,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511253185,
       "topOutcome": "Motormekaniker"
+    },
+    {
+      "answers": {
+        "_66xsll": "_y722c7",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_lvdjc5"
+        ],
+        "_vlrdt9": "_tjnogz",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 17,
+        "name": "Ølogsnus"
+      },
+      "id": "_i0kqff",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511246755,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
