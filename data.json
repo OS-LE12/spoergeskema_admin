@@ -2083,6 +2083,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511247500,
       "topOutcome": "Skibsmontør"
+    },
+    {
+      "answers": {
+        "_66xsll": "_y722c7",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_lvdjc5",
+          "_m51y95"
+        ],
+        "_vlrdt9": "_04x1d0",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 17
+      },
+      "id": "_vu97cr",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511246523,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
