@@ -1941,6 +1941,25 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511249256,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_i6m1hk",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_kpe7kg"
+        ],
+        "_vlrdt9": "_04x1d0",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18
+      },
+      "id": "_2ue8x7",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511258766,
+      "topOutcome": "Tak for din ærlighed!"
     }
   ]
 }
