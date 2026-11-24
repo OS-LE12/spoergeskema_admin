@@ -2103,6 +2103,28 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511246523,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_p37mwo",
+        "_a6oh54": "_l0wgxi",
+        "_syu6o6": [
+          "_m51y95",
+          "_5b5c88",
+          "_kpe7kg"
+        ],
+        "_vlrdt9": "_wvlikc",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 27,
+        "name": "Mj"
+      },
+      "id": "_ygt52a",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795514747128,
+      "topOutcome": "Skibsmontør"
     }
   ]
 }
