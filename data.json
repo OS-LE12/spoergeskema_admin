@@ -1980,6 +1980,27 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511233626,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_azazpf",
+        "_a6oh54": "_vpk58b",
+        "_syu6o6": [
+          "_kmtqz6",
+          "_lvdjc5"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18,
+        "name": "Anne"
+      },
+      "id": "_hkfcpl",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511256431,
+      "topOutcome": "Tak for din ærlighed!"
     }
   ]
 }
