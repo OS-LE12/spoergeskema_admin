@@ -1960,6 +1960,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511258766,
       "topOutcome": "Tak for din ærlighed!"
+    },
+    {
+      "answers": {
+        "_66xsll": "_azazpf",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_m51y95"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18,
+        "name": "Freja"
+      },
+      "id": "_42d53k",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511233626,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
