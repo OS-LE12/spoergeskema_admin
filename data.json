@@ -1720,6 +1720,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511223864,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_y722c7",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_kmtqz6",
+          "_lvdjc5"
+        ],
+        "_vlrdt9": "_jpjibc",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 17
+      },
+      "id": "_ftiox6",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511228965,
+      "topOutcome": "Vidste du at der I Forsvaret findes der mere end 70 forskellige faglærte uddannelsesveje"
     }
   ]
 }
