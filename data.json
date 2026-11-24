@@ -2040,6 +2040,28 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511246755,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_i6m1hk",
+        "_a6oh54": "_vpk58b",
+        "_syu6o6": [
+          "_m51y95",
+          "_kmtqz6",
+          "_kpe7kg"
+        ],
+        "_vlrdt9": "_tjnogz",
+        "_zxepjg": "_n8gbsk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 16,
+        "name": "N"
+      },
+      "id": "_wk1ohy",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511250911,
+      "topOutcome": "Motormekaniker"
     }
   ]
 }
