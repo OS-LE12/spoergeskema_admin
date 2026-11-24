@@ -2062,6 +2062,27 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511250911,
       "topOutcome": "Motormekaniker"
+    },
+    {
+      "answers": {
+        "_66xsll": "_p37mwo",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_kpe7kg",
+          "_lvdjc5"
+        ],
+        "_vlrdt9": "_wvlikc",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 18,
+        "name": "Aisha"
+      },
+      "id": "_2jm0su",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511247500,
+      "topOutcome": "Skibsmontør"
     }
   ]
 }
