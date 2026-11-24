@@ -2168,6 +2168,30 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795514815367,
       "topOutcome": "Motormekaniker"
+    },
+    {
+      "answers": {
+        "_66xsll": "_p37mwo",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_kpe7kg",
+          "_m51y95",
+          "_lvdjc5",
+          "_kmtqz6",
+          "_5b5c88"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 20,
+        "name": "Søs"
+      },
+      "id": "_ihpnaf",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795514823455,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
