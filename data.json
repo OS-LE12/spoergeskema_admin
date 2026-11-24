@@ -1861,6 +1861,26 @@
       "survey": "smw8xgb1ib27",
       "timestamp": 1795511249569,
       "topOutcome": "Flymekanikeren"
+    },
+    {
+      "answers": {
+        "_66xsll": "_p37mwo",
+        "_a6oh54": "_89ni77",
+        "_syu6o6": [
+          "_m51y95",
+          "_5b5c88"
+        ],
+        "_vlrdt9": "_7oa3b6",
+        "_zxepjg": "_pjh8tk"
+      },
+      "completed": true,
+      "contact": {
+        "age": 17
+      },
+      "id": "_atr19s",
+      "survey": "smw8xgb1ib27",
+      "timestamp": 1795511242080,
+      "topOutcome": "Flymekanikeren"
     }
   ]
 }
